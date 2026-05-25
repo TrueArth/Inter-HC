@@ -1,0 +1,52 @@
+schema: spec-driven
+
+context: |
+  Você está trabalhando em um Esqueleto de Aplicação Web Full-Stack (Python/FastAPI + Vue 3).
+  
+  Pilha Tecnológica:
+  - Backend: Python 3.10+, FastAPI, Uvicorn (ASGI).
+  - ORM: SQLAlchemy 2.0+ (async) com Alembic.
+  - Databases: PostgreSQL (AGHU), SQLite (Local), Oracle (python-oracledb).
+  - Frontend: Vue 3, TypeScript, Vite (empacotado e servido por FastAPI.staticfiles na raiz '/').
+  - Autenticação: Active Directory (LDAP) com python-ldap e fallback para MockAuthProvider + Sessões JWT (Access + HttpOnly Refresh Token).
+
+  Convenções de Código e Guardrails:
+  - Usar async/await, type hints e docstrings no estilo Google.
+  - Usar snake_case para Python e camelCase para TypeScript/JavaScript.
+  - Testes: Criar arquivos de teste para cobrir funcionalidades, visando alta cobertura.
+  - No Hard Deletes: Proibido o uso de DELETE SQL para dados de negócio. Utilizar coluna `deleted_at` (Soft Delete).
+  - No Secrets in Code: Proibido salvar chaves de API ou senhas no código; utilizar `.env`.
+  - Resiliência e Consistência: Uso de filas assíncronas (Message Broker) e retentativas (Retry) para garantir entregas à Central de Marcação.
+  - Criptografia: Utilizar AES-256 para dados sensíveis.
+  - Auditoria: Criação de trilhas de auditoria imutáveis.
+
+  Domínio de Negócio (Novo Módulo de Interconsulta):
+  - Sistema de Encaminhamento Digital Inteligente integrado ao AGHU.
+  - Motor de Regras: Classificação de risco automática (Vermelho, Amarelo, Verde) baseada em sintomas.
+  - Fila Priorizada: Organização automática pela gravidade para a Central de Marcação.
+
+  Fluxo de Dados Obrigatório (Fidelidade Arquitetural):
+  SQL ➔ Resource ➔ Provider ➔ Controller ➔ Router
+  
+  Estrutura de Diretórios Recomendada:
+  src/
+  ├── main.py
+  ├── routers/
+  ├── controllers/
+  ├── providers/
+  ├── resources/
+  ├── models/
+  ├── helpers/
+  └── sql/
+
+rules:
+  proposal:
+    - Garantir que a proposta descreva explicitamente o fluxo de dados em camadas.
+    - Demarcar claramente quais arquivos [NEW], [MODIFY] ou [DELETE] serão afetados.
+    - Incluir o impacto nas diretrizes LGPD e Trilhas de Auditoria.
+  design:
+    - Sempre descrever o schema de banco de dados (SQLAlchemy) se houver novas persistências, garantindo `deleted_at`.
+    - Listar os SQLs nativos que serão gerados ou atualizados em `sql/` ou `src/providers/sql/`.
+  tasks:
+    - Dividir as tarefas por camada/modulo de forma incremental, seguindo a ordem das dependências (ex: SQL/Resource -> Provider -> Controller -> Router).
+    - Incluir obrigatoriamente tarefas de testes unitários para a camada de serviço/motor de regras.
