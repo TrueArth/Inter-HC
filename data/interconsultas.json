@@ -1,0 +1,175 @@
+[
+  {
+    "id": 1,
+    "paciente_cns": "123456789012345",
+    "medico_solicitante_crm": "12345-SP",
+    "especialidade_id": 1,
+    "sintomas_json": [
+      {
+        "id": 1,
+        "nome": "Cegueira"
+      }
+    ],
+    "gravidade": "VERMELHO",
+    "status": "ENFILEIRADO",
+    "criado_em": "2026-05-25T12:00:00Z",
+    "atualizado_em": "2026-05-25T12:00:00Z",
+    "deleted_at": null
+  },
+  {
+    "id": 2,
+    "paciente_cns": "987654321012345",
+    "medico_solicitante_crm": "54321-PE",
+    "especialidade_id": 2,
+    "sintomas_json": [
+      {
+        "id": 5,
+        "nome": "Febre alta"
+      }
+    ],
+    "gravidade": "AMARELO",
+    "status": "PENDENTE",
+    "criado_em": "2026-05-25T13:00:00Z",
+    "atualizado_em": "2026-05-25T13:00:00Z",
+    "deleted_at": null
+  },
+  {
+    "id": 3,
+    "paciente_cns": "gAAAAABqFQHFp3SwjYelIKw88A3EyF-RBKTRBp6lcPz5tO3PVy7F1xPLNEThe6yGNnI1mrgg0ZsdNzR0SRYeClxpQ8hT_dzOVg==",
+    "medico_solicitante_crm": "medico_teste",
+    "especialidade_id": 1,
+    "sintomas_json": [
+      {
+        "id": 1,
+        "nome": "Cegueira"
+      }
+    ],
+    "gravidade": "VERMELHO",
+    "status": "ENFILEIRADO",
+    "criado_em": "2026-05-26T02:13:25.336542+00:00",
+    "atualizado_em": "2026-05-26T02:13:25.336542+00:00",
+    "deleted_at": null
+  },
+  {
+    "id": 4,
+    "paciente_cns": "gAAAAABqFQHHy8Jwokx39yPPeUxpJ6AlwR2KlMwDI4W41F1eWSBYZzipbJiMljWWO5c5EqzomE9pktJaTmohw7co-AjBCmBsJQ==",
+    "medico_solicitante_crm": "medico_teste",
+    "especialidade_id": 1,
+    "sintomas_json": [
+      {
+        "id": 1,
+        "nome": "Cegueira"
+      }
+    ],
+    "gravidade": "VERMELHO",
+    "status": "ENFILEIRADO",
+    "criado_em": "2026-05-26T02:13:27.363587+00:00",
+    "atualizado_em": "2026-05-26T02:13:27.363587+00:00",
+    "deleted_at": null
+  },
+  {
+    "id": 5,
+    "paciente_cns": "gAAAAABqFQHJt5KEZJZIpvToF8bfnz4owKT7OezdkM7ZOQGNBzLEvbB4JA9Tw9dqfgx0M1a2aEX0WzLNGD-_xX6wF5SmVRbI_g==",
+    "medico_solicitante_crm": "medico_teste",
+    "especialidade_id": 2,
+    "sintomas_json": [
+      {
+        "id": 5,
+        "nome": "Febre alta"
+      }
+    ],
+    "gravidade": "AMARELO",
+    "status": "ENFILEIRADO",
+    "criado_em": "2026-05-26T02:13:29.387325+00:00",
+    "atualizado_em": "2026-05-26T02:13:29.387325+00:00",
+    "deleted_at": null
+  },
+  {
+    "id": 6,
+    "paciente_cns": "gAAAAABqFQHLreUSyrpHlXIpDat62PT23XeuVsEJPVVPfW27UjYaRT8-nkdHtDFqlPypMlTf_ApDKL6eZKOmOe9Pl2f_0tM-xQ==",
+    "medico_solicitante_crm": "medico_teste",
+    "especialidade_id": 3,
+    "sintomas_json": [
+      {
+        "id": 99,
+        "nome": "Tosse leve"
+      }
+    ],
+    "gravidade": "VERDE",
+    "status": "ENFILEIRADO",
+    "criado_em": "2026-05-26T02:13:31.404495+00:00",
+    "atualizado_em": "2026-05-26T02:13:31.404495+00:00",
+    "deleted_at": null
+  },
+  {
+    "id": 7,
+    "paciente_cns": "gAAAAABqFQHNX5I2DOQV2T8PbGkbfzoDeGQhM_IINYWblEApOu-Q1jTOARF2-2jqiooesAsjjyFFms-UlweTu1mIC1n9kLryRg==",
+    "medico_solicitante_crm": "medico_teste",
+    "especialidade_id": 2,
+    "sintomas_json": [
+      {
+        "id": 5,
+        "nome": "Febre alta"
+      }
+    ],
+    "gravidade": "AMARELO",
+    "status": "ENFILEIRADO",
+    "criado_em": "2026-05-26T02:13:33.425592+00:00",
+    "atualizado_em": "2026-05-26T02:13:33.425592+00:00",
+    "deleted_at": null
+  },
+  {
+    "id": 8,
+    "paciente_cns": "gAAAAABqFQM6ZihdF2FkYZmOaid8E2MZNc3bFibHePrPGVQy2KRps5IVWjfcL6lTOUyPGgYrH-U64FRM2GnhpaDev23TQ7SmSQ==",
+    "medico_solicitante_crm": "-",
+    "especialidade_id": 1,
+    "sintomas_json": [
+      {
+        "id": 5,
+        "nome": "Febre alta"
+      }
+    ],
+    "gravidade": "AMARELO",
+    "status": "ENFILEIRADO",
+    "criado_em": "2026-05-26T02:19:38.818634+00:00",
+    "atualizado_em": "2026-05-26T02:19:38.818634+00:00",
+    "deleted_at": null
+  },
+  {
+    "id": 9,
+    "paciente_cns": "gAAAAABqFQNMwYQT37wIY0Zsu9618J4w-uYAYIHSLZmUqeTYMQYk03yWn4kkqlL96z3aTvRwHPteghrsP7FXPTb_itDUe4KO3w==",
+    "medico_solicitante_crm": "-",
+    "especialidade_id": 1,
+    "sintomas_json": [
+      {
+        "id": 1,
+        "nome": "Cegueira"
+      },
+      {
+        "id": 2,
+        "nome": "Infarto"
+      },
+      {
+        "id": 3,
+        "nome": "AVC"
+      },
+      {
+        "id": 4,
+        "nome": "Dor torácica intensa"
+      },
+      {
+        "id": 5,
+        "nome": "Febre alta"
+      },
+      {
+        "id": 6,
+        "nome": "Fratura"
+      }
+    ],
+    "gravidade": "VERMELHO",
+    "status": "ENFILEIRADO",
+    "criado_em": "2026-05-26T02:19:56.448791+00:00",
+    "atualizado_em": "2026-05-26T02:19:56.448791+00:00",
+    "deleted_at": null
+  }
+]
