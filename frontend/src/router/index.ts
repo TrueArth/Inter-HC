@@ -8,6 +8,7 @@ import Exemplos from '../views/Exemplos.vue';
 import Pacientes from '../views/Pacientes.vue';
 import Leitos from '../views/Leitos.vue';
 import Interconsultas from '../views/Interconsultas.vue';
+import CentralMarcacao from '../views/CentralMarcacao.vue';
 
 const routes = [
   {
@@ -25,7 +26,7 @@ const routes = [
     path: '/admin',
     name: 'Admin',
     component: Admin,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, requiresAdmin: true },
   },
 
   {
@@ -37,7 +38,7 @@ const routes = [
     path: '/pacientes',
     name: 'Pacientes',
     component: Pacientes,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, requiresAdmin: true },
   },
   {
     path: '/leitos',
@@ -50,6 +51,12 @@ const routes = [
     name: 'Interconsultas',
     component: Interconsultas,
     meta: { requiresAuth: true },
+  },
+  {
+    path: '/central-marcacao',
+    name: 'Central de Marcação',
+    component: CentralMarcacao,
+    meta: { requiresAuth: true, requiresAdmin: true },
   },
 ];
 
@@ -66,6 +73,8 @@ router.beforeEach((to, _from, next: NavigationGuardNext) => {
 
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
     next({ name: 'Login' });
+  } else if (to.meta.requiresAdmin && !authStore.isAdmin) {
+    next({ name: 'Home' });
   } else {
     next();
   }

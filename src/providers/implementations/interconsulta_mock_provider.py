@@ -177,3 +177,22 @@ class InterconsultaMockProvider(InterconsultaProviderInterface):
             self._save_data(data)
             
         return found
+
+    async def atualizar_status_pedido(self, pedido_id: int, novo_status: str) -> bool:
+        """
+        Updates the status of the requested interconsultation.
+        """
+        data = self._load_data()
+        found = False
+        
+        for r in data:
+            if r["id"] == pedido_id and r.get("deleted_at") is None:
+                r["status"] = novo_status
+                r["atualizado_em"] = datetime.now(timezone.utc).isoformat()
+                found = True
+                break
+                
+        if found:
+            self._save_data(data)
+            
+        return found

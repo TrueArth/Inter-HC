@@ -26,3 +26,11 @@ class InterconsultaProviderInterface(ABC):
         Retorna True em caso de sucesso.
         """
         pass
+
+    @abstractmethod
+    async def atualizar_status_pedido(self, pedido_id: int, novo_status: str) -> bool:
+        """
+        Atualiza o status de um pedido de interconsulta.
+        Retorna True em caso de sucesso.
+        """
+        pass

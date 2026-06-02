@@ -62,6 +62,18 @@ async def criar_interconsulta(
     )
     return pedido
 
+async def verify_regulator_user(current_user: dict = Depends(get_current_user)):
+    ADMIN_GROUP = "GLO-SEC-HCPE-SETISD"
+    if ADMIN_GROUP not in current_user.get("groups", []):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, 
+            detail="Acesso negado: Apenas a equipe de regulação da Central de Marcação possui acesso a esta operação."
+        )
+    return current_user
+
+class StatusUpdate(BaseModel):
+    status: str = Field(..., description="Novo status do pedido (ex: AGENDADO, ERRO)")
+
 @router.get("/", response_model=List[InterconsultaResponse])
 async def listar_interconsultas(
     provider: InterconsultaProviderInterface = Depends(get_interconsulta_provider(strategy="POSTGRES")),
@@ -70,7 +82,7 @@ async def listar_interconsultas(
     """
     Lista todos os pedidos ativos (Soft Delete out), ordenados por prioridade clínica.
     """
-    return await InterconsultaController.listar_pedidos(provider)
+    return await InterconsultaController.listar_pedidos(provider, current_user)
 
 @router.delete("/{pedido_id}")
 async def inativar_interconsulta(
@@ -82,3 +94,27 @@ async def inativar_interconsulta(
     Realiza o Soft Delete em um pedido de interconsulta (obrigatório LGPD).
     """
     return await InterconsultaController.cancelar_pedido(pedido_id, provider)
+
+@router.patch("/{pedido_id}/status")
+async def atualizar_status_pedido(
+    pedido_id: int,
+    payload: StatusUpdate,
+    provider: InterconsultaProviderInterface = Depends(get_interconsulta_provider(strategy="POSTGRES")),
+    current_user: dict = Depends(verify_regulator_user)
+):
+    """
+    Atualiza o status de uma interconsulta. Apenas para reguladores/admin.
+    """
+    return await InterconsultaController.atualizar_status(pedido_id, payload.status, provider)
+
+@router.post("/{pedido_id}/retry")
+async def reprocessar_pedido(
+    pedido_id: int,
+    background_tasks: BackgroundTasks,
+    provider: InterconsultaProviderInterface = Depends(get_interconsulta_provider(strategy="POSTGRES")),
+    current_user: dict = Depends(verify_regulator_user)
+):
+    """
+    Reprocessa o envio de uma interconsulta que falhou. Apenas para reguladores/admin.
+    """
+    return await InterconsultaController.reprocessar_envio(pedido_id, provider, background_tasks)

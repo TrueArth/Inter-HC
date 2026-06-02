@@ -14,3 +14,10 @@ O sistema MUST garantir que todos os pedidos classificados pelo Motor de Regras 
 - **WHEN** a integração com a Central de Marcação retornar HTTP 200 OK
 - **THEN** o sistema atualiza o status do pedido localmente (via provider e SQL nativo) para "AGENDADO"
 
+### Requirement: Disparo Manual de Re-enfileiramento
+O sistema MUST permitir que uma tentativa de envio com status de 'ERRO' seja re-enfileirada de forma manual, reiniciando o fluxo assíncrono de envio para a Central de Marcação do AGHU.
+
+#### Scenario: Re-envio Manual com Sucesso
+- **WHEN** o operador da Central de Marcação aciona a opção "Re-enviar" em um pedido com falha
+- **THEN** o worker do Message Broker é acionado para tentar processar o envio novamente, alterando o status do pedido local para 'ENFILEIRADO'.
+

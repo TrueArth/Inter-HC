@@ -116,3 +116,26 @@ class InterconsultaPostgresProvider(InterconsultaProviderInterface):
             await self.session.commit()
             row = result.mappings().first()
             return row is not None
+
+    async def atualizar_status_pedido(self, pedido_id: int, novo_status: str) -> bool:
+        """
+        Atualiza o status do pedido de interconsulta.
+        Retorna True se o pedido foi atualizado com sucesso.
+        """
+        params = {"id": pedido_id, "status": novo_status}
+        if self._dialect == "sqlite":
+            update_sql = text(
+                "UPDATE interconsulta_pedidos "
+                "SET status = :status, atualizado_em = CURRENT_TIMESTAMP "
+                "WHERE id = :id AND deleted_at IS NULL"
+            )
+            result = await self.session.execute(update_sql, params)
+            await self.session.commit()
+            return result.rowcount > 0
+        else:
+            sql_template = read_sql_file(_get_sql_path("atualizar_status_pedido.sql"))
+            query_str = create_query(sql_template, params)
+            result = await self.session.execute(text(query_str))
+            await self.session.commit()
+            row = result.mappings().first()
+            return row is not None
