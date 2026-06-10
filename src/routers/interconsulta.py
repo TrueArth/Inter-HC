@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends, BackgroundTasks, status
+from src.schemas.interconsulta_schema import InterconsultaCreate, InterconsultaResponse, StatusUpdate
+from fastapi import APIRouter, Depends, BackgroundTasks, status, HTTPException
 from pydantic import BaseModel, Field
 from typing import List, Dict, Any, Optional
 from datetime import datetime
@@ -17,26 +18,6 @@ router = APIRouter(
 )
 
 # --- Schemas (Pydantic) ---
-
-class Sintoma(BaseModel):
-    id: int
-    nome: str
-
-class InterconsultaCreate(BaseModel):
-    paciente_cns: str = Field(..., description="CNS do paciente (será encriptado via AES-256 no banco)")
-    medico_solicitante_crm: str = Field(..., description="CRM do médico logado solicitante")
-    especialidade_id: int = Field(..., description="ID da especialidade desejada no AGHU")
-    sintomas_json: List[Sintoma] = Field(default_factory=list, description="Lista de sintomas para análise do Motor de Risco")
-
-class InterconsultaResponse(BaseModel):
-    id: int
-    paciente_cns: str
-    medico_solicitante_crm: str
-    especialidade_id: int
-    gravidade: str
-    status: str
-    criado_em: Optional[datetime] = None
-    atualizado_em: Optional[datetime] = None
 
 # --- Endpoints ---
 
@@ -70,9 +51,6 @@ async def verify_regulator_user(current_user: dict = Depends(get_current_user)):
             detail="Acesso negado: Apenas a equipe de regulação da Central de Marcação possui acesso a esta operação."
         )
     return current_user
-
-class StatusUpdate(BaseModel):
-    status: str = Field(..., description="Novo status do pedido (ex: AGENDADO, ERRO)")
 
 @router.get("/", response_model=List[InterconsultaResponse])
 async def listar_interconsultas(

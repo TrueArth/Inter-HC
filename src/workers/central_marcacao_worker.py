@@ -55,7 +55,7 @@ async def enviar_para_central_aghu(pedido_dict: dict, retry_count: int = 0):
         
         if sucesso_api:
             logger.info(f"Sucesso: Pedido {pedido_dict.get('id')} processado pela Central de Marcação.")
-            await update_status_in_worker(pedido_dict.get('id'), 'PENDENTE')
+            await update_status_in_worker(pedido_dict.get('id'), 'AGENDADO')
         else:
             raise Exception("HTTP 503 Service Unavailable")
             
