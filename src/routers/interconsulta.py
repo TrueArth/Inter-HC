@@ -3,6 +3,8 @@ from fastapi import APIRouter, Depends, BackgroundTasks, status, HTTPException
 from pydantic import BaseModel, Field
 from typing import List, Dict, Any, Optional
 from datetime import datetime
+from fastapi import APIRouter, Depends
+from src.services.queue_optimizer_service import QueueOptimizerService
 
 from src.controllers.interconsulta_controller import InterconsultaController
 from src.providers.interfaces.interconsulta_provider_interface import InterconsultaProviderInterface

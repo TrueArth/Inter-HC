@@ -1,6 +1,7 @@
 from fastapi import HTTPException, BackgroundTasks
 from typing import List, Dict, Any
 from cryptography.fernet import InvalidToken
+from src.services.queue_optimizer_service import QueueOptimizerService
 
 from src.providers.interfaces.interconsulta_provider_interface import InterconsultaProviderInterface
 from src.services.risk_engine_service import RiskEngineService
@@ -57,15 +58,16 @@ class InterconsultaController:
         Retorna as interconsultas ativas.
         """
         try:
-            pedidos = await provider.listar_pedidos_ativos()
+            pedidos_estaticos = await provider.listar_pedidos_ativos()
+            fila_inteligente = QueueOptimizerService.reordenar_fila_dinamica(pedidos_estaticos)
             # Trilha de Auditoria (LGPD)
             username = current_user.get("username") or current_user.get("name") or "Desconhecido"
             import logging
             logger = logging.getLogger("audit")
             logger.warning(
-                f"AUDITORIA: Usuario '{username}' visualizou os dados sensiveis (CNS) de {len(pedidos)} pedido(s) de interconsulta."
+                f"AUDITORIA: Usuario '{username}' visualizou os dados sensiveis (CNS) de {len(fila_inteligente)} pedido(s) de interconsulta."
             )
-            return pedidos
+            return fila_inteligente
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Erro ao listar pedidos: {_format_error(e)}")
             

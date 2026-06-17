@@ -81,6 +81,8 @@
             <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Gravidade</th>
             <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
             <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Criado em</th>
+            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Score</th>  
+            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tempo de espera</th>
           </tr>
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
@@ -95,6 +97,12 @@
             </td>
             <td class="px-4 py-3 text-sm">{{ pedido.status }}</td>
             <td class="px-4 py-3 text-sm">{{ formatarData(pedido.criado_em) }}</td>
+            <td class="px-4 py-4 whitespace-nowrap text-sm font-bold text-gray-900">
+            {{ pedido.score_prioridade }} pts
+          </td>
+          <td class="px-4 py-4 whitespace-nowrap text-sm text-red-600 font-medium">
+            {{ pedido.dias_na_fila }} dias
+          </td>
           </tr>
         </tbody>
       </table>

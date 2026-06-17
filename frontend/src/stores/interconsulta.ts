@@ -30,6 +30,8 @@ export interface InterconsultaPedido {
   sintomas_json?: any;
   criado_em?: string | null;
   atualizado_em?: string | null;
+  dias_na_fila?: number;
+  score_prioridade?: number;
 }
 
 export const SINTOMAS_CATALOGO_MVP: SintomaCatalogoItem[] = [
