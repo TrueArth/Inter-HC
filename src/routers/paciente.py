@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, status
 from typing import List
 
 from ..controllers import paciente_controller
@@ -8,6 +8,15 @@ from ..providers.interfaces.paciente_provider_interface import PacienteProviderI
 
 from ..auth.auth import auth_handler
 
+async def verify_regulator_user(current_user: dict = Depends(auth_handler.decode_token)):
+    ADMIN_GROUP = "GLO-SEC-HCPE-SETISD"
+    if ADMIN_GROUP not in current_user.get("groups", []):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, 
+            detail="Acesso negado: Apenas a equipe de regulação da Central de Marcação possui acesso a dados de pacientes."
+        )
+    return current_user
+
 # --- PONTO ÚNICO DE CONFIGURAÇÃO PARA ESTE ROTEADOR ---
 # Para usar o banco de dados em produção, altere esta linha para "postgres"
 STRATEGY = "csv"
@@ -16,7 +25,7 @@ STRATEGY = "csv"
 router = APIRouter(
     prefix="/api/pacientes",
     tags=["Pacientes"],
-    dependencies=[Depends(auth_handler.decode_token)]
+    dependencies=[Depends(verify_regulator_user)]
 )
 
 @router.get("", response_model=List[dict])

@@ -27,8 +27,11 @@ export interface InterconsultaPedido {
   especialidade_id: number;
   gravidade: string;
   status: string;
+  sintomas_json?: any;
   criado_em?: string | null;
   atualizado_em?: string | null;
+  dias_na_fila?: number;
+  score_prioridade?: number;
 }
 
 export const SINTOMAS_CATALOGO_MVP: SintomaCatalogoItem[] = [
@@ -100,6 +103,42 @@ export const useInterconsultaStore = defineStore('interconsulta', () => {
     }
   }
 
+  async function atualizarStatusPedido(pedidoId: number, status: string): Promise<void> {
+    loading.value = true;
+    error.value = null;
+    try {
+      await api.patch(`/api/interconsultas/${pedidoId}/status`, { status });
+      const p = pedidos.value.find((x) => x.id === pedidoId);
+      if (p) {
+        p.status = status;
+        p.atualizado_em = new Date().toISOString();
+      }
+    } catch (err: unknown) {
+      error.value = 'Falha ao atualizar status do pedido.';
+      throw err;
+    } finally {
+      loading.value = false;
+    }
+  }
+
+  async function reprocessarPedido(pedidoId: number): Promise<void> {
+    loading.value = true;
+    error.value = null;
+    try {
+      await api.post(`/api/interconsultas/${pedidoId}/retry`);
+      const p = pedidos.value.find((x) => x.id === pedidoId);
+      if (p) {
+        p.status = 'ENFILEIRADO';
+        p.atualizado_em = new Date().toISOString();
+      }
+    } catch (err: unknown) {
+      error.value = 'Falha ao reprocessar pedido.';
+      throw err;
+    } finally {
+      loading.value = false;
+    }
+  }
+
   return {
     pedidos,
     loading,
@@ -108,5 +147,7 @@ export const useInterconsultaStore = defineStore('interconsulta', () => {
     listarPedidos,
     criarPedido,
     mascararCns,
+    atualizarStatusPedido,
+    reprocessarPedido,
   };
 });

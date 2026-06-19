@@ -40,15 +40,27 @@ def get_paciente_provider(strategy: str) -> Callable[..., PacienteProviderInterf
 # --- Interconsulta Provider Factory ---
 from .providers.interfaces.interconsulta_provider_interface import InterconsultaProviderInterface
 from .providers.implementations.interconsulta_postgres_provider import InterconsultaPostgresProvider
+from .providers.implementations.interconsulta_mock_provider import InterconsultaMockProvider
 from .resources.database import get_app_db_session
 
 def _get_interconsulta_postgres_provider(
     session: AsyncSession = Depends(get_app_db_session)
 ) -> InterconsultaProviderInterface:
-    return InterconsultaPostgresProvider(session=session)
+    # Detects the engine dialect (sqlite vs postgresql) to pass correct strategy
+    dialect = session.bind.dialect.name if session.bind else "postgresql"
+    return InterconsultaPostgresProvider(session=session, dialect=dialect)
+
+def _get_interconsulta_mock_provider() -> InterconsultaProviderInterface:
+    return InterconsultaMockProvider()
 
 def get_interconsulta_provider(strategy: str = "POSTGRES") -> Callable[..., InterconsultaProviderInterface]:
-    if strategy.upper() == "POSTGRES":
+    # Check if there is an environment variable override (e.g. for development)
+    env_strategy = os.getenv("INTERCONSULTA_PROVIDER_TYPE", None)
+    selected_strategy = env_strategy if env_strategy is not None else strategy
+    
+    if selected_strategy.upper() == "POSTGRES":
         return _get_interconsulta_postgres_provider
+    elif selected_strategy.upper() == "MOCK":
+        return _get_interconsulta_mock_provider
     else:
-        raise ValueError(f"Estratégia de interconsulta desconhecida: {strategy}")
+        raise ValueError(f"Estratégia de interconsulta desconhecida: {selected_strategy}")

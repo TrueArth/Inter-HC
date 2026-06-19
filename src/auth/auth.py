@@ -34,15 +34,30 @@ class MockAuthProvider(AuthProviderInterface):
     """Provedor de autenticação mock para desenvolvimento offline."""
     def authenticate_user(self, username, password) -> dict:
         print("--- Using Mock Authentication ---")
+        admin_group = "GLO-SEC-HCPE-SETISD"
         if username == "admin" and password == "admin":
             print(f"Authentication successful for mock user: {username}")
-            # O nome do grupo que o frontend usa para identificar administradores
-            admin_group = "GLO-SEC-HCPE-SETISD"
             return {
                 "username": "admin",
                 "displayName": ["Mock Admin"],
-                "groups": [admin_group, "Users"],
+                "groups": [admin_group, "Medicos", "Users"],
                 "email": "admin@mock.com"
+            }
+        elif username == "medico" and password == "medico":
+            print(f"Authentication successful for mock user: {username}")
+            return {
+                "username": "medico",
+                "displayName": ["Mock Medico"],
+                "groups": ["Medicos", "Users"],
+                "email": "medico@mock.com"
+            }
+        elif username == "regulador" and password == "regulador":
+            print(f"Authentication successful for mock user: {username}")
+            return {
+                "username": "regulador",
+                "displayName": ["Mock Regulador"],
+                "groups": [admin_group, "Users"],
+                "email": "regulador@mock.com"
             }
         else:
             print(f"Authentication failed for mock user: {username}")

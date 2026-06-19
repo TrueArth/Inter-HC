@@ -30,7 +30,7 @@
               <BeakerIcon class="h-6 w-6" />
               <span>Exemplos</span>
             </router-link>
-            <router-link v-if="authStore.isAuthenticated" to="/pacientes" class="flex items-center space-x-2 py-2.5 px-4 rounded transition duration-200 hover:bg-paper-active-link hover:text-white">
+            <router-link v-if="authStore.isAuthenticated && authStore.isAdmin" to="/pacientes" class="flex items-center space-x-2 py-2.5 px-4 rounded transition duration-200 hover:bg-paper-active-link hover:text-white">
               <UsersIcon class="h-6 w-6" />
               <span>Pacientes</span>
             </router-link>
@@ -39,12 +39,20 @@
     <span>Leitos</span>
   </router-link>
             <router-link
-              v-if="authStore.isAuthenticated"
+              v-if="authStore.isAuthenticated && isMedico"
               to="/interconsultas"
               class="flex items-center space-x-2 py-2.5 px-4 rounded transition duration-200 hover:bg-paper-active-link hover:text-white"
             >
               <ClipboardDocumentListIcon class="h-6 w-6" />
               <span>Interconsultas</span>
+            </router-link>
+            <router-link
+              v-if="authStore.isAuthenticated && authStore.isAdmin"
+              to="/central-marcacao"
+              class="flex items-center space-x-2 py-2.5 px-4 rounded transition duration-200 hover:bg-paper-active-link hover:text-white"
+            >
+              <QueueListIcon class="h-6 w-6" />
+              <span>Central de Marcação</span>
             </router-link>
         <router-link v-if="authStore.isAdmin" to="/admin" class="flex items-center space-x-2 py-2.5 px-4 rounded transition duration-200 hover:bg-paper-active-link hover:text-white">
           <ShieldCheckIcon class="h-6 w-6"/>
@@ -83,7 +91,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, watch, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import {
   HomeIcon,
@@ -94,6 +102,7 @@ import {
   Bars3Icon,
   ArrowRightOnRectangleIcon,
   ClipboardDocumentListIcon,
+  QueueListIcon,
 } from '@heroicons/vue/24/outline';
 import ProfileDropdown from '../components/ProfileDropdown.vue';
 import Button from '../components/Button.vue';
@@ -103,6 +112,10 @@ const sidebarOpen = ref(false);
 const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
+
+const isMedico = computed(() => {
+  return authStore.user?.groups?.includes('Medicos') || false;
+});
 
 // Close sidebar on route change
 watch(() => route.path, () => {
