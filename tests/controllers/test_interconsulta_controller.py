@@ -29,8 +29,9 @@ async def test_solicitar_interconsulta_com_sintoma_critico():
     # Verifica se a gravidade VERMELHO foi injetada no payload antes de salvar
     args, _ = mock_provider.inserir_pedido.call_args
     assert args[0]["gravidade"] == "VERMELHO"
-    # Verifica se o worker assíncrono foi disparado na BackgroundTask
-    mock_bg_tasks.add_task.assert_called_once()
+    assert args[0]["status"] == "PENDENTE"
+    # Verifica se o worker assíncrono NÃO foi disparado na BackgroundTask
+    mock_bg_tasks.add_task.assert_not_called()
 
 @pytest.mark.asyncio
 async def test_solicitar_interconsulta_sem_sintomas_criticos():
@@ -51,3 +52,5 @@ async def test_solicitar_interconsulta_sem_sintomas_criticos():
     # Sem ID crítico ou moderado (IDs 1 a 6 mapeados no engine), o retorno padrão é VERDE
     args, _ = mock_provider.inserir_pedido.call_args
     assert args[0]["gravidade"] == "VERDE"
+    assert args[0]["status"] == "PENDENTE"
+    mock_bg_tasks.add_task.assert_not_called()

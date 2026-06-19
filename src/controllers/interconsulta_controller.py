@@ -39,7 +39,7 @@ class InterconsultaController:
         # 1. Processamento pelo Motor de Regras
         gravidade = RiskEngineService.calcular_gravidade(sintomas)
         payload["gravidade"] = gravidade
-        payload["status"] = "ENFILEIRADO"
+        payload["status"] = "PENDENTE"
         
         # 2. Persistência de Dados via Provider (Criptografia e Soft Delete aplicados no provider)
         try:
@@ -47,8 +47,8 @@ class InterconsultaController:
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Erro ao salvar o pedido: {_format_error(e)}")
             
-        # 3. Publicação no Message Broker (Assíncrono)
-        MessageBroker.dispatch(background_tasks, enviar_para_central_aghu, pedido_criado)
+        # 3. Publicação no Message Broker (Removido disparo automático na criação)
+        # MessageBroker.dispatch(background_tasks, enviar_para_central_aghu, pedido_criado)
         
         return pedido_criado
 

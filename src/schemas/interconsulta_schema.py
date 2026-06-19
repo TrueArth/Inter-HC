@@ -21,6 +21,8 @@ class InterconsultaResponse(BaseModel):
     status: str
     criado_em: Optional[datetime] = None
     atualizado_em: Optional[datetime] = None
+    score_prioridade: Optional[float] = None
+    dias_na_fila: Optional[int] = None
 
     class Config:
         from_attributes = True

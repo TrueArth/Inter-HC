@@ -115,6 +115,8 @@
               <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">CNS do Paciente</th>
               <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Especialidade (AGHU)</th>
               <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Gravidade Clínica</th>
+              <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Pontuação</th>
+              <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Tempo de Espera</th>
               <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Status Integração</th>
               <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Criado Em</th>
               <th class="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Ações</th>
@@ -134,6 +136,12 @@
                 <span :class="gravidadeClass(pedido.gravidade)" class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider">
                   {{ pedido.gravidade }}
                 </span>
+              </td>
+              <td class="px-4 py-3 text-sm font-semibold text-gray-900">
+                {{ pedido.score_prioridade ?? 0 }} pts
+              </td>
+              <td class="px-4 py-3 text-sm text-red-600 font-medium">
+                {{ pedido.dias_na_fila ?? 0 }} dias
               </td>
               <td class="px-4 py-3 text-sm">
                 <span :class="statusClass(pedido.status)" class="inline-flex px-2 py-0.5 rounded text-xs font-medium uppercase">
@@ -229,6 +237,18 @@
               <span :class="statusClass(pedidoSelecionado.status)" class="inline-flex px-3 py-1 rounded text-xs font-medium uppercase">
                 {{ pedidoSelecionado.status }}
               </span>
+            </div>
+          </div>
+
+          <!-- Pontuação e Tempo de Espera -->
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <p class="text-xs font-semibold text-gray-400 uppercase mb-1">Pontuação</p>
+              <p class="text-sm font-bold text-gray-800">{{ pedidoSelecionado.score_prioridade ?? 0 }} pts</p>
+            </div>
+            <div>
+              <p class="text-xs font-semibold text-gray-400 uppercase mb-1">Tempo de Espera</p>
+              <p class="text-sm font-bold text-red-600">{{ pedidoSelecionado.dias_na_fila ?? 0 }} dias</p>
             </div>
           </div>
 

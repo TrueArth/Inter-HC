@@ -170,13 +170,22 @@ async def test_listar_interconsultas_contem_pedido_criado(client: AsyncClient):
     # Cria um pedido
     post_resp = await client.post("/api/interconsultas/", json=PAYLOAD_MODERADO)
     assert post_resp.status_code == 201, post_resp.text
-    criado_id = post_resp.json()["id"]
+    criado_data = post_resp.json()
+    criado_id = criado_data["id"]
 
     # Lista e verifica se o pedido aparece
     list_resp = await client.get("/api/interconsultas/")
     assert list_resp.status_code == 200, list_resp.text
-    ids = [item["id"] for item in list_resp.json()]
+    pedidos = list_resp.json()
+    ids = [item["id"] for item in pedidos]
     assert criado_id in ids, f"Pedido {criado_id} não encontrado na listagem"
+
+    # Verifica se os novos campos de score e dias na fila estão presentes e são numéricos
+    pedido_retornado = next(p for p in pedidos if p["id"] == criado_id)
+    assert "score_prioridade" in pedido_retornado
+    assert "dias_na_fila" in pedido_retornado
+    assert isinstance(pedido_retornado["score_prioridade"], (int, float))
+    assert isinstance(pedido_retornado["dias_na_fila"], int)
 
 
 @pytest.mark.asyncio

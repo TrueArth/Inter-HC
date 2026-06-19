@@ -11,9 +11,9 @@
       }
     ],
     "gravidade": "VERMELHO",
-    "status": "ENFILEIRADO",
+    "status": "AGENDADO",
     "criado_em": "2026-05-25T12:00:00Z",
-    "atualizado_em": "2026-05-25T12:00:00Z",
+    "atualizado_em": "2026-06-19T12:10:20.606552+00:00",
     "deleted_at": null
   },
   {
@@ -602,6 +602,356 @@
     "status": "PENDENTE",
     "criado_em": "2026-06-02T19:18:25.396773+00:00",
     "atualizado_em": "2026-06-02T19:18:27.407131+00:00",
+    "deleted_at": null
+  },
+  {
+    "id": 34,
+    "paciente_cns": "gAAAAABqNS5wG210tVgt-qj4X9mKQGG17p4BwD4iwF7W9LcqoIf5MXYzxRzs2imoXeJ1olsBCd8c69UCn2neoBMV1UtBGON2fQ==",
+    "medico_solicitante_crm": "medico_teste",
+    "especialidade_id": 1,
+    "sintomas_json": [
+      {
+        "id": 1,
+        "nome": "Cegueira"
+      }
+    ],
+    "gravidade": "VERMELHO",
+    "status": "AGENDADO",
+    "criado_em": "2026-06-19T11:56:32.202157+00:00",
+    "atualizado_em": "2026-06-19T11:56:34.244518+00:00",
+    "deleted_at": null
+  },
+  {
+    "id": 35,
+    "paciente_cns": "gAAAAABqNS5yOV0ADrMSFMFeF6hqchDwLTYiNTDweuMYcK6Gr_v0jmWummGCgp0JseLoNHaMTOjCDmAh-jGKlqSf-l_m199Qcg==",
+    "medico_solicitante_crm": "medico_teste",
+    "especialidade_id": 1,
+    "sintomas_json": [
+      {
+        "id": 1,
+        "nome": "Cegueira"
+      }
+    ],
+    "gravidade": "VERMELHO",
+    "status": "AGENDADO",
+    "criado_em": "2026-06-19T11:56:34.303236+00:00",
+    "atualizado_em": "2026-06-19T11:56:36.344397+00:00",
+    "deleted_at": null
+  },
+  {
+    "id": 36,
+    "paciente_cns": "gAAAAABqNS503DDN2l4rO_rSq9wuVMPpeuOo-AHtK8vZ5gTeQptN8ShAQ63Jqp-JfRazUEYmfPw7lEI3iHDZMiuoa_u3AYnmww==",
+    "medico_solicitante_crm": "medico_teste",
+    "especialidade_id": 2,
+    "sintomas_json": [
+      {
+        "id": 5,
+        "nome": "Febre alta"
+      }
+    ],
+    "gravidade": "AMARELO",
+    "status": "AGENDADO",
+    "criado_em": "2026-06-19T11:56:36.370975+00:00",
+    "atualizado_em": "2026-06-19T11:56:38.399967+00:00",
+    "deleted_at": null
+  },
+  {
+    "id": 37,
+    "paciente_cns": "gAAAAABqNS52CDGvthug66Xb4NUHjjvwzvpVQoTkIofZaPIIjd-ofEksutZjnAs50HdWUkm80WM2cS8EfE4BCE0P42kss4G7Qw==",
+    "medico_solicitante_crm": "medico_teste",
+    "especialidade_id": 3,
+    "sintomas_json": [
+      {
+        "id": 99,
+        "nome": "Tosse leve"
+      }
+    ],
+    "gravidade": "VERDE",
+    "status": "AGENDADO",
+    "criado_em": "2026-06-19T11:56:38.425011+00:00",
+    "atualizado_em": "2026-06-19T11:56:40.459474+00:00",
+    "deleted_at": null
+  },
+  {
+    "id": 38,
+    "paciente_cns": "gAAAAABqNS54qeb-JsultOsaJArlsD5rCKqVEfFZpkAGFpYyUd-mRZSJxFK5ji6W5h19Ezdtrr9jHaPTYU2Gofa8IIn8VBmzxg==",
+    "medico_solicitante_crm": "medico_teste",
+    "especialidade_id": 2,
+    "sintomas_json": [
+      {
+        "id": 5,
+        "nome": "Febre alta"
+      }
+    ],
+    "gravidade": "AMARELO",
+    "status": "AGENDADO",
+    "criado_em": "2026-06-19T11:56:40.486915+00:00",
+    "atualizado_em": "2026-06-19T11:56:42.527329+00:00",
+    "deleted_at": null
+  },
+  {
+    "id": 39,
+    "paciente_cns": "gAAAAABqNS6L5HV2NAFZVkjzFdAnWrHnOgdOtY20VJYK_PYfPgg4WZczGzjzZoIDKyx23V8VxoF1cDdWV_w0JmR_ASoOuX8mHw==",
+    "medico_solicitante_crm": "medico_teste",
+    "especialidade_id": 1,
+    "sintomas_json": [
+      {
+        "id": 1,
+        "nome": "Cegueira"
+      }
+    ],
+    "gravidade": "VERMELHO",
+    "status": "AGENDADO",
+    "criado_em": "2026-06-19T11:56:59.244833+00:00",
+    "atualizado_em": "2026-06-19T11:57:01.279661+00:00",
+    "deleted_at": null
+  },
+  {
+    "id": 40,
+    "paciente_cns": "gAAAAABqNS6NX8Txc3yGITMWYcgvRBu0crj3qbtLKx-AdllpUQAVNmYb8AsZA-P28b5V_Vp91SjEkF_J1tvnnubPYJgyIVHjkQ==",
+    "medico_solicitante_crm": "medico_teste",
+    "especialidade_id": 1,
+    "sintomas_json": [
+      {
+        "id": 1,
+        "nome": "Cegueira"
+      }
+    ],
+    "gravidade": "VERMELHO",
+    "status": "AGENDADO",
+    "criado_em": "2026-06-19T11:57:01.310017+00:00",
+    "atualizado_em": "2026-06-19T11:57:03.337215+00:00",
+    "deleted_at": null
+  },
+  {
+    "id": 41,
+    "paciente_cns": "gAAAAABqNS6Prruc8RgbPrCtAKWTmfFsEpALADkySUG579mxC9mXG_mbYtYoxvGAyc2D_6BfYvjxwS1KPuQbEWaBXcbY7kh98w==",
+    "medico_solicitante_crm": "medico_teste",
+    "especialidade_id": 2,
+    "sintomas_json": [
+      {
+        "id": 5,
+        "nome": "Febre alta"
+      }
+    ],
+    "gravidade": "AMARELO",
+    "status": "AGENDADO",
+    "criado_em": "2026-06-19T11:57:03.365454+00:00",
+    "atualizado_em": "2026-06-19T11:57:05.390916+00:00",
+    "deleted_at": null
+  },
+  {
+    "id": 42,
+    "paciente_cns": "gAAAAABqNS6R-_UP2OcREOPYFmeBLm7OihprKDAxe8deBEQyUhqAZNKcyN4qdlh2ee46PTAZzu2PQEK3mRhevPRlGQuet_dclA==",
+    "medico_solicitante_crm": "medico_teste",
+    "especialidade_id": 3,
+    "sintomas_json": [
+      {
+        "id": 99,
+        "nome": "Tosse leve"
+      }
+    ],
+    "gravidade": "VERDE",
+    "status": "AGENDADO",
+    "criado_em": "2026-06-19T11:57:05.419160+00:00",
+    "atualizado_em": "2026-06-19T11:57:07.444401+00:00",
+    "deleted_at": null
+  },
+  {
+    "id": 43,
+    "paciente_cns": "gAAAAABqNS6TGsmZpnBQHOcqPWg-b5TevS10UXyExM8T9fyLEVvR8UhHy78J9S8T_sJWR4Ah7vbE0WGejNMWaI3qQdD7HfqZnA==",
+    "medico_solicitante_crm": "medico_teste",
+    "especialidade_id": 2,
+    "sintomas_json": [
+      {
+        "id": 5,
+        "nome": "Febre alta"
+      }
+    ],
+    "gravidade": "AMARELO",
+    "status": "AGENDADO",
+    "criado_em": "2026-06-19T11:57:07.469990+00:00",
+    "atualizado_em": "2026-06-19T11:57:09.494853+00:00",
+    "deleted_at": null
+  },
+  {
+    "id": 44,
+    "paciente_cns": "gAAAAABqNS-VOYPrp9jB5mPuz7Ux6uHVFHjHtYMoCoCv2v1gCVHvDpC1nykp7Al81zRuciwX9C6F6xhK5ZBkauTVj1OvdnDBxg==",
+    "medico_solicitante_crm": "-",
+    "especialidade_id": 5,
+    "sintomas_json": [
+      {
+        "id": 1,
+        "nome": "Cegueira"
+      },
+      {
+        "id": 2,
+        "nome": "Infarto"
+      },
+      {
+        "id": 3,
+        "nome": "AVC"
+      },
+      {
+        "id": 5,
+        "nome": "Febre alta"
+      }
+    ],
+    "gravidade": "VERMELHO",
+    "status": "AGENDADO",
+    "criado_em": "2026-06-19T12:01:25.338893+00:00",
+    "atualizado_em": "2026-06-19T12:01:27.373924+00:00",
+    "deleted_at": null
+  },
+  {
+    "id": 45,
+    "paciente_cns": "gAAAAABqNS--6L4pEOGCsG1b2jgUXybkatbRRhch4ZX7HWVkBVQ31Jvah8HRHVA_UxsAPdWIkJIJ46MJvsJeNUvJkQNfUtFR8g==",
+    "medico_solicitante_crm": "-",
+    "especialidade_id": 9,
+    "sintomas_json": [
+      {
+        "id": 1,
+        "nome": "Cegueira"
+      },
+      {
+        "id": 2,
+        "nome": "Infarto"
+      },
+      {
+        "id": 3,
+        "nome": "AVC"
+      },
+      {
+        "id": 4,
+        "nome": "Dor torácica intensa"
+      },
+      {
+        "id": 5,
+        "nome": "Febre alta"
+      },
+      {
+        "id": 6,
+        "nome": "Fratura"
+      }
+    ],
+    "gravidade": "VERMELHO",
+    "status": "AGENDADO",
+    "criado_em": "2026-06-19T12:02:06.843455+00:00",
+    "atualizado_em": "2026-06-19T12:02:08.858943+00:00",
+    "deleted_at": null
+  },
+  {
+    "id": 46,
+    "paciente_cns": "gAAAAABqNTEx8MMayRF7odEETDQpisus1Nv6tZ6c9sTPu_gyGvLboITt6hIRa6682upzuAiGORAHNa_UGrUF1_sd7kpiMc97Dg==",
+    "medico_solicitante_crm": "medico_teste",
+    "especialidade_id": 1,
+    "sintomas_json": [
+      {
+        "id": 1,
+        "nome": "Cegueira"
+      }
+    ],
+    "gravidade": "VERMELHO",
+    "status": "PENDENTE",
+    "criado_em": "2026-06-19T12:08:17.065569+00:00",
+    "atualizado_em": "2026-06-19T12:08:17.065569+00:00",
+    "deleted_at": null
+  },
+  {
+    "id": 47,
+    "paciente_cns": "gAAAAABqNTEx3T-NdLpOjtyol9_9ZoEQXUFIsK-rcHJP-lOFTD6Wi3-rGUeYqWyP1dMXg90hozbvTMPgH1p_sbmYGmuefDztwQ==",
+    "medico_solicitante_crm": "medico_teste",
+    "especialidade_id": 1,
+    "sintomas_json": [
+      {
+        "id": 1,
+        "nome": "Cegueira"
+      }
+    ],
+    "gravidade": "VERMELHO",
+    "status": "PENDENTE",
+    "criado_em": "2026-06-19T12:08:17.079541+00:00",
+    "atualizado_em": "2026-06-19T12:08:17.079541+00:00",
+    "deleted_at": null
+  },
+  {
+    "id": 48,
+    "paciente_cns": "gAAAAABqNTExT346qHwn4t4xV4AwZlUz3zDwpzpcuOGKSu33Y8kYC6eF8xZftNT1ijYULgwJn3E41IoJAKXSZOG51R0gj2ynZA==",
+    "medico_solicitante_crm": "medico_teste",
+    "especialidade_id": 2,
+    "sintomas_json": [
+      {
+        "id": 5,
+        "nome": "Febre alta"
+      }
+    ],
+    "gravidade": "AMARELO",
+    "status": "PENDENTE",
+    "criado_em": "2026-06-19T12:08:17.092998+00:00",
+    "atualizado_em": "2026-06-19T12:08:17.092998+00:00",
+    "deleted_at": null
+  },
+  {
+    "id": 49,
+    "paciente_cns": "gAAAAABqNTExf3ixKG6Bre3J-GHWZIjD5klUWrclwwlfiujSecpD7j3IYsYzevwxsQD6-c3edzzQ9iMoOsb2DaN7HIMj5lo4sQ==",
+    "medico_solicitante_crm": "medico_teste",
+    "especialidade_id": 3,
+    "sintomas_json": [
+      {
+        "id": 99,
+        "nome": "Tosse leve"
+      }
+    ],
+    "gravidade": "VERDE",
+    "status": "PENDENTE",
+    "criado_em": "2026-06-19T12:08:17.106915+00:00",
+    "atualizado_em": "2026-06-19T12:08:17.106915+00:00",
+    "deleted_at": null
+  },
+  {
+    "id": 50,
+    "paciente_cns": "gAAAAABqNTExMA_BUI4sZdCjTc_GLVg5CyqvrO9g1Q2qknQ2I_owx1zmUHnu2jWsHS49MDAB4V7anLttUx3c1h3p9bhbVFPItA==",
+    "medico_solicitante_crm": "medico_teste",
+    "especialidade_id": 2,
+    "sintomas_json": [
+      {
+        "id": 5,
+        "nome": "Febre alta"
+      }
+    ],
+    "gravidade": "AMARELO",
+    "status": "PENDENTE",
+    "criado_em": "2026-06-19T12:08:17.121446+00:00",
+    "atualizado_em": "2026-06-19T12:08:17.121446+00:00",
+    "deleted_at": null
+  },
+  {
+    "id": 51,
+    "paciente_cns": "gAAAAABqNTG6LEdxjeQFrSma5ccivAkz0zjkXoqON2UXMRbRgRrXPCVHNn_ZxuM7IX7faHaWcTbqrb-3bN9gcSP3axIFR2RCfg==",
+    "medico_solicitante_crm": "-",
+    "especialidade_id": 67,
+    "sintomas_json": [
+      {
+        "id": 1,
+        "nome": "Cegueira"
+      },
+      {
+        "id": 2,
+        "nome": "Infarto"
+      },
+      {
+        "id": 3,
+        "nome": "AVC"
+      },
+      {
+        "id": 5,
+        "nome": "Febre alta"
+      }
+    ],
+    "gravidade": "VERMELHO",
+    "status": "PENDENTE",
+    "criado_em": "2026-06-19T12:10:34.171883+00:00",
+    "atualizado_em": "2026-06-19T12:10:34.171883+00:00",
     "deleted_at": null
   }
 ]
