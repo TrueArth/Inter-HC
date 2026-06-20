@@ -63,16 +63,18 @@ async def _get_sqlite_interconsulta_provider() -> InterconsultaPostgresProvider:
 # Overrides de dependências do FastAPI
 # ────────────────────────────────────────────────────────────────
 def _mock_current_user():
-    """Simula um token JWT decodificado válido."""
-    return {"name": "medico_teste", "sub": "medico_teste", "groups": ["Users"]}
+    """Simula um token JWT decodificado válido com privilégios de teste."""
+    return {
+        "name": "medico_teste",
+        "sub": "medico_teste",
+        "groups": ["GLO-SEC-HCPE-SETISD", "Medicos", "Users"],
+        "role": "admin"
+    }
 
 
 # A factory get_interconsulta_provider retorna uma função de dependência.
 # Precisamos sobrescrever a função interna que ela retorna.
 from src.dependencies import _get_interconsulta_postgres_provider
-
-app.dependency_overrides[_get_interconsulta_postgres_provider] = _get_sqlite_interconsulta_provider
-app.dependency_overrides[get_current_user] = _mock_current_user
 
 
 # ────────────────────────────────────────────────────────────────
@@ -91,11 +93,14 @@ async def create_tables():
 @pytest_asyncio.fixture()
 async def client():
     """AsyncClient com transporte ASGI — faz chamadas HTTP reais ao app FastAPI."""
+    app.dependency_overrides[_get_interconsulta_postgres_provider] = _get_sqlite_interconsulta_provider
+    app.dependency_overrides[get_current_user] = _mock_current_user
     async with AsyncClient(
         transport=ASGITransport(app=app),
         base_url="http://testserver",
     ) as ac:
         yield ac
+    app.dependency_overrides.clear()
 
 
 # ────────────────────────────────────────────────────────────────

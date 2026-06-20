@@ -17,8 +17,10 @@ class InterconsultaResponse(BaseModel):
     paciente_cns: str
     medico_solicitante_crm: str
     especialidade_id: int
+    sintomas_json: List[Sintoma] = Field(default_factory=list)
     gravidade: str
     status: str
+    marcado_por: Optional[str] = None
     criado_em: Optional[datetime] = None
     atualizado_em: Optional[datetime] = None
     score_prioridade: Optional[float] = None

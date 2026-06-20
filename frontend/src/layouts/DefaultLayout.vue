@@ -26,20 +26,16 @@
 
 
 
-            <router-link to="/exemplos" class="flex items-center space-x-2 py-2.5 px-4 rounded transition duration-200 hover:bg-paper-active-link hover:text-white">
-              <BeakerIcon class="h-6 w-6" />
-              <span>Exemplos</span>
-            </router-link>
             <router-link v-if="authStore.isAuthenticated && authStore.isAdmin" to="/pacientes" class="flex items-center space-x-2 py-2.5 px-4 rounded transition duration-200 hover:bg-paper-active-link hover:text-white">
               <UsersIcon class="h-6 w-6" />
               <span>Pacientes</span>
             </router-link>
-            <router-link to="/leitos" class="flex items-center space-x-2 py-2.5 px-4 rounded transition duration-200 hover:bg-paper-active-link hover:text-white">
-    <CubeTransparentIcon class="h-5 w-5" />
-    <span>Leitos</span>
-  </router-link>
+            <router-link v-if="authStore.isAuthenticated && (authStore.isAdmin || authStore.isMedico)" to="/leitos" class="flex items-center space-x-2 py-2.5 px-4 rounded transition duration-200 hover:bg-paper-active-link hover:text-white">
+              <CubeTransparentIcon class="h-5 w-5" />
+              <span>Leitos</span>
+            </router-link>
             <router-link
-              v-if="authStore.isAuthenticated && isMedico"
+              v-if="authStore.isAuthenticated && (authStore.isAdmin || authStore.isMedico)"
               to="/interconsultas"
               class="flex items-center space-x-2 py-2.5 px-4 rounded transition duration-200 hover:bg-paper-active-link hover:text-white"
             >
@@ -47,7 +43,7 @@
               <span>Interconsultas</span>
             </router-link>
             <router-link
-              v-if="authStore.isAuthenticated && authStore.isAdmin"
+              v-if="authStore.isAuthenticated && (authStore.isAdmin || authStore.isRegulador)"
               to="/central-marcacao"
               class="flex items-center space-x-2 py-2.5 px-4 rounded transition duration-200 hover:bg-paper-active-link hover:text-white"
             >
@@ -91,11 +87,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue';
+import { ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import {
   HomeIcon,
-  BeakerIcon,
   UsersIcon,
   ShieldCheckIcon,
   CubeTransparentIcon,
@@ -112,10 +107,6 @@ const sidebarOpen = ref(false);
 const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
-
-const isMedico = computed(() => {
-  return authStore.user?.groups?.includes('Medicos') || false;
-});
 
 // Close sidebar on route change
 watch(() => route.path, () => {

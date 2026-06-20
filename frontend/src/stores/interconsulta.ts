@@ -28,6 +28,7 @@ export interface InterconsultaPedido {
   gravidade: string;
   status: string;
   sintomas_json?: any;
+  marcado_por?: string | null;
   criado_em?: string | null;
   atualizado_em?: string | null;
   dias_na_fila?: number;

@@ -64,3 +64,30 @@ def get_interconsulta_provider(strategy: str = "POSTGRES") -> Callable[..., Inte
         return _get_interconsulta_mock_provider
     else:
         raise ValueError(f"Estratégia de interconsulta desconhecida: {selected_strategy}")
+
+# --- User Provider Factory ---
+from .providers.interfaces.user_provider_interface import UserProviderInterface
+from .providers.implementations.user_postgres_provider import UserPostgresProvider
+from .providers.implementations.user_mock_provider import UserMockProvider
+
+def _get_user_postgres_provider(
+    session: AsyncSession = Depends(get_app_db_session)
+) -> UserProviderInterface:
+    dialect = session.bind.dialect.name if session.bind else "postgresql"
+    return UserPostgresProvider(session=session, dialect=dialect)
+
+def _get_user_mock_provider() -> UserProviderInterface:
+    return UserMockProvider()
+
+def get_user_provider(strategy: str = "POSTGRES") -> Callable[..., UserProviderInterface]:
+    env_strategy = os.getenv("USER_PROVIDER_TYPE", None)
+    if not env_strategy:
+        env_strategy = os.getenv("INTERCONSULTA_PROVIDER_TYPE", "POSTGRES")
+    selected_strategy = env_strategy if env_strategy is not None else strategy
+    
+    if selected_strategy.upper() == "POSTGRES":
+        return _get_user_postgres_provider
+    elif selected_strategy.upper() == "MOCK":
+        return _get_user_mock_provider
+    else:
+        raise ValueError(f"Estratégia de usuário desconhecida: {selected_strategy}")

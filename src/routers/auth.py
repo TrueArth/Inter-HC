@@ -43,15 +43,10 @@ async def login(
     """
 
     try:
-
-        user = await run_in_threadpool(auth_handler.authenticate_user, form_data.username, form_data.password)
-
+        user = await auth_handler.authenticate_user(form_data.username, form_data.password, db=db)
     except HTTPException as e:
-
         raise e
-
     except Exception as e:
-
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"An unexpected error occurred: {e}")
 
 
@@ -112,7 +107,7 @@ async def refresh_token(request: Request, response: Response, db: AsyncSession =
 
     # Re-fetch full user data to ensure the new token has all AD attributes
     try:
-        user_full_info = await run_in_threadpool(auth_handler.authenticate_user, token_obj.user_id, None) # Pass None for password as we are re-authenticating
+        user_full_info = await auth_handler.authenticate_user(token_obj.user_id, None, db=db) # Pass None for password as we are re-authenticating
     except HTTPException as e:
         # Handle cases where the user might not exist in AD anymore
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=f"Failed to re-authenticate user: {e.detail}")

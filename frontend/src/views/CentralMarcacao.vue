@@ -222,6 +222,10 @@
                 <p class="text-xs text-gray-600 mt-0.5">{{ formatarData(pedidoSelecionado.atualizado_em) }}</p>
               </div>
             </div>
+            <div v-if="pedidoSelecionado.marcado_por" class="pt-2 border-t border-gray-100">
+              <p class="text-xs font-semibold text-gray-400 uppercase">Marcado Por (Regulação)</p>
+              <p class="text-sm font-semibold text-blue-700 mt-0.5">@{{ pedidoSelecionado.marcado_por }}</p>
+            </div>
           </div>
 
           <!-- Gravidade e Status -->

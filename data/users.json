@@ -1,0 +1,57 @@
+[
+  {
+    "id": 1,
+    "username": "new_medico",
+    "hashed_password": "pbkdf2_sha256$100000$b4fbf231f16999b7720f9a838673d72b$f0ebe4ddda06d42ea62e9e351f4121022ea0e4a1da1a14f791388f9438b15519",
+    "display_name": "Dr. Gregory House",
+    "role": "medico",
+    "email": "gregory@ufpe.br",
+    "created_at": "2026-06-20T04:43:52.874347+00:00",
+    "updated_at": "2026-06-20T04:43:52.936313+00:00",
+    "deleted_at": "2026-06-20T04:43:52.936313+00:00"
+  },
+  {
+    "id": 2,
+    "username": "new_medico",
+    "hashed_password": "pbkdf2_sha256$100000$84df8f533722f216d8e612e884e233b3$1c02cafbc9225a09a10fa1a6b438ae33fdbd89f33b85854412f19918c72fd73b",
+    "display_name": "Dr. Gregory House",
+    "role": "medico",
+    "email": "gregory@ufpe.br",
+    "created_at": "2026-06-20T04:44:45.492528+00:00",
+    "updated_at": "2026-06-20T04:44:45.520905+00:00",
+    "deleted_at": "2026-06-20T04:44:45.520905+00:00"
+  },
+  {
+    "id": 3,
+    "username": "new_medico",
+    "hashed_password": "pbkdf2_sha256$100000$55a66a290f05011436ea991104ed0a95$7d83744f41590d68358876565acb6fb3a61a88975a36d90591bb7929f621bd21",
+    "display_name": "Dr. Gregory House",
+    "role": "medico",
+    "email": "gregory@ufpe.br",
+    "created_at": "2026-06-20T04:46:09.009231+00:00",
+    "updated_at": "2026-06-20T04:46:09.053946+00:00",
+    "deleted_at": "2026-06-20T04:46:09.053946+00:00"
+  },
+  {
+    "id": 4,
+    "username": "new_medico",
+    "hashed_password": "pbkdf2_sha256$100000$2666afd99dbcadc70df8ee2eb9130ba9$f6facd25ea92ba18338d532c53fcd137fb61978dd4b309ff8c738222016290e4",
+    "display_name": "Dr. Gregory House",
+    "role": "medico",
+    "email": "gregory@ufpe.br",
+    "created_at": "2026-06-20T04:50:09.556330+00:00",
+    "updated_at": "2026-06-20T04:50:09.628775+00:00",
+    "deleted_at": "2026-06-20T04:50:09.628775+00:00"
+  },
+  {
+    "id": 5,
+    "username": "new_medico",
+    "hashed_password": "pbkdf2_sha256$100000$33c5b3fb7d02195bee85e3c2148b436f$a15496f24b2c5ea7e018eaafc389e1a247f4c6cde9b03b15a4ea9d155b6e468c",
+    "display_name": "Dr. Gregory House",
+    "role": "medico",
+    "email": "gregory@ufpe.br",
+    "created_at": "2026-06-20T04:50:42.030121+00:00",
+    "updated_at": "2026-06-20T04:50:42.084162+00:00",
+    "deleted_at": "2026-06-20T04:50:42.084162+00:00"
+  }
+]

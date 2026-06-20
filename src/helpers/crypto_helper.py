@@ -45,3 +45,29 @@ def decrypt_data(encrypted_data: str) -> str:
     except InvalidToken:
         logger.warning("Falha ao descriptografar: chave diferente da usada na criptografia.")
         raise
+
+
+import hashlib
+import hmac
+
+def hash_password(password: str) -> str:
+    """Gera o hash PBKDF2-SHA256 de uma senha para armazenamento seguro."""
+    salt = os.urandom(16)
+    rounds = 100000
+    db_hash = hashlib.pbkdf2_hmac('sha256', password.encode(), salt, rounds)
+    return f"pbkdf2_sha256${rounds}${salt.hex()}${db_hash.hex()}"
+
+
+def verify_password(password: str, hashed: str) -> bool:
+    """Verifica se a senha coincide com o hash fornecido."""
+    try:
+        parts = hashed.split('$')
+        if len(parts) != 4 or parts[0] != 'pbkdf2_sha256':
+            return False
+        rounds = int(parts[1])
+        salt = bytes.fromhex(parts[2])
+        original_hash = bytes.fromhex(parts[3])
+        db_hash = hashlib.pbkdf2_hmac('sha256', password.encode(), salt, rounds)
+        return hmac.compare_digest(original_hash, db_hash)
+    except Exception:
+        return False

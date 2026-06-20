@@ -82,12 +82,12 @@ class InterconsultaController:
         return {"message": "Pedido cancelado com sucesso."}
 
     @staticmethod
-    async def atualizar_status(pedido_id: int, status: str, provider: InterconsultaProviderInterface) -> dict:
+    async def atualizar_status(pedido_id: int, status: str, provider: InterconsultaProviderInterface, marcado_por: str = None) -> dict:
         """
         Atualiza o status de um pedido de interconsulta.
         """
         try:
-            sucesso = await provider.atualizar_status_pedido(pedido_id, status)
+            sucesso = await provider.atualizar_status_pedido(pedido_id, status, marcado_por=marcado_por)
             if not sucesso:
                 raise HTTPException(status_code=404, detail="Pedido não encontrado ou inativo.")
             return {"message": "Status atualizado com sucesso.", "pedido_id": pedido_id, "novo_status": status}

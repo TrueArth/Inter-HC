@@ -4,7 +4,6 @@ import Home from '../views/Home.vue';
 import Login from '../views/Login.vue';
 import Admin from '../views/Admin.vue';
 
-import Exemplos from '../views/Exemplos.vue';
 import Pacientes from '../views/Pacientes.vue';
 import Leitos from '../views/Leitos.vue';
 import Interconsultas from '../views/Interconsultas.vue';
@@ -28,12 +27,6 @@ const routes = [
     component: Admin,
     meta: { requiresAuth: true, requiresAdmin: true },
   },
-
-  {
-    path: '/exemplos',
-    name: 'Exemplos',
-    component: Exemplos,
-  },
   {
     path: '/pacientes',
     name: 'Pacientes',
@@ -44,19 +37,19 @@ const routes = [
     path: '/leitos',
     name: 'Leitos',
     component: Leitos,
-    meta: { requiresAuth: true }, // Remova se não precisar de login
+    meta: { requiresAuth: true },
   },
   {
     path: '/interconsultas',
     name: 'Interconsultas',
     component: Interconsultas,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, requiresMedico: true },
   },
   {
     path: '/central-marcacao',
     name: 'Central de Marcação',
     component: CentralMarcacao,
-    meta: { requiresAuth: true, requiresAdmin: true },
+    meta: { requiresAuth: true, requiresRegulador: true },
   },
 ];
 
@@ -68,12 +61,15 @@ const router = createRouter({
 });
 
 router.beforeEach((to, _from, next: NavigationGuardNext) => {
-  // Pinia store must be used inside a function to ensure it's initialized
   const authStore = useAuthStore();
 
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
     next({ name: 'Login' });
   } else if (to.meta.requiresAdmin && !authStore.isAdmin) {
+    next({ name: 'Home' });
+  } else if (to.meta.requiresMedico && !(authStore.isAdmin || authStore.isMedico)) {
+    next({ name: 'Home' });
+  } else if (to.meta.requiresRegulador && !(authStore.isAdmin || authStore.isRegulador)) {
     next({ name: 'Home' });
   } else {
     next();

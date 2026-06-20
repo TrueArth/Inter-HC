@@ -3,22 +3,22 @@
 @theme {
   --font-family-sans: 'Nunito', sans-serif;
 
-  --color-paper-bg: #f4f3ef;
-  --color-paper-text: #66615b;
-  --color-paper-sidebar: #424242;
-  --color-paper-active-link: #5a5a5a; /* Light Gray for active link */
+  --color-paper-bg: #f4f6fa;
+  --color-paper-text: #2c3e50;
+  --color-paper-sidebar: #0b2240; /* Navy Blue - HC-UFPE */
+  --color-paper-active-link: #1e40af; /* Active Blue */
 
   /* Default */
-  --color-paper-default: #66615b;
-  --color-paper-default-hover: #55504a;
+  --color-paper-default: #475569;
+  --color-paper-default-hover: #334155;
 
   /* Primary */
-  --color-paper-primary: #7a9e9f;
-  --color-paper-primary-hover: #6a8d8e;
+  --color-paper-primary: #0f4c81; /* Brand Blue - HC-UFPE */
+  --color-paper-primary-hover: #0b3a63;
 
   /* Info */
-  --color-paper-info: #68b3c8;
-  --color-paper-info-hover: #58a2b7;
+  --color-paper-info: #3b82f6;
+  --color-paper-info-hover: #2563eb;
 
   /* Success */
   --color-paper-success: #7ac29a;

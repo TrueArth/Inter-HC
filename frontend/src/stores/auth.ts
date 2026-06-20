@@ -5,6 +5,7 @@ import api from '../services/api';
 interface User {
   username: string;
   groups: string[];
+  role?: string;
   givenName?: string[];
   userPrincipalName?: string[];
   title?: string[];
@@ -19,7 +20,15 @@ export const useAuthStore = defineStore('auth', () => {
   const isAuthenticated = computed(() => !!accessToken.value);
   const isAdmin = computed(() => {
     const ADMIN_GROUP = "GLO-SEC-HCPE-SETISD"; 
-    return user.value?.groups?.includes(ADMIN_GROUP) || false;
+    return user.value?.role === 'admin' || user.value?.groups?.includes(ADMIN_GROUP) || false;
+  });
+
+  const isMedico = computed(() => {
+    return user.value?.role === 'medico' || user.value?.groups?.includes('Medicos') || false;
+  });
+
+  const isRegulador = computed(() => {
+    return user.value?.role === 'regulador' || user.value?.groups?.includes('Reguladores') || false;
   });
 
   function setToken(token: string) {
@@ -103,6 +112,8 @@ export const useAuthStore = defineStore('auth', () => {
     user, 
     isAuthenticated, 
     isAdmin, 
+    isMedico,
+    isRegulador,
     login, 
     logout,
     setToken,

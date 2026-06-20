@@ -19,6 +19,7 @@ class InterconsultaPedido(Base):
     
     gravidade = Column(String, nullable=False) # VERMELHO, AMARELO, VERDE
     status = Column(String, nullable=False, default="PENDENTE") # PENDENTE, ENFILEIRADO, AGENDADO, ERRO
+    marcado_por = Column(String, nullable=True) # Identifica o marcador que agendou a consulta
     
     criado_em = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     atualizado_em = Column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))

@@ -23,12 +23,30 @@ router = APIRouter(
 
 # --- Endpoints ---
 
+async def verify_medico_user(current_user: dict = Depends(get_current_user)):
+    role = current_user.get("role")
+    if role:
+        if role not in ["medico", "admin"]:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN, 
+                detail="Acesso negado: Apenas médicos ou administradores possuem acesso a esta operação."
+            )
+    else:
+        groups = current_user.get("groups", [])
+        ADMIN_GROUP = "GLO-SEC-HCPE-SETISD"
+        if "Medicos" not in groups and ADMIN_GROUP not in groups:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN, 
+                detail="Acesso negado: Apenas médicos ou administradores possuem acesso a esta operação."
+            )
+    return current_user
+
 @router.post("/", response_model=InterconsultaResponse, status_code=status.HTTP_201_CREATED)
 async def criar_interconsulta(
     payload: InterconsultaCreate,
     background_tasks: BackgroundTasks,
     provider: InterconsultaProviderInterface = Depends(get_interconsulta_provider(strategy="POSTGRES")),
-    current_user: dict = Depends(get_current_user)  # Exige token JWT
+    current_user: dict = Depends(verify_medico_user)  # Exige token JWT de médico/admin
 ):
     """
     Submete um novo pedido de interconsulta.
@@ -47,17 +65,26 @@ async def criar_interconsulta(
 
 async def verify_regulator_user(current_user: dict = Depends(get_current_user)):
     ADMIN_GROUP = "GLO-SEC-HCPE-SETISD"
-    if ADMIN_GROUP not in current_user.get("groups", []):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN, 
-            detail="Acesso negado: Apenas a equipe de regulação da Central de Marcação possui acesso a esta operação."
-        )
+    role = current_user.get("role")
+    if role:
+        if role not in ["regulador", "admin"]:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN, 
+                detail="Acesso negado: Apenas a equipe de regulação da Central de Marcação possui acesso a esta operação."
+            )
+    else:
+        groups = current_user.get("groups", [])
+        if ADMIN_GROUP not in groups and "Reguladores" not in groups:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN, 
+                detail="Acesso negado: Apenas a equipe de regulação da Central de Marcação possui acesso a esta operação."
+            )
     return current_user
 
 @router.get("/", response_model=List[InterconsultaResponse])
 async def listar_interconsultas(
     provider: InterconsultaProviderInterface = Depends(get_interconsulta_provider(strategy="POSTGRES")),
-    current_user: dict = Depends(get_current_user)
+    current_user: dict = Depends(verify_regulator_user) # Exige regulador ou admin
 ):
     """
     Lista todos os pedidos ativos (Soft Delete out), ordenados por prioridade clínica.
@@ -68,7 +95,7 @@ async def listar_interconsultas(
 async def inativar_interconsulta(
     pedido_id: int,
     provider: InterconsultaProviderInterface = Depends(get_interconsulta_provider(strategy="POSTGRES")),
-    current_user: dict = Depends(get_current_user)
+    current_user: dict = Depends(verify_medico_user) # Apenas médico/admin
 ):
     """
     Realiza o Soft Delete em um pedido de interconsulta (obrigatório LGPD).
@@ -85,7 +112,8 @@ async def atualizar_status_pedido(
     """
     Atualiza o status de uma interconsulta. Apenas para reguladores/admin.
     """
-    return await InterconsultaController.atualizar_status(pedido_id, payload.status, provider)
+    username = current_user.get("username") or current_user.get("sub") or "regulador"
+    return await InterconsultaController.atualizar_status(pedido_id, payload.status, provider, marcado_por=username)
 
 @router.post("/{pedido_id}/retry")
 async def reprocessar_pedido(

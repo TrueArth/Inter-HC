@@ -6,6 +6,7 @@ SELECT
     sintomas_json, 
     gravidade, 
     status, 
+    marcado_por,
     criado_em, 
     atualizado_em
 FROM interconsulta_pedidos

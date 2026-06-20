@@ -27,43 +27,102 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/login")
 class AuthProviderInterface(ABC):
     """Interface para provedores de autenticação."""
     @abstractmethod
-    def authenticate_user(self, username, password) -> dict:
+    async def authenticate_user(self, username, password, db=None) -> dict:
         pass
 
 class MockAuthProvider(AuthProviderInterface):
-    """Provedor de autenticação mock para desenvolvimento offline."""
-    def authenticate_user(self, username, password) -> dict:
-        print("--- Using Mock Authentication ---")
+    """Provedor de autenticação mock para desenvolvimento offline, integrado com banco local."""
+    async def authenticate_user(self, username, password, db=None) -> dict:
+        print("--- Authenticating with MockAuthProvider ---")
+        
+        # 1. Tentativa de autenticação no banco local se o banco estiver presente
+        if db is not None:
+            try:
+                from ..helpers.crypto_helper import verify_password
+                from ..providers.implementations.user_postgres_provider import UserPostgresProvider
+                
+                dialect = db.bind.dialect.name if db.bind else "postgresql"
+                provider = UserPostgresProvider(session=db, dialect=dialect)
+                
+                # Se a tabela de usuários estiver vazia, cria o admin inicial
+                usuarios = await provider.listar_usuarios()
+                if not usuarios:
+                    from ..helpers.crypto_helper import hash_password
+                    admin_initial = {
+                        "username": "admin",
+                        "hashed_password": hash_password("admin"),
+                        "display_name": "Administrador do Sistema",
+                        "role": "admin",
+                        "email": "admin@ufpe.br"
+                    }
+                    await provider.inserir_usuario(admin_initial)
+                
+                user_db = await provider.buscar_usuario_por_username(username)
+                if user_db:
+                    # Se password for None, estamos re-autenticando no refresh, aceita
+                    if password is None or verify_password(password, user_db["hashed_password"]):
+                        admin_group = "GLO-SEC-HCPE-SETISD"
+                        role = user_db["role"]
+                        groups = ["Users"]
+                        if role == "admin":
+                            groups.extend([admin_group, "Medicos"])
+                        elif role == "medico":
+                            groups.append("Medicos")
+                        elif role == "regulador":
+                            groups.append("Reguladores")
+                            
+                        return {
+                            "username": user_db["username"],
+                            "displayName": [user_db["display_name"]],
+                            "name": user_db["display_name"],
+                            "groups": groups,
+                            "role": role,
+                            "email": user_db.get("email") or ""
+                        }
+                    else:
+                        raise HTTPException(
+                            status_code=status.HTTP_401_UNAUTHORIZED, 
+                            detail="Credenciais inválidas no banco de dados local"
+                        )
+            except HTTPException:
+                raise
+            except Exception as e:
+                print(f"Erro na autenticação local do banco (continuando para fallback): {e}")
+                
+        # 2. Fallback para usuários mock estáticos (compatibilidade de teste e desenvolvimento)
+        print("--- Using Static Mock Fallback ---")
         admin_group = "GLO-SEC-HCPE-SETISD"
-        if username == "admin" and password == "admin":
-            print(f"Authentication successful for mock user: {username}")
+        if username == "admin" and (password is None or password == "admin"):
             return {
                 "username": "admin",
                 "displayName": ["Mock Admin"],
+                "name": "Mock Admin",
                 "groups": [admin_group, "Medicos", "Users"],
+                "role": "admin",
                 "email": "admin@mock.com"
             }
-        elif username == "medico" and password == "medico":
-            print(f"Authentication successful for mock user: {username}")
+        elif username == "medico" and (password is None or password == "medico"):
             return {
                 "username": "medico",
                 "displayName": ["Mock Medico"],
+                "name": "Mock Medico",
                 "groups": ["Medicos", "Users"],
+                "role": "medico",
                 "email": "medico@mock.com"
             }
-        elif username == "regulador" and password == "regulador":
-            print(f"Authentication successful for mock user: {username}")
+        elif username == "regulador" and (password is None or password == "regulador"):
             return {
                 "username": "regulador",
                 "displayName": ["Mock Regulador"],
-                "groups": [admin_group, "Users"],
+                "name": "Mock Regulador",
+                "groups": ["Reguladores", "Users"],  # Reguladores apenas!
+                "role": "regulador",
                 "email": "regulador@mock.com"
             }
         else:
-            print(f"Authentication failed for mock user: {username}")
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED, 
-                detail="Invalid mock credentials"
+                detail="Credenciais inválidas"
             )
 
 class ActiveDirectoryAuthProvider(AuthProviderInterface):
@@ -76,7 +135,7 @@ class ActiveDirectoryAuthProvider(AuthProviderInterface):
         if not self.ad_url or not self.ad_basedn:
             raise RuntimeError("Active Directory is not configured. Check .env file.")
 
-    def authenticate_user(self, username, password) -> dict:
+    async def authenticate_user(self, username, password, db=None) -> dict:
         print(f"--- Starting AD Authentication (ldap3) for user: {username} ---")
         try:
             server = Server(self.ad_url, get_info=ALL)
@@ -167,8 +226,8 @@ class AuthHandler:
             print("WARNING: AD environment variables not found. Using Mock authentication.")
             self.provider: AuthProviderInterface = MockAuthProvider()
 
-    def authenticate_user(self, username, password):
-        return self.provider.authenticate_user(username, password)
+    async def authenticate_user(self, username, password, db=None):
+        return await self.provider.authenticate_user(username, password, db=db)
 
     def create_access_token(self, data: dict, expires_delta: timedelta | None = None):
         to_encode = data.copy()
