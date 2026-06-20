@@ -37,7 +37,7 @@ class InterconsultaController:
         sintomas = payload.get("sintomas_json", [])
         
         # 1. Processamento pelo Motor de Regras
-        gravidade = RiskEngineService.calcular_gravidade(sintomas)
+        gravidade = RiskEngineService.calcular_gravidade(sintomas, payload.get("especialidade_id"))
         payload["gravidade"] = gravidade
         payload["status"] = "PENDENTE"
         

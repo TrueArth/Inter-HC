@@ -34,13 +34,48 @@ export interface InterconsultaPedido {
   score_prioridade?: number;
 }
 
+export interface EspecialidadeCatalogoItem {
+  id: number;
+  nome: string;
+}
+
+export const ESPECIALIDADES_CATALOGO: EspecialidadeCatalogoItem[] = [
+  { id: 1, nome: 'Cardiologia' },
+  { id: 2, nome: 'Clínica Médica' },
+  { id: 3, nome: 'Dermatologia' },
+  { id: 4, nome: 'Endocrinologia' },
+  { id: 5, nome: 'Gastroenterologia' },
+  { id: 6, nome: 'Geriatria' },
+  { id: 7, nome: 'Hematologia' },
+  { id: 8, nome: 'Infectologia' },
+  { id: 9, nome: 'Medicina de Família e Comunidade' },
+  { id: 10, nome: 'Medicina do Trabalho' },
+  { id: 11, nome: 'Nefrologia' },
+  { id: 12, nome: 'Neurologia' },
+  { id: 13, nome: 'Oncologia (Alta Complexidade - CACON)' },
+  { id: 14, nome: 'Pediatria' },
+  { id: 15, nome: 'Pneumologia' },
+  { id: 16, nome: 'Psiquiatria' },
+  { id: 17, nome: 'Reumatologia' },
+  { id: 18, nome: 'Urologia' },
+  { id: 19, nome: 'Ginecologia e Obstetrícia' },
+];
+
 export const SINTOMAS_CATALOGO_MVP: SintomaCatalogoItem[] = [
-  { id: 1, nome: 'Cegueira' },
-  { id: 2, nome: 'Infarto' },
-  { id: 3, nome: 'AVC' },
+  { id: 1, nome: 'Cegueira / Perda súbita de visão' },
+  { id: 2, nome: 'Infarto / Dor torácica súbita' },
+  { id: 3, nome: 'AVC / Perda de força unilateral' },
   { id: 4, nome: 'Dor torácica intensa' },
   { id: 5, nome: 'Febre alta' },
   { id: 6, nome: 'Fratura' },
+  { id: 7, nome: 'Ideação suicida ativa' },
+  { id: 8, nome: 'Hematúria macroscópica' },
+  { id: 9, nome: 'Nódulo tireoidiano palpável' },
+  { id: 10, nome: 'Dispneia aguda' },
+  { id: 11, nome: 'Dor abdominal intensa' },
+  { id: 12, nome: 'Convulsão' },
+  { id: 13, nome: 'Erupção cutânea com febre' },
+  { id: 14, nome: 'Confusão mental aguda' },
 ];
 
 export function mascararCns(cns: string): string {

@@ -1,8 +1,5 @@
-# motor-regras-gravidade Specification
+## MODIFIED Requirements
 
-## Purpose
-TBD - created by archiving change modulo-interconsulta. Update Purpose after archive.
-## Requirements
 ### Requirement: Cálculo Automático de Prioridade Clínica
 O sistema MUST processar o array de IDs de sintomas contido no pedido e a especialidade solicitada para calcular automaticamente o risco clínico. A priorização clínica de um sintoma MUST ser reavaliada/promovida dinamicamente baseada na especialidade de destino da interconsulta.
 
@@ -13,4 +10,3 @@ O sistema MUST processar o array de IDs de sintomas contido no pedido e a especi
 #### Scenario: Ausência de Sintomas Críticos (Verde)
 - **WHEN** o array de sintomas contiver apenas sintomas de baixa gravidade na especialidade de destino
 - **THEN** o Motor de Regras atribui a gravidade "VERDE" ao pedido antes do envio
-

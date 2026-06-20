@@ -131,7 +131,7 @@
             >
               <td class="px-4 py-3 text-sm font-medium text-gray-900">#{{ pedido.id }}</td>
               <td class="px-4 py-3 text-sm font-mono text-gray-700 font-semibold">{{ pedido.paciente_cns }}</td>
-              <td class="px-4 py-3 text-sm text-gray-600">Especialidade {{ pedido.especialidade_id }}</td>
+              <td class="px-4 py-3 text-sm text-gray-600">{{ obterNomeEspecialidade(pedido.especialidade_id) }}</td>
               <td class="px-4 py-3 text-sm">
                 <span :class="gravidadeClass(pedido.gravidade)" class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider">
                   {{ pedido.gravidade }}
@@ -204,8 +204,8 @@
             </div>
             <div class="grid grid-cols-2 gap-4">
               <div>
-                <p class="text-xs font-semibold text-gray-400 uppercase">Especialidade ID</p>
-                <p class="text-sm font-semibold text-gray-800 mt-0.5">{{ pedidoSelecionado.especialidade_id }}</p>
+                <p class="text-xs font-semibold text-gray-400 uppercase">Especialidade</p>
+                <p class="text-sm font-semibold text-gray-800 mt-0.5">{{ obterNomeEspecialidade(pedidoSelecionado.especialidade_id) }}</p>
               </div>
               <div>
                 <p class="text-xs font-semibold text-gray-400 uppercase">CRM Solicitante</p>
@@ -325,10 +325,15 @@ import {
 } from '@heroicons/vue/24/outline';
 import Card from '../components/Card.vue';
 import Button from '../components/Button.vue';
-import { useInterconsultaStore, InterconsultaPedido } from '../stores/interconsulta';
+import { useInterconsultaStore, InterconsultaPedido, ESPECIALIDADES_CATALOGO } from '../stores/interconsulta';
 
 const toast = useToast();
 const interconsultaStore = useInterconsultaStore();
+
+function obterNomeEspecialidade(id: number): string {
+  const esp = ESPECIALIDADES_CATALOGO.find((x) => x.id === id);
+  return esp ? esp.nome : `Especialidade ${id}`;
+}
 
 const pedidoSelecionado = ref<InterconsultaPedido | null>(null);
 const executingAction = ref(false);
