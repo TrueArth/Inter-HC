@@ -62,9 +62,18 @@ class InterconsultaPostgresProvider(InterconsultaProviderInterface):
             if row:
                 row_dict = dict(row)
                 if row_dict.get("paciente_cns"):
-                    row_dict["paciente_cns"] = decrypt_data(row_dict["paciente_cns"])
+                    try:
+                        row_dict["paciente_cns"] = decrypt_data(row_dict["paciente_cns"])
+                    except Exception:
+                        pass
+                if isinstance(row_dict.get("sintomas_json"), str):
+                    try:
+                        row_dict["sintomas_json"] = json.loads(row_dict["sintomas_json"])
+                    except Exception:
+                        pass
                 return row_dict
             return {}
+
 
         # Para SQLite: busca o registro recém-inserido via SELECT
         select_sql = text(
@@ -76,8 +85,17 @@ class InterconsultaPostgresProvider(InterconsultaProviderInterface):
         row = sel_result.mappings().first()
         row_dict = dict(row) if row else {}
         if row_dict.get("paciente_cns"):
-            row_dict["paciente_cns"] = decrypt_data(row_dict["paciente_cns"])
+            try:
+                row_dict["paciente_cns"] = decrypt_data(row_dict["paciente_cns"])
+            except Exception:
+                pass
+        if isinstance(row_dict.get("sintomas_json"), str):
+            try:
+                row_dict["sintomas_json"] = json.loads(row_dict["sintomas_json"])
+            except Exception:
+                pass
         return row_dict
+
 
     async def listar_pedidos_ativos(self) -> List[Dict[str, Any]]:
         """
@@ -91,9 +109,18 @@ class InterconsultaPostgresProvider(InterconsultaProviderInterface):
         for r in rows:
             p_dict = dict(r)
             if p_dict.get("paciente_cns"):
-                p_dict["paciente_cns"] = decrypt_data(p_dict["paciente_cns"])
+                try:
+                    p_dict["paciente_cns"] = decrypt_data(p_dict["paciente_cns"])
+                except Exception:
+                    pass
+            if isinstance(p_dict.get("sintomas_json"), str):
+                try:
+                    p_dict["sintomas_json"] = json.loads(p_dict["sintomas_json"])
+                except Exception:
+                    pass
             pedidos.append(p_dict)
         return pedidos
+
 
     async def inativar_pedido(self, pedido_id: int) -> bool:
         """

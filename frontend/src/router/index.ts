@@ -5,9 +5,9 @@ import Login from '../views/Login.vue';
 import Admin from '../views/Admin.vue';
 
 import Pacientes from '../views/Pacientes.vue';
-import Leitos from '../views/Leitos.vue';
 import Interconsultas from '../views/Interconsultas.vue';
 import CentralMarcacao from '../views/CentralMarcacao.vue';
+
 
 const routes = [
   {
@@ -34,13 +34,8 @@ const routes = [
     meta: { requiresAuth: true, requiresAdmin: true },
   },
   {
-    path: '/leitos',
-    name: 'Leitos',
-    component: Leitos,
-    meta: { requiresAuth: true },
-  },
-  {
     path: '/interconsultas',
+
     name: 'Interconsultas',
     component: Interconsultas,
     meta: { requiresAuth: true, requiresMedico: true },

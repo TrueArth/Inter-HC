@@ -8,6 +8,33 @@ from src.services.risk_engine_service import RiskEngineService
 from src.helpers.messaging_helper import MessageBroker
 from src.workers.central_marcacao_worker import enviar_para_central_aghu
 
+def resolver_nome_por_cns(cns: str) -> str:
+    import os
+    import csv
+    cns_to_nome = {
+        "111111111111111": "CARLA DIAS (CSV)",
+        "222222222222222": "BRUNO LIMA (CSV)",
+        "333333333333333": "FERNANDA COSTA (CSV)",
+        "444444444444444": "LUCAS ALMEIDA (CSV)",
+        "555555555555555": "MARIA DA SILVA",
+        "666666666666666": "JOÃO DOS SANTOS",
+        "777777777777777": "ANA OLIVEIRA",
+        "888888888888888": "ROBERTO SOUZA"
+    }
+    try:
+        csv_path = "data/pacientes.csv"
+        if os.path.exists(csv_path):
+            with open(csv_path, mode='r', encoding='utf-8') as f:
+                reader = csv.DictReader(f)
+                for row in reader:
+                    cns_val = row.get("cns")
+                    nome_val = row.get("nome")
+                    if cns_val and nome_val:
+                        cns_to_nome[cns_val.strip()] = nome_val.strip()
+    except Exception:
+        pass
+    return cns_to_nome.get(cns, "Desconhecido")
+
 def _format_error(exc: Exception) -> str:
     """Mensagem legível para HTTP detail (ex.: InvalidToken tem str vazio)."""
     if isinstance(exc, InvalidToken):
@@ -47,9 +74,8 @@ class InterconsultaController:
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Erro ao salvar o pedido: {_format_error(e)}")
             
-        # 3. Publicação no Message Broker (Removido disparo automático na criação)
-        # MessageBroker.dispatch(background_tasks, enviar_para_central_aghu, pedido_criado)
-        
+        # Resolve o nome do paciente
+        pedido_criado["paciente_nome"] = resolver_nome_por_cns(pedido_criado.get("paciente_cns"))
         return pedido_criado
 
     @staticmethod
@@ -60,6 +86,11 @@ class InterconsultaController:
         try:
             pedidos_estaticos = await provider.listar_pedidos_ativos()
             fila_inteligente = QueueOptimizerService.reordenar_fila_dinamica(pedidos_estaticos)
+            
+            # Resolve os nomes de cada paciente
+            for p in fila_inteligente:
+                p["paciente_nome"] = resolver_nome_por_cns(p.get("paciente_cns"))
+                
             # Trilha de Auditoria (LGPD)
             username = current_user.get("username") or current_user.get("name") or "Desconhecido"
             import logging

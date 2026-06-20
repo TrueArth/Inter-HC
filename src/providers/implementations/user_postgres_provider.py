@@ -55,6 +55,10 @@ class UserPostgresProvider(UserProviderInterface):
     async def atualizar_usuario(self, user_id: int, user_data: dict) -> dict:
         params = dict(user_data)
         params["id"] = user_id
+        params.setdefault("display_name", None)
+        params.setdefault("role", None)
+        params.setdefault("email", None)
+        params.setdefault("hashed_password", None)
         
         if self._dialect == "sqlite":
             sql_template = read_sql_file(_get_sql_path("atualizar_usuario.sql"))

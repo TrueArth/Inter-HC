@@ -15,6 +15,7 @@ class InterconsultaCreate(BaseModel):
 class InterconsultaResponse(BaseModel):
     id: int
     paciente_cns: str
+    paciente_nome: Optional[str] = None
     medico_solicitante_crm: str
     especialidade_id: int
     sintomas_json: List[Sintoma] = Field(default_factory=list)

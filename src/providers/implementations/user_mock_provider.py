@@ -4,6 +4,8 @@ from datetime import datetime, timezone
 from typing import List, Dict, Any, Optional
 
 from ..interfaces.user_provider_interface import UserProviderInterface
+from src.helpers.crypto_helper import hash_password
+
 
 class UserMockProvider(UserProviderInterface):
     """
@@ -19,6 +21,7 @@ class UserMockProvider(UserProviderInterface):
         if not os.path.exists(self.file_path):
             with open(self.file_path, "w", encoding="utf-8") as f:
                 json.dump([], f, indent=2, ensure_ascii=False)
+
 
     def _load_data(self) -> List[Dict[str, Any]]:
         try:
@@ -74,12 +77,15 @@ class UserMockProvider(UserProviderInterface):
                 u["display_name"] = user_data.get("display_name", u["display_name"])
                 u["role"] = user_data.get("role", u["role"])
                 u["email"] = user_data.get("email", u["email"])
+                if "hashed_password" in user_data and user_data["hashed_password"] is not None:
+                    u["hashed_password"] = user_data["hashed_password"]
                 u["updated_at"] = now_str
                 self._save_data(data)
                 res = dict(u)
                 res.pop("hashed_password", None)
                 return res
         return {}
+
 
     async def inativar_usuario(self, user_id: int) -> bool:
         data = self._load_data()

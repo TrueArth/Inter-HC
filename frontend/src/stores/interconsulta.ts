@@ -23,6 +23,7 @@ export interface InterconsultaCreatePayload {
 export interface InterconsultaPedido {
   id: number;
   paciente_cns: string;
+  paciente_nome?: string | null;
   medico_solicitante_crm: string;
   especialidade_id: number;
   gravidade: string;

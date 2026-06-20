@@ -11,6 +11,8 @@ interface User {
   title?: string[];
   department?: string[];
   employeeNumber?: string[];
+  displayName?: string[];
+  email?: string;
 }
 
 export const useAuthStore = defineStore('auth', () => {

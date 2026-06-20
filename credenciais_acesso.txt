@@ -1,0 +1,21 @@
+=== CREDENCIAIS DE ACESSO (MOCK) ===
+
+1. Administrador (Acesso total a todas as visões e gestão de usuários)
+   - Usuário: admin
+   - Senha: admin
+
+2. Médico (Acesso à tela de solicitações e criação de nova interconsulta)
+   - Usuário: medico
+   - Senha: medico
+
+3. Médico 2 (Acesso à tela de solicitações e criação de nova interconsulta)
+   - Usuário: medico2
+   - Senha: medico2
+
+4. Médico 3 (Acesso à tela de solicitações e criação de nova interconsulta)
+   - Usuário: medico3
+   - Senha: medico3
+
+5. Central de Marcação / Regulador (Acesso exclusivo à fila digital de regulação e agendamentos)
+   - Usuário: regulador
+   - Senha: regulador

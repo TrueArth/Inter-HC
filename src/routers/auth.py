@@ -15,6 +15,11 @@ from ..auth.auth import auth_handler, JWT_EXP_HOURS, REFRESH_TOKEN_EXP_DAYS
 from ..resources.database import get_app_db_session
 
 from sqlalchemy.ext.asyncio import AsyncSession
+from pydantic import BaseModel, Field
+from typing import Optional
+from ..dependencies import get_user_provider
+from ..helpers.crypto_helper import hash_password
+
 
 
 
@@ -178,15 +183,52 @@ async def logout(response: Response, request: Request, db: AsyncSession = Depend
 
 
 @router.get("/users/me")
-
 async def read_users_me(current_user: dict = Depends(auth_handler.decode_token)):
-
     """
-
     Returns the current user's information.
-
     """
-
     return current_user
+
+
+class ProfileUpdate(BaseModel):
+    display_name: Optional[str] = Field(None, description="Novo nome de exibição")
+    email: Optional[str] = Field(None, description="Novo endereço de e-mail")
+    password: Optional[str] = Field(None, description="Nova senha")
+
+
+@router.put("/users/profile")
+async def update_profile(
+    payload: ProfileUpdate,
+    provider = Depends(get_user_provider()),
+    current_user: dict = Depends(auth_handler.decode_token)
+):
+    """
+    Permite que o próprio usuário autenticado altere seu nome de exibição, e-mail e/ou senha.
+    """
+    username = current_user.get("username") or current_user.get("sub")
+    if not username:
+        raise HTTPException(status_code=400, detail="Não foi possível identificar o usuário atual a partir do token.")
+
+    # Busca o usuário atual no banco
+    existing_user = await provider.buscar_usuario_por_username(username)
+    if not existing_user:
+        raise HTTPException(status_code=404, detail="Usuário não encontrado no banco de dados.")
+
+    # Constrói os dados de atualização
+    update_data = {}
+    if payload.display_name is not None:
+        update_data["display_name"] = payload.display_name
+    if payload.email is not None:
+        update_data["email"] = payload.email
+    if payload.password is not None and payload.password.strip() != "":
+        update_data["hashed_password"] = hash_password(payload.password)
+
+    # Executa a atualização
+    updated = await provider.atualizar_usuario(existing_user["id"], update_data)
+    if not updated:
+        raise HTTPException(status_code=500, detail="Falha ao atualizar o perfil do usuário.")
+
+    return updated
+
 
 

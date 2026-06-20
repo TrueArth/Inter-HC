@@ -19,6 +19,8 @@ import pytest_asyncio
 os.environ.setdefault("SQLITE_DSN", "sqlite+aiosqlite:///:memory:")
 os.environ.setdefault("JWT_SECRET", "test-secret-key-integration")
 os.environ.setdefault("AES_SECRET_KEY", "")  # crypto_helper gera uma chave efêmera se vazio
+os.environ["INTERCONSULTA_PROVIDER_TYPE"] = "POSTGRES"
+
 
 from httpx import AsyncClient, ASGITransport
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession

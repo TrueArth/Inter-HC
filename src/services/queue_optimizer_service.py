@@ -26,7 +26,11 @@ class QueueOptimizerService:
             if isinstance(data_criacao, str):
                 data_criacao = datetime.fromisoformat(data_criacao.replace("Z", "+00:00"))
                 
-            dias_espera = (hoje - data_criacao).days
+            hoje_comparacao = hoje
+            if data_criacao.tzinfo is None:
+                hoje_comparacao = hoje.replace(tzinfo=None)
+                
+            dias_espera = (hoje_comparacao - data_criacao).days
             dias_espera = max(0, dias_espera) # Evita números negativos
             
             # 3. A MÁGICA: Calcula o Score Total (Aceleração)

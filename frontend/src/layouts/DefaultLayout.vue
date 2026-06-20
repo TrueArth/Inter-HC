@@ -30,10 +30,7 @@
               <UsersIcon class="h-6 w-6" />
               <span>Pacientes</span>
             </router-link>
-            <router-link v-if="authStore.isAuthenticated && (authStore.isAdmin || authStore.isMedico)" to="/leitos" class="flex items-center space-x-2 py-2.5 px-4 rounded transition duration-200 hover:bg-paper-active-link hover:text-white">
-              <CubeTransparentIcon class="h-5 w-5" />
-              <span>Leitos</span>
-            </router-link>
+
             <router-link
               v-if="authStore.isAuthenticated && (authStore.isAdmin || authStore.isMedico)"
               to="/interconsultas"

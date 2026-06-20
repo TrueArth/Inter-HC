@@ -8,6 +8,9 @@ from sqlalchemy.pool import StaticPool
 
 os.environ.setdefault("SQLITE_DSN", "sqlite+aiosqlite:///:memory:")
 os.environ.setdefault("JWT_SECRET", "test-secret-key-admin")
+os.environ["USER_PROVIDER_TYPE"] = "POSTGRES"
+os.environ["INTERCONSULTA_PROVIDER_TYPE"] = "POSTGRES"
+
 
 from src.main import app
 from src.resources.database import Base

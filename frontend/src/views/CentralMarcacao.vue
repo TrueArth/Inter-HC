@@ -112,7 +112,7 @@
           <thead class="bg-gray-50">
             <tr>
               <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">ID</th>
-              <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">CNS do Paciente</th>
+              <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Paciente / CNS</th>
               <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Especialidade (AGHU)</th>
               <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Gravidade Clínica</th>
               <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Pontuação</th>
@@ -130,7 +130,10 @@
               @click="selecionarPedido(pedido)"
             >
               <td class="px-4 py-3 text-sm font-medium text-gray-900">#{{ pedido.id }}</td>
-              <td class="px-4 py-3 text-sm font-mono text-gray-700 font-semibold">{{ pedido.paciente_cns }}</td>
+              <td class="px-4 py-3 text-sm">
+                <div class="font-mono text-gray-700 font-semibold">{{ pedido.paciente_cns }}</div>
+                <div class="text-xs text-gray-400 mt-0.5">{{ pedido.paciente_nome || 'Não identificado' }}</div>
+              </td>
               <td class="px-4 py-3 text-sm text-gray-600">{{ obterNomeEspecialidade(pedido.especialidade_id) }}</td>
               <td class="px-4 py-3 text-sm">
                 <span :class="gravidadeClass(pedido.gravidade)" class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider">
@@ -198,9 +201,15 @@
 
           <!-- Informações Principais -->
           <div class="bg-gray-50 rounded-lg p-4 space-y-3">
-            <div>
-              <p class="text-xs font-semibold text-gray-400 uppercase">CNS do Paciente (Decifrado)</p>
-              <p class="text-base font-mono font-bold text-gray-800 mt-0.5 select-all">{{ pedidoSelecionado.paciente_cns }}</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <p class="text-xs font-semibold text-gray-400 uppercase">Nome do Paciente</p>
+                <p class="text-sm font-semibold text-gray-800 mt-0.5">{{ pedidoSelecionado.paciente_nome || 'Não identificado' }}</p>
+              </div>
+              <div>
+                <p class="text-xs font-semibold text-gray-400 uppercase">CNS do Paciente (Decifrado)</p>
+                <p class="text-sm font-mono font-bold text-gray-800 mt-0.5 select-all">{{ pedidoSelecionado.paciente_cns }}</p>
+              </div>
             </div>
             <div class="grid grid-cols-2 gap-4">
               <div>
