@@ -51,6 +51,22 @@ uv sync
 cp .env.example .env
 ./start.sh
 ```
+Caso contrário, entre na pasta frontend, rode os comandos:
+
+```bash
+npm install
+npm run build
+```
+Em seguida vá até a raíz do projeto e use:
+
+```bash
+python -m uvicorn src.main:app --reload
+```
+
+Por último volte a pasta frontend e rode:
+```bash
+npm run dev
+```
 
 O frontend (build de produção) será servido automaticamente em `http://localhost:8000`.
 
