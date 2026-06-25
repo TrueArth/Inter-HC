@@ -189,11 +189,12 @@
       }
     ],
     "gravidade": "VERMELHO",
-    "status": "PENDENTE",
-    "marcado_por": null,
+    "status": "AGENDADO",
+    "marcado_por": "admin",
     "criado_em": "2026-06-20T15:56:47.436330+00:00",
-    "atualizado_em": "2026-06-20T15:56:47.436330+00:00",
-    "deleted_at": null
+    "atualizado_em": "2026-06-25T01:59:55.383602+00:00",
+    "deleted_at": null,
+    "data_consulta": "2026-06-25T12:00:00+00:00"
   },
   {
     "id": 11,

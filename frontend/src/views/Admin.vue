@@ -191,6 +191,76 @@
 
     <!-- Tab 4: Gerenciar Sintomas & Regras -->
     <div v-show="abaAtiva === 'sintomas'" class="space-y-6">
+      
+      <!-- Filtro de Especialidades no Topo (Estilo Central de Marcação) -->
+      <div class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm space-y-3">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h4 class="text-sm font-bold text-gray-800">Filtrar Catálogo por Especialidade</h4>
+            <p class="text-xs text-gray-400">Selecione uma especialidade para gerenciar seus sintomas e pontuações específicas</p>
+          </div>
+          <!-- Campo de busca rápida -->
+          <div class="relative w-full sm:w-64">
+            <input 
+              type="text" 
+              v-model="buscaSintoma" 
+              placeholder="Buscar sintoma no catálogo..." 
+              class="form-control text-xs py-1.5 px-3 bg-white w-full border border-gray-200 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+            />
+          </div>
+        </div>
+        
+        <div class="flex flex-wrap gap-2 pt-1">
+          <button
+            type="button"
+            class="px-4 py-2 text-xs font-bold rounded-lg transition duration-200 focus:outline-none flex items-center gap-2 border"
+            :class="[
+              especialidadeFiltro === 'todas' 
+                ? 'bg-blue-600 border-blue-600 text-white shadow-sm font-bold' 
+                : 'bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100 hover:text-gray-800 font-medium'
+            ]"
+            @click="especialidadeFiltro = 'todas'"
+          >
+            Todas
+            <span 
+              class="px-2 py-0.5 text-[10px] rounded-full font-extrabold transition-colors duration-200"
+              :class="[
+                especialidadeFiltro === 'todas' 
+                  ? 'bg-blue-700 text-white' 
+                  : 'bg-gray-200 text-gray-700'
+              ]"
+            >
+              {{ sintomas.length }}
+            </span>
+          </button>
+          
+          <button
+            v-for="esp in especialidades"
+            :key="esp.id"
+            type="button"
+            class="px-4 py-2 text-xs font-bold rounded-lg transition duration-200 focus:outline-none flex items-center gap-2 border"
+            :class="[
+              especialidadeFiltro === esp.id 
+                ? 'bg-blue-600 border-blue-600 text-white shadow-sm font-bold' 
+                : 'bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100 hover:text-gray-800 font-medium'
+            ]"
+            @click="especialidadeFiltro = esp.id"
+          >
+            {{ esp.nome }}
+            <span 
+              class="px-2 py-0.5 text-[10px] rounded-full font-extrabold transition-colors duration-200"
+              :class="[
+                especialidadeFiltro === esp.id 
+                  ? 'bg-blue-700 text-white' 
+                  : 'bg-gray-200 text-gray-700'
+              ]"
+            >
+              {{ contarSintomasDaEspecialidade(esp.id) }}
+            </span>
+          </button>
+        </div>
+      </div>
+
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         <!-- Lista de Sintomas -->
@@ -198,7 +268,12 @@
           <template #header>
             <div class="pb-2">
               <h2 class="text-lg font-semibold text-gray-700">Sintomas do Catálogo</h2>
-              <p class="text-xs text-gray-400">Sintomas clínicos gerais cadastrados e suas gravidades padrão.</p>
+              <p class="text-xs text-gray-400">
+                Exibindo {{ sintomasFiltrados.length }} sintoma(s)
+                <span v-if="especialidadeFiltro !== 'todas'">
+                  de <strong class="text-blue-600">{{ obterNomeEspecialidade(especialidadeFiltro) }}</strong>
+                </span>
+              </p>
             </div>
           </template>
           
@@ -207,8 +282,8 @@
             <p class="text-sm text-gray-500 mt-2">Carregando sintomas...</p>
           </div>
           
-          <div v-else-if="sintomas.length === 0" class="text-center py-12">
-            <p class="text-sm text-gray-500">Nenhum sintoma cadastrado.</p>
+          <div v-else-if="sintomasFiltrados.length === 0" class="text-center py-12">
+            <p class="text-sm text-gray-500">Nenhum sintoma cadastrado ou encontrado nesta seleção.</p>
           </div>
           
           <div v-else class="overflow-x-auto">
@@ -222,12 +297,23 @@
                 </tr>
               </thead>
               <tbody class="bg-white divide-y divide-gray-100">
-                <tr v-for="sint in sintomas" :key="sint.id" class="hover:bg-gray-50/50 transition">
+                <tr v-for="sint in sintomasFiltrados" :key="sint.id" class="hover:bg-gray-50/50 transition">
                   <td class="px-6 py-4 text-sm font-semibold text-gray-900 font-mono">#{{ sint.id }}</td>
-                  <td class="px-6 py-4 text-sm text-gray-600 font-medium">{{ sint.nome }}</td>
+                  <td class="px-6 py-4 text-sm text-gray-600 font-medium">
+                    <div>{{ sint.nome }}</div>
+                    <div class="flex flex-wrap gap-1 mt-1">
+                      <span 
+                        v-for="esp in obterEspecialidadesSintoma(sint.id)" 
+                        :key="esp.id" 
+                        class="inline-flex items-center px-1.5 py-0.2 bg-gray-100 text-gray-600 text-[10px] rounded font-medium"
+                      >
+                        {{ esp.nome }}
+                      </span>
+                    </div>
+                  </td>
                   <td class="px-6 py-4 text-sm">
-                    <span :class="scoreClass(sint.pontuacao)" class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-bold uppercase">
-                      {{ sint.pontuacao }} pts
+                    <span :class="scoreClass(obterPontuacaoExibicao(sint))" class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-bold uppercase">
+                      {{ obterPontuacaoExibicao(sint) }} pts
                     </span>
                   </td>
                   <td class="px-6 py-4 text-sm text-center flex justify-center gap-2">
@@ -731,6 +817,48 @@ const novaEsp = ref({ nome: '' });
 const novoSint = ref({ nome: '', pontuacao: 1, especialidade_id: 1 });
 const novaRegra = ref({ sintoma_id: 1, especialidade_id: 1, pontuacao: 5 });
 const salvandoRegra = ref(false);
+
+// Filtros para o Catálogo de Sintomas
+const especialidadeFiltro = ref<number | 'todas'>('todas');
+const buscaSintoma = ref('');
+
+const contarSintomasDaEspecialidade = (espId: number) => {
+  return regras.value.filter(r => r.especialidade_id === espId && !r.deleted_at).length;
+};
+
+const obterPontuacaoExibicao = (sint: any) => {
+  if (especialidadeFiltro.value === 'todas') {
+    return sint.pontuacao;
+  }
+  const rule = regras.value.find(r => r.sintoma_id === sint.id && r.especialidade_id === especialidadeFiltro.value && !r.deleted_at);
+  return rule ? rule.pontuacao : sint.pontuacao;
+};
+
+const obterEspecialidadesSintoma = (sintId: number) => {
+  const ids = regras.value.filter(r => r.sintoma_id === sintId && !r.deleted_at).map(r => r.especialidade_id);
+  return especialidades.value.filter(e => ids.includes(e.id));
+};
+
+const sintomasFiltrados = computed(() => {
+  let list = sintomas.value;
+  
+  if (especialidadeFiltro.value !== 'todas') {
+    const espId = especialidadeFiltro.value;
+    const sintomasComRegra = new Set(
+      regras.value
+        .filter(r => r.especialidade_id === espId && !r.deleted_at)
+        .map(r => r.sintoma_id)
+    );
+    list = list.filter(s => sintomasComRegra.has(s.id));
+  }
+  
+  if (buscaSintoma.value.trim()) {
+    const term = buscaSintoma.value.toLowerCase().trim();
+    list = list.filter(s => s.nome.toLowerCase().includes(term));
+  }
+  
+  return list;
+});
 
 const carregarCatalogos = async () => {
   loadingCatalog.value = true;
