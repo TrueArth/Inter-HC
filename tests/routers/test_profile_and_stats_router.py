@@ -114,3 +114,70 @@ async def test_get_statistics_admin_only(client: AsyncClient):
     assert "specialties_distribution" in data
     assert "top_doctors" in data
     assert "inappropriate_doctors" in data
+    # Novas chaves
+    assert "total_interconsultas" in data
+    assert "tempo_medio_atendimento_segundos" in data
+    assert "tempo_medio_atendimento_formatado" in data
+    assert "especialidades_mais_pendencias" in data
+
+
+@pytest.mark.asyncio
+async def test_export_statistics_excel_admin_only(client: AsyncClient):
+    # 1. Regular user gets 403
+    app.dependency_overrides[auth_handler.decode_token] = _mock_regular_user
+    response = await client.get("/api/admin/statistics/export")
+    assert response.status_code == 403
+
+    # 2. Admin user gets 200 and Excel stream
+    app.dependency_overrides[auth_handler.decode_token] = _mock_admin_user
+    response = await client.get("/api/admin/statistics/export")
+    assert response.status_code == 200
+    assert response.headers["content-type"] == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    assert "Content-Disposition" in response.headers
+    assert "attachment" in response.headers["Content-Disposition"]
+    assert len(response.content) > 0
+
+    # 3. Verify worksheets and contents
+    import io
+    import pandas as pd
+    excel_file = io.BytesIO(response.content)
+    xls = pd.ExcelFile(excel_file)
+    sheets = xls.sheet_names
+    assert "Indicadores Gerais" in sheets
+    assert "Fila Reguladora" in sheets
+    assert "Volume por Especialidade" in sheets
+    assert "Pendencias por Especialidade" in sheets
+    assert "Medicos Mais Solicitantes" in sheets
+    assert "Casos Indevidos por Medico" in sheets
+    assert "Controle de Usuarios" in sheets
+    assert "Catalogo Especialidades" in sheets
+    assert "Catalogo Sintomas" in sheets
+
+    df_geral = pd.read_excel(excel_file, sheet_name="Indicadores Gerais")
+    kpis = df_geral["Indicador"].tolist()
+    assert "Total de Interconsultas" in kpis
+    assert "Tempo Médio de Atendimento da Marcação" in kpis
+    assert "Especialidade Mais Solicitada (Nome)" in kpis
+    assert "Total de Casos Indevidos (Verde)" in kpis
+
+    df_esp = pd.read_excel(excel_file, sheet_name="Volume por Especialidade")
+    assert "Especialidade" in df_esp.columns
+    assert "Total de Solicitações" in df_esp.columns
+
+    df_docs = pd.read_excel(excel_file, sheet_name="Medicos Mais Solicitantes")
+    assert "Médico Solicitante" in df_docs.columns
+    assert "Volume de Solicitações" in df_docs.columns
+
+    df_users = pd.read_excel(excel_file, sheet_name="Controle de Usuarios")
+    assert "ID Usuário" in df_users.columns
+    assert "Nome Exibido" in df_users.columns
+
+    df_cat_esp = pd.read_excel(excel_file, sheet_name="Catalogo Especialidades")
+    assert "ID Especialidade" in df_cat_esp.columns
+    assert "Nome da Especialidade" in df_cat_esp.columns
+
+    df_cat_sint = pd.read_excel(excel_file, sheet_name="Catalogo Sintomas")
+    assert "ID Sintoma" in df_cat_sint.columns
+    assert "Nome do Sintoma" in df_cat_sint.columns
+
+

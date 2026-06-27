@@ -7,21 +7,24 @@ class Sintoma(BaseModel):
     nome: str
 
 class InterconsultaCreate(BaseModel):
-    paciente_cns: str = Field(..., description="CNS do paciente (será encriptado via AES-256 no banco)")
+    paciente_prep: str = Field(..., description="PREP do paciente (será encriptado via AES-256 no banco)")
     medico_solicitante_crm: str = Field(..., description="CRM do médico logado solicitante")
     especialidade_id: int = Field(..., description="ID da especialidade desejada no AGHU")
     sintomas_json: List[Sintoma] = Field(default_factory=list, description="Lista de sintomas para análise do Motor de Risco")
 
-    @field_validator("paciente_cns")
+    @field_validator("paciente_prep")
     @classmethod
-    def validate_cns_numeric(cls, v: str) -> str:
-        if not v.isdigit():
-            raise ValueError("O CNS do paciente deve conter apenas dígitos numéricos.")
-        return v
+    def validate_prep_format(cls, v: str) -> str:
+        v_clean = v.strip()
+        if not v_clean.isdigit():
+            raise ValueError("O número do PREP deve conter apenas dígitos numéricos.")
+        if not (7 <= len(v_clean) <= 8):
+            raise ValueError("O número do PREP deve conter entre 7 e 8 dígitos.")
+        return v_clean
 
 class InterconsultaResponse(BaseModel):
     id: int
-    paciente_cns: str
+    paciente_prep: str
     paciente_nome: Optional[str] = None
     medico_solicitante_crm: str
     especialidade_id: int

@@ -7,7 +7,7 @@ TBD - created by archiving change modulo-interconsulta. Update Purpose after arc
 O sistema MUST permitir que um médico solicite uma interconsulta selecionando sintomas de um catálogo pré-definido e garanta a persistência imutável dos dados (uso de Soft Delete `deleted_at`). Campos confidenciais MUST ser armazenados com criptografia AES-256 no banco de dados local. Os novos pedidos criados pelo médico MUST ter status inicial 'PENDENTE' e não devem ser integrados/agendados automaticamente de forma assíncrona.
 
 #### Scenario: Submissão válida
-- **WHEN** um médico envia um formulário preenchido com CNS do paciente, especialidade e array de sintomas
+- **WHEN** um médico envia um formulário preenchido com o PREP do paciente (7 a 8 dígitos), especialidade e array de sintomas
 - **THEN** o sistema salva o pedido na base de dados (criptografando dados sensíveis de identificação via AES-256) com status inicial 'PENDENTE', não realiza disparo automático de agendamento e retorna status 201 Created
 
 ### Requirement: Restrição de Lista de Pedidos Ativos

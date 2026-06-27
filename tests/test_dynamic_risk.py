@@ -103,7 +103,7 @@ async def test_dynamic_gravity_override_applied(client: AsyncClient):
     _mock_user_role = "medico"
     
     payload = {
-        "paciente_cns": "123456789012345",
+        "paciente_prep": "12345678",
         "medico_solicitante_crm": "medico_teste",
         "especialidade_id": 15,
         "sintomas_json": [{"id": 20, "nome": "Tosse Crônica"}]
@@ -121,7 +121,7 @@ async def test_queue_filtering_consultation_date(client: AsyncClient):
     # 1. Cria um pedido
     _mock_user_role = "medico"
     payload = {
-        "paciente_cns": "111222333445566",
+        "paciente_prep": "7700201",
         "medico_solicitante_crm": "medico_teste",
         "especialidade_id": 15,
         "sintomas_json": [{"id": 20, "nome": "Tosse Crônica"}]
@@ -160,7 +160,7 @@ async def test_queue_filtering_consultation_date(client: AsyncClient):
     # 5. Cria outro pedido agendado para o futuro (amanhã)
     _mock_user_role = "medico"
     payload_future = {
-        "paciente_cns": "999888777665544",
+        "paciente_prep": "7700301",
         "medico_solicitante_crm": "medico_teste",
         "especialidade_id": 15,
         "sintomas_json": [{"id": 20, "nome": "Tosse Crônica"}]
@@ -190,7 +190,7 @@ async def test_api_blocks_past_consultation_date(client: AsyncClient):
     global _mock_user_role
     _mock_user_role = "medico"
     payload = {
-        "paciente_cns": "123456789012345",
+        "paciente_prep": "7700401",
         "medico_solicitante_crm": "medico_teste",
         "especialidade_id": 15,
         "sintomas_json": [{"id": 20, "nome": "Tosse Crônica"}]
@@ -210,16 +210,30 @@ async def test_api_blocks_past_consultation_date(client: AsyncClient):
     assert "Não é possível agendar uma consulta para uma data no passado." in update_res.json()["detail"]
 
 @pytest.mark.asyncio
-async def test_api_blocks_non_numeric_cns(client: AsyncClient):
-    """Verifica se a API rejeita requisições com CNS contendo caracteres não numéricos."""
+async def test_api_blocks_invalid_prep(client: AsyncClient):
+    """Verifica se a API rejeita requisições com PREP inválido (letras ou comprimento incorreto)."""
     global _mock_user_role
     _mock_user_role = "medico"
-    payload = {
-        "paciente_cns": "12345678901234a",  # Contém a letra 'a'
+    
+    # 1. PREP com letras
+    payload_alpha = {
+        "paciente_prep": "1234567a",
         "medico_solicitante_crm": "medico_teste",
         "especialidade_id": 15,
         "sintomas_json": [{"id": 20, "nome": "Tosse Crônica"}]
     }
-    res = await client.post("/api/interconsultas/", json=payload)
-    assert res.status_code == 422
-    assert "O CNS do paciente deve conter apenas dígitos numéricos." in res.text
+    res_alpha = await client.post("/api/interconsultas/", json=payload_alpha)
+    assert res_alpha.status_code == 422
+    assert "O número do PREP deve conter apenas dígitos numéricos." in res_alpha.text
+
+    # 2. PREP muito curto
+    payload_short = {
+        "paciente_prep": "123456",
+        "medico_solicitante_crm": "medico_teste",
+        "especialidade_id": 15,
+        "sintomas_json": [{"id": 20, "nome": "Tosse Crônica"}]
+    }
+    res_short = await client.post("/api/interconsultas/", json=payload_short)
+    assert res_short.status_code == 422
+    assert "O número do PREP deve conter entre 7 e 8 dígitos." in res_short.text
+

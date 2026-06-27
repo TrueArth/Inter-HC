@@ -8,18 +8,18 @@ from src.services.risk_engine_service import RiskEngineService
 from src.helpers.messaging_helper import MessageBroker
 from src.workers.central_marcacao_worker import enviar_para_central_aghu
 
-def resolver_nome_por_cns(cns: str) -> str:
+def resolver_nome_por_prep(prep: str) -> str:
     import os
     import csv
-    cns_to_nome = {
-        "111111111111111": "CARLA DIAS (CSV)",
-        "222222222222222": "BRUNO LIMA (CSV)",
-        "333333333333333": "FERNANDA COSTA (CSV)",
-        "444444444444444": "LUCAS ALMEIDA (CSV)",
-        "555555555555555": "MARIA DA SILVA",
-        "666666666666666": "JOÃO DOS SANTOS",
-        "777777777777777": "ANA OLIVEIRA",
-        "888888888888888": "ROBERTO SOUZA"
+    prep_to_nome = {
+        "10000016": "CARLA DIAS (CSV)",
+        "7700201": "BRUNO LIMA (CSV)",
+        "7700301": "FERNANDA COSTA (CSV)",
+        "7700401": "LUCAS ALMEIDA (CSV)",
+        "55555555": "MARIA DA SILVA",
+        "66666666": "JOÃO DOS SANTOS",
+        "77777777": "ANA OLIVEIRA",
+        "88888888": "ROBERTO SOUZA"
     }
     try:
         csv_path = "data/pacientes.csv"
@@ -27,19 +27,19 @@ def resolver_nome_por_cns(cns: str) -> str:
             with open(csv_path, mode='r', encoding='utf-8') as f:
                 reader = csv.DictReader(f)
                 for row in reader:
-                    cns_val = row.get("cns")
+                    prep_val = row.get("prep")
                     nome_val = row.get("nome")
-                    if cns_val and nome_val:
-                        cns_to_nome[cns_val.strip()] = nome_val.strip()
+                    if prep_val and nome_val:
+                        prep_to_nome[prep_val.strip()] = nome_val.strip()
     except Exception:
         pass
-    return cns_to_nome.get(cns, "Desconhecido")
+    return prep_to_nome.get(prep, "Desconhecido")
 
 def _format_error(exc: Exception) -> str:
     """Mensagem legível para HTTP detail (ex.: InvalidToken tem str vazio)."""
     if isinstance(exc, InvalidToken):
         return (
-            "Não foi possível descriptografar o CNS. "
+            "Não foi possível descriptografar o PREP. "
             "A AES_SECRET_KEY do .env mudou desde que os pedidos foram gravados. "
             "Apague os registros antigos em interconsulta_pedidos ou restaure a chave anterior."
         )
@@ -90,7 +90,7 @@ class InterconsultaController:
             raise HTTPException(status_code=500, detail=f"Erro ao salvar o pedido: {_format_error(e)}")
             
         # Resolve o nome do paciente
-        pedido_criado["paciente_nome"] = resolver_nome_por_cns(pedido_criado.get("paciente_cns"))
+        pedido_criado["paciente_nome"] = resolver_nome_por_prep(pedido_criado.get("paciente_prep"))
         return pedido_criado
 
     @staticmethod
@@ -104,7 +104,7 @@ class InterconsultaController:
             
             # Resolve os nomes de cada paciente
             for p in fila_inteligente:
-                p["paciente_nome"] = resolver_nome_por_cns(p.get("paciente_cns"))
+                p["paciente_nome"] = resolver_nome_por_prep(p.get("paciente_prep"))
                 
             # Se o usuário não for administrador, remove da visão da central 1 dia após a consulta
             if current_user.get("role") != "admin":
@@ -132,7 +132,7 @@ class InterconsultaController:
             import logging
             logger = logging.getLogger("audit")
             logger.warning(
-                f"AUDITORIA: Usuario '{username}' visualizou os dados sensiveis (CNS) de {len(fila_inteligente)} pedido(s) de interconsulta."
+                f"AUDITORIA: Usuario '{username}' visualizou os dados sensiveis (PREP) de {len(fila_inteligente)} pedido(s) de interconsulta."
             )
             return fila_inteligente
         except Exception as e:

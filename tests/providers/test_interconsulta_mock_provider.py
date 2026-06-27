@@ -19,7 +19,7 @@ async def test_mock_provider_workflow(mock_db_file):
     
     # 1. Insert a new interconsultation request
     novo_pedido = {
-        "paciente_cns": "987654321012345",
+        "paciente_prep": "7700201",
         "medico_solicitante_crm": "54321-PE",
         "especialidade_id": 2,
         "sintomas_json": [{"id": 5, "nome": "Febre"}],
@@ -29,7 +29,7 @@ async def test_mock_provider_workflow(mock_db_file):
     
     criado = await provider.inserir_pedido(novo_pedido)
     assert criado["id"] == 1
-    assert criado["paciente_cns"] == "987654321012345"
+    assert criado["paciente_prep"] == "7700201"
     assert criado["medico_solicitante_crm"] == "54321-PE"
     assert criado["gravidade"] == "AMARELO"
     assert isinstance(criado["criado_em"], datetime)
@@ -37,13 +37,13 @@ async def test_mock_provider_workflow(mock_db_file):
     # Ensure that on-disk representation is securely encrypted
     raw_records = provider._load_data()
     assert len(raw_records) == 1
-    assert raw_records[0]["paciente_cns"] != "987654321012345"
+    assert raw_records[0]["paciente_prep"] != "7700201"
     
     # 2. List requests (must automatically decrypt)
     pedidos = await provider.listar_pedidos_ativos()
     assert len(pedidos) == 1
     assert pedidos[0]["id"] == 1
-    assert pedidos[0]["paciente_cns"] == "987654321012345"
+    assert pedidos[0]["paciente_prep"] == "7700201"
     
     # 3. Soft Delete the request
     sucesso = await provider.inativar_pedido(1)
@@ -65,7 +65,7 @@ async def test_mock_provider_sorting(mock_db_file):
     # Insert multiple records with different severities
     # 1. AMARELO first
     await provider.inserir_pedido({
-        "paciente_cns": "111",
+        "paciente_prep": "7700201",
         "gravidade": "AMARELO",
         "especialidade_id": 1,
         "status": "PENDENTE"
@@ -73,7 +73,7 @@ async def test_mock_provider_sorting(mock_db_file):
     
     # 2. VERMELHO second
     await provider.inserir_pedido({
-        "paciente_cns": "222",
+        "paciente_prep": "7700301",
         "gravidade": "VERMELHO",
         "especialidade_id": 1,
         "status": "PENDENTE"
@@ -81,7 +81,7 @@ async def test_mock_provider_sorting(mock_db_file):
     
     # 3. VERDE third
     await provider.inserir_pedido({
-        "paciente_cns": "333",
+        "paciente_prep": "7700401",
         "gravidade": "VERDE",
         "especialidade_id": 1,
         "status": "PENDENTE"
@@ -91,18 +91,18 @@ async def test_mock_provider_sorting(mock_db_file):
     pedidos = await provider.listar_pedidos_ativos()
     assert len(pedidos) == 3
     assert pedidos[0]["gravidade"] == "VERMELHO"
-    assert pedidos[0]["paciente_cns"] == "222"
+    assert pedidos[0]["paciente_prep"] == "7700301"
     assert pedidos[1]["gravidade"] == "AMARELO"
-    assert pedidos[1]["paciente_cns"] == "111"
+    assert pedidos[1]["paciente_prep"] == "7700201"
     assert pedidos[2]["gravidade"] == "VERDE"
-    assert pedidos[2]["paciente_cns"] == "333"
+    assert pedidos[2]["paciente_prep"] == "7700401"
 
 @pytest.mark.asyncio
 async def test_atualizar_status_pedido_success(mock_db_file):
     """Atualizar o status de um pedido existente deve retornar True e persistir no disco."""
     provider = InterconsultaMockProvider(file_path=mock_db_file)
     await provider.inserir_pedido({
-        "paciente_cns": "123456789012345",
+        "paciente_prep": "10000016",
         "medico_solicitante_crm": "12345-PE",
         "especialidade_id": 1,
         "sintomas_json": [{"id": 1, "nome": "Cegueira"}],
@@ -131,7 +131,7 @@ async def test_atualizar_status_pedido_ignorado_apos_soft_delete(mock_db_file):
     """Um pedido com soft delete não deve ter seu status alterado."""
     provider = InterconsultaMockProvider(file_path=mock_db_file)
     await provider.inserir_pedido({
-        "paciente_cns": "999888777001234",
+        "paciente_prep": "7700401",
         "medico_solicitante_crm": "99999-PE",
         "especialidade_id": 3,
         "sintomas_json": [],

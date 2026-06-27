@@ -251,18 +251,18 @@ async def lifespan(app: FastAPI):
         if pedidos_count == 0:
             from src.helpers.crypto_helper import encrypt_data
             mock_pedidos = [
-                {"cns": encrypt_data("111111111111111"), "medico": "Dr. Carlos Silva", "esp_id": 1, "sintomas": json.dumps([{"id": 4, "nome": "Dor torácica intensa"}]), "gravidade": "VERMELHO", "status": "PENDENTE"},
-                {"cns": encrypt_data("222222222222222"), "medico": "Dr. Carlos Silva", "esp_id": 1, "sintomas": json.dumps([{"id": 2, "nome": "Infarto / Dor torácica súbita"}]), "gravidade": "VERMELHO", "status": "PENDENTE"},
-                {"cns": encrypt_data("333333333333333"), "medico": "Dr. Roberto Souza", "esp_id": 2, "sintomas": json.dumps([{"id": 14, "nome": "Confusão mental aguda"}]), "gravidade": "AMARELO", "status": "PENDENTE"},
-                {"cns": encrypt_data("444444444444444"), "medico": "Dr. Roberto Souza", "esp_id": 3, "sintomas": json.dumps([{"id": 6, "nome": "Fratura"}]), "gravidade": "VERDE", "status": "PENDENTE"},
-                {"cns": encrypt_data("555555555555555"), "medico": "Dr. Roberto Souza", "esp_id": 4, "sintomas": json.dumps([{"id": 9, "nome": "Nódulo tireoidiano palpável"}]), "gravidade": "VERDE", "status": "PENDENTE"},
-                {"cns": encrypt_data("666666666666666"), "medico": "Dra. Ana Costa", "esp_id": 12, "sintomas": json.dumps([{"id": 12, "nome": "Convulsão"}]), "gravidade": "VERMELHO", "status": "PENDENTE"},
-                {"cns": encrypt_data("777777777777777"), "medico": "Dra. Ana Costa", "esp_id": 1, "sintomas": json.dumps([{"id": 10, "nome": "Dispneia aguda"}]), "gravidade": "VERMELHO", "status": "PENDENTE"},
-                {"cns": encrypt_data("888888888888888"), "medico": "Dra. Ana Costa", "esp_id": 2, "sintomas": json.dumps([{"id": 5, "nome": "Febre alta"}]), "gravidade": "AMARELO", "status": "PENDENTE"},
+                {"prep": encrypt_data("10000016"), "medico": "Dr. Carlos Silva", "esp_id": 1, "sintomas": json.dumps([{"id": 4, "nome": "Dor torácica intensa"}]), "gravidade": "VERMELHO", "status": "PENDENTE"},
+                {"prep": encrypt_data("7700201"), "medico": "Dr. Carlos Silva", "esp_id": 1, "sintomas": json.dumps([{"id": 2, "nome": "Infarto / Dor torácica súbita"}]), "gravidade": "VERMELHO", "status": "PENDENTE"},
+                {"prep": encrypt_data("7700301"), "medico": "Dr. Roberto Souza", "esp_id": 2, "sintomas": json.dumps([{"id": 14, "nome": "Confusão mental aguda"}]), "gravidade": "AMARELO", "status": "PENDENTE"},
+                {"prep": encrypt_data("7700401"), "medico": "Dr. Roberto Souza", "esp_id": 3, "sintomas": json.dumps([{"id": 6, "nome": "Fratura"}]), "gravidade": "VERDE", "status": "PENDENTE"},
+                {"prep": encrypt_data("55555555"), "medico": "Dr. Roberto Souza", "esp_id": 4, "sintomas": json.dumps([{"id": 9, "nome": "Nódulo tireoidiano palpável"}]), "gravidade": "VERDE", "status": "PENDENTE"},
+                {"prep": encrypt_data("66666666"), "medico": "Dra. Ana Costa", "esp_id": 12, "sintomas": json.dumps([{"id": 12, "nome": "Convulsão"}]), "gravidade": "VERMELHO", "status": "PENDENTE"},
+                {"prep": encrypt_data("77777777"), "medico": "Dra. Ana Costa", "esp_id": 1, "sintomas": json.dumps([{"id": 10, "nome": "Dispneia aguda"}]), "gravidade": "VERMELHO", "status": "PENDENTE"},
+                {"prep": encrypt_data("88888888"), "medico": "Dra. Ana Costa", "esp_id": 2, "sintomas": json.dumps([{"id": 5, "nome": "Febre alta"}]), "gravidade": "AMARELO", "status": "PENDENTE"},
             ]
             stmt_pedido = text(
-                "INSERT INTO interconsulta_pedidos (paciente_cns, medico_solicitante_crm, especialidade_id, sintomas_json, gravidade, status, criado_em, atualizado_em) "
-                "VALUES (:cns, :medico, :esp_id, :sintomas, :gravidade, :status, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)"
+                "INSERT INTO interconsulta_pedidos (paciente_prep, medico_solicitante_crm, especialidade_id, sintomas_json, gravidade, status, criado_em, atualizado_em) "
+                "VALUES (:prep, :medico, :esp_id, :sintomas, :gravidade, :status, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)"
             )
             for p in mock_pedidos:
                 await conn.execute(stmt_pedido, p)
@@ -294,14 +294,14 @@ async def lifespan(app: FastAPI):
             from datetime import datetime
             now_str = datetime.now(timezone.utc).isoformat()
             default_pedidos = [
-                {"id": 1, "paciente_cns": encrypt_data("111111111111111"), "medico_solicitante_crm": "Dr. Carlos Silva", "especialidade_id": 1, "sintomas_json": [{"id": 4, "nome": "Dor torácica intensa"}], "gravidade": "VERMELHO", "status": "PENDENTE", "marcado_por": None, "criado_em": now_str, "atualizado_em": now_str, "deleted_at": None},
-                {"id": 2, "paciente_cns": encrypt_data("222222222222222"), "medico_solicitante_crm": "Dr. Carlos Silva", "especialidade_id": 1, "sintomas_json": [{"id": 2, "nome": "Infarto / Dor torácica súbita"}], "gravidade": "VERMELHO", "status": "PENDENTE", "marcado_por": None, "criado_em": now_str, "atualizado_em": now_str, "deleted_at": None},
-                {"id": 3, "paciente_cns": encrypt_data("333333333333333"), "medico_solicitante_crm": "Dr. Roberto Souza", "especialidade_id": 2, "sintomas_json": [{"id": 14, "nome": "Confusão mental aguda"}], "gravidade": "AMARELO", "status": "PENDENTE", "marcado_por": None, "criado_em": now_str, "atualizado_em": now_str, "deleted_at": None},
-                {"id": 4, "paciente_cns": encrypt_data("444444444444444"), "medico_solicitante_crm": "Dr. Roberto Souza", "especialidade_id": 3, "sintomas_json": [{"id": 6, "nome": "Fratura"}], "gravidade": "VERDE", "status": "PENDENTE", "marcado_por": None, "criado_em": now_str, "atualizado_em": now_str, "deleted_at": None},
-                {"id": 5, "paciente_cns": encrypt_data("555555555555555"), "medico_solicitante_crm": "Dr. Roberto Souza", "especialidade_id": 4, "sintomas_json": [{"id": 9, "nome": "Nódulo tireoidiano palpável"}], "gravidade": "VERDE", "status": "PENDENTE", "marcado_por": None, "criado_em": now_str, "atualizado_em": now_str, "deleted_at": None},
-                {"id": 6, "paciente_cns": encrypt_data("666666666666666"), "medico_solicitante_crm": "Dra. Ana Costa", "especialidade_id": 12, "sintomas_json": [{"id": 12, "nome": "Convulsão"}], "gravidade": "VERMELHO", "status": "PENDENTE", "marcado_por": None, "criado_em": now_str, "atualizado_em": now_str, "deleted_at": None},
-                {"id": 7, "paciente_cns": encrypt_data("777777777777777"), "medico_solicitante_crm": "Dra. Ana Costa", "especialidade_id": 1, "sintomas_json": [{"id": 10, "nome": "Dispneia aguda"}], "gravidade": "VERMELHO", "status": "PENDENTE", "marcado_por": None, "criado_em": now_str, "atualizado_em": now_str, "deleted_at": None},
-                {"id": 8, "paciente_cns": encrypt_data("888888888888888"), "medico_solicitante_crm": "Dra. Ana Costa", "especialidade_id": 2, "sintomas_json": [{"id": 5, "nome": "Febre alta"}], "gravidade": "AMARELO", "status": "PENDENTE", "marcado_por": None, "criado_em": now_str, "atualizado_em": now_str, "deleted_at": None}
+                {"id": 1, "paciente_prep": encrypt_data("10000016"), "medico_solicitante_crm": "Dr. Carlos Silva", "especialidade_id": 1, "sintomas_json": [{"id": 4, "nome": "Dor torácica intensa"}], "gravidade": "VERMELHO", "status": "PENDENTE", "marcado_por": None, "criado_em": now_str, "atualizado_em": now_str, "deleted_at": None},
+                {"id": 2, "paciente_prep": encrypt_data("7700201"), "medico_solicitante_crm": "Dr. Carlos Silva", "especialidade_id": 1, "sintomas_json": [{"id": 2, "nome": "Infarto / Dor torácica súbita"}], "gravidade": "VERMELHO", "status": "PENDENTE", "marcado_por": None, "criado_em": now_str, "atualizado_em": now_str, "deleted_at": None},
+                {"id": 3, "paciente_prep": encrypt_data("7700301"), "medico_solicitante_crm": "Dr. Roberto Souza", "especialidade_id": 2, "sintomas_json": [{"id": 14, "nome": "Confusão mental aguda"}], "gravidade": "AMARELO", "status": "PENDENTE", "marcado_por": None, "criado_em": now_str, "atualizado_em": now_str, "deleted_at": None},
+                {"id": 4, "paciente_prep": encrypt_data("7700401"), "medico_solicitante_crm": "Dr. Roberto Souza", "especialidade_id": 3, "sintomas_json": [{"id": 6, "nome": "Fratura"}], "gravidade": "VERDE", "status": "PENDENTE", "marcado_por": None, "criado_em": now_str, "atualizado_em": now_str, "deleted_at": None},
+                {"id": 5, "paciente_prep": encrypt_data("55555555"), "medico_solicitante_crm": "Dr. Roberto Souza", "especialidade_id": 4, "sintomas_json": [{"id": 9, "nome": "Nódulo tireoidiano palpável"}], "gravidade": "VERDE", "status": "PENDENTE", "marcado_por": None, "criado_em": now_str, "atualizado_em": now_str, "deleted_at": None},
+                {"id": 6, "paciente_prep": encrypt_data("66666666"), "medico_solicitante_crm": "Dra. Ana Costa", "especialidade_id": 12, "sintomas_json": [{"id": 12, "nome": "Convulsão"}], "gravidade": "VERMELHO", "status": "PENDENTE", "marcado_por": None, "criado_em": now_str, "atualizado_em": now_str, "deleted_at": None},
+                {"id": 7, "paciente_prep": encrypt_data("77777777"), "medico_solicitante_crm": "Dra. Ana Costa", "especialidade_id": 1, "sintomas_json": [{"id": 10, "nome": "Dispneia aguda"}], "gravidade": "VERMELHO", "status": "PENDENTE", "marcado_por": None, "criado_em": now_str, "atualizado_em": now_str, "deleted_at": None},
+                {"id": 8, "paciente_prep": encrypt_data("88888888"), "medico_solicitante_crm": "Dra. Ana Costa", "especialidade_id": 2, "sintomas_json": [{"id": 5, "nome": "Febre alta"}], "gravidade": "AMARELO", "status": "PENDENTE", "marcado_por": None, "criado_em": now_str, "atualizado_em": now_str, "deleted_at": None}
             ]
             with open(interconsultas_json_path, "w", encoding="utf-8") as f:
                 json.dump(default_pedidos, f, indent=2, ensure_ascii=False)

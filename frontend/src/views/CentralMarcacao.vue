@@ -147,7 +147,7 @@
           <thead class="bg-gray-50">
             <tr>
               <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">ID</th>
-              <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Paciente / CNS</th>
+              <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Paciente / PREP</th>
               <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Especialidade (AGHU)</th>
               <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Gravidade Clínica</th>
               <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Pontuação</th>
@@ -166,7 +166,7 @@
             >
               <td class="px-4 py-3 text-sm font-medium text-gray-900">#{{ pedido.id }}</td>
               <td class="px-4 py-3 text-sm">
-                <div class="font-mono text-gray-700 font-semibold">{{ pedido.paciente_cns }}</div>
+                <div class="font-mono text-gray-700 font-semibold">{{ pedido.paciente_prep }}</div>
                 <div class="text-xs text-gray-400 mt-0.5">{{ pedido.paciente_nome || 'Não identificado' }}</div>
               </td>
               <td class="px-4 py-3 text-sm text-gray-600">{{ obterNomeEspecialidade(pedido.especialidade_id) }}</td>
@@ -242,8 +242,8 @@
                 <p class="text-sm font-semibold text-gray-800 mt-0.5">{{ pedidoSelecionado.paciente_nome || 'Não identificado' }}</p>
               </div>
               <div>
-                <p class="text-xs font-semibold text-gray-400 uppercase">CNS do Paciente (Decifrado)</p>
-                <p class="text-sm font-mono font-bold text-gray-800 mt-0.5 select-all">{{ pedidoSelecionado.paciente_cns }}</p>
+                <p class="text-xs font-semibold text-gray-400 uppercase">PREP do Paciente (Decifrado)</p>
+                <p class="text-sm font-mono font-bold text-gray-800 mt-0.5 select-all">{{ pedidoSelecionado.paciente_prep }}</p>
               </div>
             </div>
             <div class="grid grid-cols-2 gap-4">

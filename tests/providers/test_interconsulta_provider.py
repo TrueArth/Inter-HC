@@ -35,7 +35,7 @@ async def test_inserir_listar_inativar_pedido(db_session: AsyncSession):
     
     # 1. Inserir pedido
     novo_pedido = {
-        "paciente_cns": "987654321012345",
+        "paciente_prep": "7700201",
         "medico_solicitante_crm": "54321-PE",
         "especialidade_id": 2,
         "sintomas_json": [{"id": 5, "nome": "Febre"}],
@@ -46,13 +46,13 @@ async def test_inserir_listar_inativar_pedido(db_session: AsyncSession):
     criado = await provider.inserir_pedido(novo_pedido)
     assert criado["id"] is not None
     # Deve retornar desencriptado conforme a implementação
-    assert criado["paciente_cns"] == "987654321012345"
+    assert criado["paciente_prep"] == "7700201"
     
     # 2. Listar pedidos
     pedidos = await provider.listar_pedidos_ativos()
     assert len(pedidos) == 1
     assert pedidos[0]["id"] == criado["id"]
-    assert pedidos[0]["paciente_cns"] == "987654321012345"
+    assert pedidos[0]["paciente_prep"] == "7700201"
     
     # 3. Soft Delete
     sucesso = await provider.inativar_pedido(criado["id"])

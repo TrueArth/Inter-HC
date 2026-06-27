@@ -493,12 +493,48 @@
       </div>
 
       <div v-else class="space-y-6">
+        <!-- Top bar with Title and Export Button -->
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+          <div>
+            <h2 class="text-lg font-bold text-gray-800">Painel Analytics</h2>
+            <p class="text-xs text-gray-400 mt-0.5">Indicadores de desempenho e fila de regulação do InterHC.</p>
+          </div>
+          <Button variant="primary" :loading="exportandoExcel" @click="exportarExcel" class="flex items-center gap-2">
+            <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+            Exportar para Excel
+          </Button>
+        </div>
+
         <!-- Highlights Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
+            <div>
+              <p class="text-sm text-gray-500">Total de Interconsultas</p>
+              <h3 class="text-2xl font-bold text-gray-800 mt-1">{{ stats.total_interconsultas }}</h3>
+              <p class="text-xs text-gray-400 mt-1">Solicitações ativas</p>
+            </div>
+            <div class="bg-blue-50/50 text-blue-600 p-3 rounded-lg">
+              <InboxIcon class="h-6 w-6" />
+            </div>
+          </div>
+
+          <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
+            <div>
+              <p class="text-sm text-gray-500">Tempo Médio de Marcação</p>
+              <h3 class="text-2xl font-bold text-gray-800 mt-1">{{ stats.tempo_medio_atendimento_formatado }}</h3>
+              <p class="text-xs text-gray-400 mt-1">Média para agendamento</p>
+            </div>
+            <div class="bg-indigo-50 text-indigo-600 p-3 rounded-lg">
+              <ClockIcon class="h-6 w-6" />
+            </div>
+          </div>
+
           <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
             <div>
               <p class="text-sm text-gray-500">Especialidade Mais Solicitada</p>
-              <h3 class="text-2xl font-bold text-gray-800 mt-1">{{ stats.top_specialty.name }}</h3>
+              <h3 class="text-2xl font-bold text-gray-800 mt-1 truncate max-w-[160px]">{{ stats.top_specialty.name }}</h3>
               <p class="text-xs text-blue-600 font-semibold mt-1">{{ stats.top_specialty.count }} solicitações</p>
             </div>
             <div class="bg-blue-50 text-blue-600 p-3 rounded-lg">
@@ -508,20 +544,9 @@
 
           <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
             <div>
-              <p class="text-sm text-gray-500">Total de Solicitações Ativas</p>
-              <h3 class="text-2xl font-bold text-gray-800 mt-1">{{ totalSolicitacoes }}</h3>
-              <p class="text-xs text-gray-400 mt-1">Aguardando regulação/agendadas</p>
-            </div>
-            <div class="bg-gray-50 text-gray-600 p-3 rounded-lg">
-              <InboxIcon class="h-6 w-6" />
-            </div>
-          </div>
-
-          <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
-            <div>
               <p class="text-sm text-gray-500">Total de Casos Indevidos</p>
               <h3 class="text-2xl font-bold text-red-600 mt-1">{{ totalIndevidas }}</h3>
-              <p class="text-xs text-red-400 font-semibold mt-1">Casos de baixa complexidade (Verde)</p>
+              <p class="text-xs text-red-400 font-semibold mt-1">Baixa complexidade (Verde)</p>
             </div>
             <div class="bg-red-50 text-red-600 p-3 rounded-lg">
               <ExclamationTriangleIcon class="h-6 w-6" />
@@ -529,8 +554,8 @@
           </div>
         </div>
 
-        <!-- Detail Metrics Lists -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Detail Metrics Lists Row 1 -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <!-- Specialties Distribution -->
           <Card class="shadow-sm border border-gray-200">
             <template #header>
@@ -555,6 +580,33 @@
             <p v-else class="text-sm text-gray-400 text-center py-6">Nenhum dado registrado.</p>
           </Card>
 
+          <!-- Pending Specialties -->
+          <Card class="shadow-sm border border-gray-200">
+            <template #header>
+              <h3 class="text-md font-bold text-gray-800">Especialidades com Mais Pendências</h3>
+              <p class="text-xs text-gray-400 mt-0.5">Ranking de solicitações pendentes por especialidade.</p>
+            </template>
+            
+            <div class="space-y-4 mt-4" v-if="stats.especialidades_mais_pendencias.length > 0">
+              <div v-for="item in stats.especialidades_mais_pendencias" :key="item.name" class="space-y-1">
+                <div class="flex justify-between text-xs">
+                  <span class="font-semibold text-gray-700">{{ item.name }}</span>
+                  <span class="font-bold text-amber-600">{{ item.count }} pendentes</span>
+                </div>
+                <div class="w-full bg-gray-100 rounded-full h-1.5">
+                  <div 
+                    class="bg-amber-500 h-1.5 rounded-full" 
+                    :style="{ width: (item.count / maxPendingCount) * 100 + '%' }"
+                  ></div>
+                </div>
+              </div>
+            </div>
+            <p v-else class="text-sm text-gray-400 text-center py-6">Nenhuma solicitação pendente.</p>
+          </Card>
+        </div>
+
+        <!-- Detail Metrics Lists Row 2 -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <!-- Top Requesting Doctors -->
           <Card class="shadow-sm border border-gray-200">
             <template #header>
@@ -743,7 +795,8 @@ import {
   ExclamationTriangleIcon,
   InboxIcon,
   QueueListIcon,
-  ClipboardDocumentListIcon
+  ClipboardDocumentListIcon,
+  ClockIcon
 } from '@heroicons/vue/24/outline';
 
 const authStore = useAuthStore();
@@ -800,6 +853,28 @@ const carregarEstatisticas = async () => {
     console.error("Erro ao carregar estatísticas:", error);
   } finally {
     loadingStats.value = false;
+  }
+};
+
+const exportandoExcel = ref(false);
+const exportarExcel = async () => {
+  exportandoExcel.value = true;
+  try {
+    const response = await api.get('/api/admin/statistics/export', {
+      responseType: 'blob'
+    });
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'analytics_interhc.xlsx');
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(url);
+  } catch (error: any) {
+    console.error("Erro ao exportar estatísticas:", error);
+  } finally {
+    exportandoExcel.value = false;
   }
 };
 
@@ -1005,10 +1080,6 @@ onMounted(() => {
 });
 
 // Computed Stats Properties
-const totalSolicitacoes = computed(() => {
-  if (!stats.value) return 0;
-  return stats.value.specialties_distribution.reduce((acc: number, item: any) => acc + item.count, 0);
-});
 
 const totalIndevidas = computed(() => {
   if (!stats.value) return 0;
@@ -1028,6 +1099,11 @@ const maxDoctorCount = computed(() => {
 const maxInappropriateCount = computed(() => {
   if (!stats.value || stats.value.inappropriate_doctors.length === 0) return 1;
   return Math.max(...stats.value.inappropriate_doctors.map((item: any) => item.count));
+});
+
+const maxPendingCount = computed(() => {
+  if (!stats.value || !stats.value.especialidades_mais_pendencias || stats.value.especialidades_mais_pendencias.length === 0) return 1;
+  return Math.max(...stats.value.especialidades_mais_pendencias.map((item: any) => item.count));
 });
 
 const roleLabel = (role: string) => {

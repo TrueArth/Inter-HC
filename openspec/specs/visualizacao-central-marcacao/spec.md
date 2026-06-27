@@ -8,7 +8,7 @@ O sistema MUST disponibilizar um painel digital centralizado (Dashboard de Regul
 
 #### Scenario: Visualização da Fila Priorizada
 - **WHEN** o operador da Central de Marcação acessar a rota `/central-marcacao`
-- **THEN** o sistema exibe os pedidos ativos no topo os de gravidade 'VERMELHO', seguidos por 'AMARELO' e 'VERDE', com dados do paciente decifrados (CNS completo), médico solicitante, data, e os valores numéricos corretos de pontuação (score) e dias na fila (sem estarem vazios ou omitidos).
+- **THEN** o sistema exibe os pedidos ativos no topo os de gravidade 'VERMELHO', seguidos por 'AMARELO' e 'VERDE', com dados do paciente decifrados (PREP completo), médico solicitante, data, e os valores numéricos corretos de pontuação (score) e dias na fila (sem estarem vazios ou omitidos).
 
 ### Requirement: Detalhamento de Sintomas Justificadores
 O painel MUST permitir visualizar a lista completa de sintomas padronizados que justificaram a gravidade clínica de uma solicitação de interconsulta.

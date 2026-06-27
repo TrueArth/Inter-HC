@@ -10,7 +10,7 @@ class InterconsultaPedido(Base):
     __tablename__ = "interconsulta_pedidos"
 
     id = Column(Integer, primary_key=True, index=True)
-    paciente_cns = Column(String, index=True, nullable=False) # Armazenará o CNS (idealmente criptografado)
+    paciente_prep = Column(String, index=True, nullable=False) # Armazenará o PREP (idealmente criptografado)
     medico_solicitante_crm = Column(String, nullable=False)
     especialidade_id = Column(Integer, nullable=False)
     

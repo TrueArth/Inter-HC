@@ -28,7 +28,7 @@ async def db_session():
 async def test_interconsulta_soft_delete(db_session: AsyncSession):
     # Cria pedido mock
     pedido = InterconsultaPedido(
-        paciente_cns=encrypt_data("123456789012345"),
+        paciente_prep=encrypt_data("10000016"),
         medico_solicitante_crm="12345-PE",
         especialidade_id=1,
         sintomas_json=[{"id": 1, "nome": "Dor Torácica"}],
@@ -51,14 +51,14 @@ async def test_interconsulta_soft_delete(db_session: AsyncSession):
 
 @pytest.mark.asyncio
 async def test_interconsulta_aes_encryption(db_session: AsyncSession):
-    original_cns = "123456789012345"
-    encrypted_cns = encrypt_data(original_cns)
+    original_prep = "10000016"
+    encrypted_prep = encrypt_data(original_prep)
     
     # O valor criptografado deve ser diferente do original
-    assert encrypted_cns != original_cns
+    assert encrypted_prep != original_prep
     
     pedido = InterconsultaPedido(
-        paciente_cns=encrypted_cns,
+        paciente_prep=encrypted_prep,
         medico_solicitante_crm="12345-PE",
         especialidade_id=1,
         sintomas_json=[{"id": 1, "nome": "Dor Torácica"}],
@@ -69,5 +69,5 @@ async def test_interconsulta_aes_encryption(db_session: AsyncSession):
     await db_session.refresh(pedido)
 
     # Verifica se ao puxar do banco, a descriptografia funciona
-    cns_retornado = decrypt_data(pedido.paciente_cns)
-    assert cns_retornado == original_cns
+    prep_retornado = decrypt_data(pedido.paciente_prep)
+    assert prep_retornado == original_prep

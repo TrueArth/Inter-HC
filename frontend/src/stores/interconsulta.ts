@@ -14,7 +14,7 @@ export interface SintomaPayload {
 }
 
 export interface InterconsultaCreatePayload {
-  paciente_cns: string;
+  paciente_prep: string;
   medico_solicitante_crm: string;
   especialidade_id: number;
   sintomas_json: SintomaPayload[];
@@ -22,7 +22,7 @@ export interface InterconsultaCreatePayload {
 
 export interface InterconsultaPedido {
   id: number;
-  paciente_cns: string;
+  paciente_prep: string;
   paciente_nome?: string | null;
   medico_solicitante_crm: string;
   especialidade_id: number;
@@ -46,24 +46,24 @@ export interface EspecialidadeCatalogoItem {
 export const ESPECIALIDADES_CATALOGO: EspecialidadeCatalogoItem[] = [];
 export const SINTOMAS_CATALOGO_MVP: SintomaCatalogoItem[] = [];
 
-export function mascararCns(cns: string): string {
-  const digits = cns.replace(/\D/g, '');
-  if (digits.length < 4) {
+export function mascararPrep(prep: string): string {
+  const digits = prep.replace(/\D/g, '');
+  if (digits.length < 3) {
     return '***';
   }
-  return `***${digits.slice(-4)}`;
+  return `***${digits.slice(-3)}`;
 }
 
 export function validarFormularioInterconsulta(
-  cns: string,
+  prep: string,
   especialidadeId: number,
   sintomasSelecionados: SintomaCatalogoItem[],
 ): string | null {
-  if (/\D/.test(cns)) {
-    return 'O CNS deve conter apenas números.';
+  if (/\D/.test(prep)) {
+    return 'O número do PREP deve conter apenas números.';
   }
-  if (cns.length !== 15) {
-    return 'O CNS deve conter exatamente 15 dígitos.';
+  if (prep.length < 7 || prep.length > 8) {
+    return 'O número do PREP deve conter entre 7 e 8 dígitos.';
   }
   if (!Number.isInteger(especialidadeId) || especialidadeId < 1) {
     return 'Informe o código da especialidade (número maior ou igual a 1).';
@@ -198,7 +198,7 @@ export const useInterconsultaStore = defineStore('interconsulta', () => {
     listarSintomasPorEspecialidade,
     listarEspecialidades,
     criarPedido,
-    mascararCns,
+    mascararPrep,
     atualizarStatusPedido,
     reprocessarPedido,
   };

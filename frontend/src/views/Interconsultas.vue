@@ -7,14 +7,14 @@
 
       <form class="space-y-4" @submit.prevent="enviar">
         <div class="form-group">
-          <label for="pacienteCns" class="form-label">CNS do paciente</label>
+          <label for="pacientePrep" class="form-label">PREP do paciente</label>
           <input
-            id="pacienteCns"
-            v-model="pacienteCns"
+            id="pacientePrep"
+            v-model="pacientePrep"
             type="text"
             inputmode="numeric"
-            maxlength="15"
-            placeholder="15 dígitos"
+            maxlength="8"
+            placeholder="7 a 8 dígitos"
             class="form-control"
           />
         </div>
@@ -146,7 +146,7 @@ import {
 const toast = useToast();
 const interconsultaStore = useInterconsultaStore();
 
-const pacienteCns = ref('');
+const pacientePrep = ref('');
 const especialidadeId = ref(1);
 const sintomasSelecionados = ref<SintomaCatalogoItem[]>([]);
 
@@ -291,7 +291,7 @@ function scrollToHighlighted() {
 }
 
 function limparFormulario(): void {
-  pacienteCns.value = '';
+  pacientePrep.value = '';
   especialidadeId.value = 1;
   sintomasSelecionados.value = [];
   termoBusca.value = '';
@@ -301,7 +301,7 @@ function limparFormulario(): void {
 
 async function enviar(): Promise<void> {
   const erroValidacao = validarFormularioInterconsulta(
-    pacienteCns.value,
+    pacientePrep.value,
     especialidadeId.value,
     sintomasSelecionados.value,
   );
@@ -312,7 +312,7 @@ async function enviar(): Promise<void> {
 
   try {
     const criado = await interconsultaStore.criarPedido({
-      paciente_cns: pacienteCns.value,
+      paciente_prep: pacientePrep.value,
       medico_solicitante_crm: '-',
       especialidade_id: especialidadeId.value,
       sintomas_json: sintomasSelecionados.value.map((s) => ({ id: s.id, nome: s.nome })),

@@ -13,7 +13,7 @@ class InterconsultaMockProvider(InterconsultaProviderInterface):
     Mock data provider for Interconsulta.
     
     Persists data in a local JSON file ('data/interconsultas.json') to simulate a database.
-    Applies AES encryption on 'paciente_cns' before saving and decrypts it on retrieval,
+    Applies AES encryption on 'paciente_prep' before saving and decrypts it on retrieval,
     matching the security behavior of the Postgres provider.
     """
 
@@ -51,13 +51,13 @@ class InterconsultaMockProvider(InterconsultaProviderInterface):
                 pass
         return val
 
-    def _decrypt_cns(self, encrypted_cns: str) -> str:
-        """Safely decrypts patient CNS, falling back to original if decryption fails."""
+    def _decrypt_prep(self, encrypted_prep: str) -> str:
+        """Safely decrypts patient PREP, falling back to original if decryption fails."""
         try:
-            return decrypt_data(encrypted_cns)
+            return decrypt_data(encrypted_prep)
         except (InvalidToken, Exception):
             # Graceful fallback: return as-is (useful if stored as plain text or key changed)
-            return encrypted_cns
+            return encrypted_prep
 
     async def inserir_pedido(self, pedido_data: dict) -> dict:
         """
@@ -72,8 +72,8 @@ class InterconsultaMockProvider(InterconsultaProviderInterface):
         
         now_str = datetime.now(timezone.utc).isoformat()
         
-        cns_original = pedido_data.get("paciente_cns", "")
-        cns_encrypted = encrypt_data(cns_original)
+        prep_original = pedido_data.get("paciente_prep", "")
+        prep_encrypted = encrypt_data(prep_original)
         
         # Sintomas can be list or string
         sintomas = pedido_data.get("sintomas_json", [])
@@ -85,7 +85,7 @@ class InterconsultaMockProvider(InterconsultaProviderInterface):
 
         new_record = {
             "id": next_id,
-            "paciente_cns": cns_encrypted,
+            "paciente_prep": prep_encrypted,
             "medico_solicitante_crm": pedido_data.get("medico_solicitante_crm", ""),
             "especialidade_id": int(pedido_data.get("especialidade_id", 0)),
             "sintomas_json": sintomas,
@@ -104,7 +104,7 @@ class InterconsultaMockProvider(InterconsultaProviderInterface):
         # Return record with parsed datetimes and decrypted CNS
         return {
             "id": new_record["id"],
-            "paciente_cns": cns_original,
+            "paciente_prep": prep_original,
             "medico_solicitante_crm": new_record["medico_solicitante_crm"],
             "especialidade_id": new_record["especialidade_id"],
             "sintomas_json": new_record["sintomas_json"],
@@ -131,11 +131,11 @@ class InterconsultaMockProvider(InterconsultaProviderInterface):
             if especialidade_id is not None and int(r.get("especialidade_id", 0)) != especialidade_id:
                 continue
                 
-            cns_decrypted = self._decrypt_cns(r.get("paciente_cns", ""))
+            prep_decrypted = self._decrypt_prep(r.get("paciente_prep", ""))
             
             active_records.append({
                 "id": r["id"],
-                "paciente_cns": cns_decrypted,
+                "paciente_prep": prep_decrypted,
                 "medico_solicitante_crm": r.get("medico_solicitante_crm", ""),
                 "especialidade_id": int(r.get("especialidade_id", 0)),
                 "sintomas_json": r.get("sintomas_json", []),

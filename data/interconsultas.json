@@ -1,7 +1,7 @@
 [
   {
     "id": 1,
-    "paciente_cns": "gAAAAABqNrZppwLFEAL6q16SBYFr_2EnhNGQL7AXkC8iV3xd2v0B006xCzapaCwyLvibDWRTmrmi_EukH5nf71qHeCGy-wy7WQ==",
+    "paciente_prep": "gAAAAABqPwIZPbMvO4MR6V7dsJ8sAaXY9lRPRdYkaAARua0-zzQ0dK9cgXhJUB7GemexQxeudqFVVZPC_SSPJ0JwDBiNGk7JFA==",
     "medico_solicitante_crm": "Dr. Carlos Silva",
     "especialidade_id": 1,
     "sintomas_json": [
@@ -11,15 +11,15 @@
       }
     ],
     "gravidade": "VERMELHO",
-    "status": "AGENDADO",
-    "marcado_por": "regulador",
-    "criado_em": "2026-06-20T15:48:57.212877+00:00",
-    "atualizado_em": "2026-06-20T15:58:12.465232+00:00",
+    "status": "PENDENTE",
+    "marcado_por": null,
+    "criado_em": "2026-06-26T22:50:01.529967+00:00",
+    "atualizado_em": "2026-06-26T22:50:01.529967+00:00",
     "deleted_at": null
   },
   {
     "id": 2,
-    "paciente_cns": "gAAAAABqNrZp5U_j5sCo8Q0K9GQ0DpWvMvfd-dHML7H6cH89CepBdKBEm0O8B4AbHA_7P6PJo3F9WjXMaEuBTmrOyQilp57d8g==",
+    "paciente_prep": "gAAAAABqPwIZomyxPHJSPWTAh1AZGIn1omsnRVsqFK3vsQAvH2Cdr29ZDiEvb-i3reHq2WkA2By1UyoHdxP6LEVpJcCEUlxaeg==",
     "medico_solicitante_crm": "Dr. Carlos Silva",
     "especialidade_id": 1,
     "sintomas_json": [
@@ -29,16 +29,15 @@
       }
     ],
     "gravidade": "VERMELHO",
-    "status": "AGENDADO",
-    "marcado_por": "regulador",
-    "criado_em": "2026-06-20T15:48:57.212877+00:00",
-    "atualizado_em": "2026-06-21T00:46:26.896290+00:00",
-    "deleted_at": null,
-    "data_consulta": "2025-06-19T03:11:00+00:00"
+    "status": "PENDENTE",
+    "marcado_por": null,
+    "criado_em": "2026-06-26T22:50:01.529967+00:00",
+    "atualizado_em": "2026-06-26T22:50:01.529967+00:00",
+    "deleted_at": null
   },
   {
     "id": 3,
-    "paciente_cns": "gAAAAABqNrZpM7qzCwGzdsEZuxrxzkSynAMbmfb4fX8POHgnB9125ONZn9LzcpDZZ7KV1ewrXZoWeWTmtJ49mbA29gUhY6PEJg==",
+    "paciente_prep": "gAAAAABqPwIZgppR9FU_PAHuuCgmhlTBD6CLz38ntqTwMu6bHS4HoTZvfjmR1dlee0QSjRBtRHFVPt-WZnjmtjlX2L_q56p8fA==",
     "medico_solicitante_crm": "Dr. Roberto Souza",
     "especialidade_id": 2,
     "sintomas_json": [
@@ -50,13 +49,13 @@
     "gravidade": "AMARELO",
     "status": "PENDENTE",
     "marcado_por": null,
-    "criado_em": "2026-06-20T15:48:57.212877+00:00",
-    "atualizado_em": "2026-06-20T15:48:57.212877+00:00",
+    "criado_em": "2026-06-26T22:50:01.529967+00:00",
+    "atualizado_em": "2026-06-26T22:50:01.529967+00:00",
     "deleted_at": null
   },
   {
     "id": 4,
-    "paciente_cns": "gAAAAABqNrZprtRvuEBGEVEBLzFnGgjkCRMMjth4OwIkyvQi_N2fxoFgwBwhsAaywc-PP7nY-J4Bcw8R4KgGQmGkEiPk-vm05g==",
+    "paciente_prep": "gAAAAABqPwIZmQUhBTzO3ZnkjFDOjCPVLfIEW6MdgW_iB2QJsWiMf9yxE4y5mSiIkw5NuazKhH8DVC5SbfQ6AtIM9SDtQLkuaA==",
     "medico_solicitante_crm": "Dr. Roberto Souza",
     "especialidade_id": 3,
     "sintomas_json": [
@@ -68,13 +67,13 @@
     "gravidade": "VERDE",
     "status": "PENDENTE",
     "marcado_por": null,
-    "criado_em": "2026-06-20T15:48:57.212877+00:00",
-    "atualizado_em": "2026-06-20T15:48:57.212877+00:00",
+    "criado_em": "2026-06-26T22:50:01.529967+00:00",
+    "atualizado_em": "2026-06-26T22:50:01.529967+00:00",
     "deleted_at": null
   },
   {
     "id": 5,
-    "paciente_cns": "gAAAAABqNrZpbRyxhqADGxTbHw_OtzgmgLEx5dZDQHZNzerZlJyMAjreYFTirYvNSZQgn8fWx-QamM1PFR5PiYbDnJdbBBPSag==",
+    "paciente_prep": "gAAAAABqPwIZG6MUSz-Sv08f08MxkNkc8HmcgCTB_f7uBHGgcmc_xxpdOKmAwWPRoojIX0y3gikqsAJot9tnduXLd0moDC4WEw==",
     "medico_solicitante_crm": "Dr. Roberto Souza",
     "especialidade_id": 4,
     "sintomas_json": [
@@ -86,13 +85,13 @@
     "gravidade": "VERDE",
     "status": "PENDENTE",
     "marcado_por": null,
-    "criado_em": "2026-06-20T15:48:57.212877+00:00",
-    "atualizado_em": "2026-06-20T15:48:57.212877+00:00",
+    "criado_em": "2026-06-26T22:50:01.529967+00:00",
+    "atualizado_em": "2026-06-26T22:50:01.529967+00:00",
     "deleted_at": null
   },
   {
     "id": 6,
-    "paciente_cns": "gAAAAABqNrZpTsxUDe3GfFBVmO3gKedSWV_7LT0Vua9yA2HzOA5ctL_E6GvVorRYu9xwHGBFESfApSAKqf4lfE7mp_j7w11o5w==",
+    "paciente_prep": "gAAAAABqPwIZSd3ZtBz-b0fpvTLApoG0W1TPgZp5SBUMua-DLEgPSjujSEdESrrm1UD-M0Ws84BPyVmkIxRmprhsPJ28iAkZVg==",
     "medico_solicitante_crm": "Dra. Ana Costa",
     "especialidade_id": 12,
     "sintomas_json": [
@@ -102,16 +101,15 @@
       }
     ],
     "gravidade": "VERMELHO",
-    "status": "AGENDADO",
-    "marcado_por": "admin",
-    "criado_em": "2026-06-20T15:48:57.212877+00:00",
-    "atualizado_em": "2026-06-21T01:16:42.036354+00:00",
-    "deleted_at": null,
-    "data_consulta": "2026-07-12T21:20:00+00:00"
+    "status": "PENDENTE",
+    "marcado_por": null,
+    "criado_em": "2026-06-26T22:50:01.529967+00:00",
+    "atualizado_em": "2026-06-26T22:50:01.529967+00:00",
+    "deleted_at": null
   },
   {
     "id": 7,
-    "paciente_cns": "gAAAAABqNrZp8G2U8jPq23EAzuA1ip6y13V0TmwnPT6mXhf0YX1zSThUM_uRECJQfefzgFduyLxvT7XcikU9FAT091TjmliPOw==",
+    "paciente_prep": "gAAAAABqPwIZJc5ofbz8Z8xlIlEOiXLfW1lIx-Psj7Q5nKdXd-pJW_6pXTjDVJatopHP1Cj7L5HS1zB24chme3iIbvdoZPzcAA==",
     "medico_solicitante_crm": "Dra. Ana Costa",
     "especialidade_id": 1,
     "sintomas_json": [
@@ -121,16 +119,15 @@
       }
     ],
     "gravidade": "VERMELHO",
-    "status": "AGENDADO",
-    "marcado_por": "admin",
-    "criado_em": "2026-06-20T15:48:57.212877+00:00",
-    "atualizado_em": "2026-06-21T03:23:08.823401+00:00",
-    "deleted_at": null,
-    "data_consulta": "2026-07-12T03:00:00+00:00"
+    "status": "PENDENTE",
+    "marcado_por": null,
+    "criado_em": "2026-06-26T22:50:01.529967+00:00",
+    "atualizado_em": "2026-06-26T22:50:01.529967+00:00",
+    "deleted_at": null
   },
   {
     "id": 8,
-    "paciente_cns": "gAAAAABqNrZpc4K5wI8erII-ya_DGj2qI8s5BkaYEqqrnEOW_ri3u-r9oavNmSg7P8k3NDU56VYqeORIt1xZOCY0tQhBapCGbQ==",
+    "paciente_prep": "gAAAAABqPwIZGAyzsnE762Pgo-_ux9UzNxR_xKTZXR212-TcVPH9RZ96w5iwlc_P8sckT1OtP7lsOvz6jgDu4GJDE52CTMLz0w==",
     "medico_solicitante_crm": "Dra. Ana Costa",
     "especialidade_id": 2,
     "sintomas_json": [
@@ -140,124 +137,10 @@
       }
     ],
     "gravidade": "AMARELO",
-    "status": "AGENDADO",
-    "marcado_por": "regulador",
-    "criado_em": "2026-06-20T15:48:57.212877+00:00",
-    "atualizado_em": "2026-06-20T15:58:20.141638+00:00",
-    "deleted_at": null
-  },
-  {
-    "id": 9,
-    "paciente_cns": "gAAAAABqNrcjcTTTgTF6TMg5iqx5UDsuez5W4S_EH_chNgs1qP938zHhESr5OwD7T3DAEeNpJeyxq2DzYvAeOfJ2m6uoZ2XPAw==",
-    "medico_solicitante_crm": "Dr. Carlos Silva",
-    "especialidade_id": 6,
-    "sintomas_json": [
-      {
-        "id": 2,
-        "nome": "Infarto / Dor torácica súbita"
-      }
-    ],
-    "gravidade": "VERMELHO",
-    "status": "AGENDADO",
-    "marcado_por": "regulador",
-    "criado_em": "2026-06-20T15:52:03.181487+00:00",
-    "atualizado_em": "2026-06-22T16:54:41.403323+00:00",
-    "deleted_at": null,
-    "data_consulta": "2026-07-12T21:30:00+00:00"
-  },
-  {
-    "id": 10,
-    "paciente_cns": "gAAAAABqNrg_g_Ffc8V-6eKH2lLJxGnPiIYcSh7FrnG9umHvStSkZFo_xyJOcddbc_mBWOF2tC1IBNwh8Cf3P5RxaMeOMYDMCA==",
-    "medico_solicitante_crm": "Administrador do Sistema",
-    "especialidade_id": 16,
-    "sintomas_json": [
-      {
-        "id": 6,
-        "nome": "Fratura"
-      },
-      {
-        "id": 7,
-        "nome": "Ideação suicida ativa"
-      },
-      {
-        "id": 1,
-        "nome": "Cegueira / Perda súbita de visão"
-      },
-      {
-        "id": 12,
-        "nome": "Convulsão"
-      }
-    ],
-    "gravidade": "VERMELHO",
-    "status": "AGENDADO",
-    "marcado_por": "admin",
-    "criado_em": "2026-06-20T15:56:47.436330+00:00",
-    "atualizado_em": "2026-06-25T01:59:55.383602+00:00",
-    "deleted_at": null,
-    "data_consulta": "2026-06-25T12:00:00+00:00"
-  },
-  {
-    "id": 11,
-    "paciente_cns": "gAAAAABqNr0DXdMWYRxil6ERKRaH-6HOIdKiZ8NYYFVlR0w646cXJwL-Td21ovwdX6NVFpBNFppt4QNwWlRivlZIKzrK7vpw4Q==",
-    "medico_solicitante_crm": "Dr. Carlos Silva",
-    "especialidade_id": 1,
-    "sintomas_json": [
-      {
-        "id": 2,
-        "nome": "Infarto / Dor torácica súbita"
-      },
-      {
-        "id": 3,
-        "nome": "AVC / Perda de força unilateral"
-      }
-    ],
-    "gravidade": "VERMELHO",
     "status": "PENDENTE",
     "marcado_por": null,
-    "criado_em": "2026-06-20T16:17:07.368546+00:00",
-    "atualizado_em": "2026-06-20T16:17:07.368546+00:00",
-    "deleted_at": null
-  },
-  {
-    "id": 12,
-    "paciente_cns": "gAAAAABqOWhnw428_4CO_FCns9H_lybd6Io_nzpzrt_Wi_Uoz8lOomZ0-MAf1nyVCtkh8l1Dd0MjSyeDH7TcPDEZsunN_kmtWQ==",
-    "medico_solicitante_crm": "Dr. Carlos Silva",
-    "especialidade_id": 11,
-    "sintomas_json": [
-      {
-        "id": 5,
-        "nome": "Febre alta"
-      },
-      {
-        "id": 4,
-        "nome": "Dor torácica intensa"
-      }
-    ],
-    "gravidade": "VERMELHO",
-    "status": "PENDENTE",
-    "marcado_por": null,
-    "data_consulta": null,
-    "criado_em": "2026-06-22T16:52:55.812841+00:00",
-    "atualizado_em": "2026-06-22T16:52:55.812841+00:00",
-    "deleted_at": null
-  },
-  {
-    "id": 13,
-    "paciente_cns": "gAAAAABqOWh5_hHvzsEPMWkO_FEIowf2WuE22MKHjnVlbsDLEdmPNkpoFCwwg1ym1bNckA_v85zk3fddlQe9y_gyl3rZ8N8gmw==",
-    "medico_solicitante_crm": "Dr. Carlos Silva",
-    "especialidade_id": 1,
-    "sintomas_json": [
-      {
-        "id": 15,
-        "nome": "Tosse Grave"
-      }
-    ],
-    "gravidade": "AMARELO",
-    "status": "PENDENTE",
-    "marcado_por": null,
-    "data_consulta": null,
-    "criado_em": "2026-06-22T16:53:13.111932+00:00",
-    "atualizado_em": "2026-06-22T16:53:13.111932+00:00",
+    "criado_em": "2026-06-26T22:50:01.529967+00:00",
+    "atualizado_em": "2026-06-26T22:50:01.529967+00:00",
     "deleted_at": null
   }
 ]

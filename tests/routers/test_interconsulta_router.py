@@ -116,21 +116,21 @@ async def client():
 # Payloads de teste com diferentes níveis de risco
 # ────────────────────────────────────────────────────────────────
 PAYLOAD_CRITICO = {
-    "paciente_cns": "123456789012345",
+    "paciente_prep": "10000016",
     "medico_solicitante_crm": "54321-PE",
     "especialidade_id": 1,
     "sintomas_json": [{"id": 1, "nome": "Cegueira"}],  # id=1 → VERMELHO
 }
 
 PAYLOAD_MODERADO = {
-    "paciente_cns": "999888777665544",
+    "paciente_prep": "7700201",
     "medico_solicitante_crm": "11111-PB",
     "especialidade_id": 2,
     "sintomas_json": [{"id": 5, "nome": "Febre alta"}],  # id=5 → AMARELO
 }
 
 PAYLOAD_BAIXO = {
-    "paciente_cns": "111222333445566",
+    "paciente_prep": "7700301",
     "medico_solicitante_crm": "22222-RJ",
     "especialidade_id": 3,
     "sintomas_json": [{"id": 99, "nome": "Tosse leve"}],  # sem match → VERDE
@@ -148,7 +148,7 @@ async def test_criar_interconsulta_retorna_201(client: AsyncClient):
     assert response.status_code == 201, response.text
     data = response.json()
     assert isinstance(data["id"], int)
-    assert data["paciente_cns"] == PAYLOAD_CRITICO["paciente_cns"]
+    assert data["paciente_prep"] == PAYLOAD_CRITICO["paciente_prep"]
     # O CRM deve ser sobrescrito com o nome do usuário autenticado (mock JWT)
     assert data["medico_solicitante_crm"] == "medico_teste"
     assert data["especialidade_id"] == PAYLOAD_CRITICO["especialidade_id"]
@@ -205,6 +205,6 @@ async def test_listar_interconsultas_contem_pedido_criado(client: AsyncClient):
 @pytest.mark.asyncio
 async def test_payload_incompleto_retorna_422(client: AsyncClient):
     """Payload sem campos obrigatórios deve retornar HTTP 422 (Unprocessable Entity)."""
-    payload_invalido = {"paciente_cns": "123456789012345"}
+    payload_invalido = {"paciente_prep": "10000016"}
     response = await client.post("/api/interconsultas/", json=payload_invalido)
     assert response.status_code == 422
