@@ -11,11 +11,12 @@
       }
     ],
     "gravidade": "VERMELHO",
-    "status": "PENDENTE",
-    "marcado_por": null,
+    "status": "AGENDADO",
+    "marcado_por": "admin",
     "criado_em": "2026-06-26T22:50:01.529967+00:00",
-    "atualizado_em": "2026-06-26T22:50:01.529967+00:00",
-    "deleted_at": null
+    "atualizado_em": "2026-06-29T13:16:23.903499+00:00",
+    "deleted_at": null,
+    "data_consulta": "2026-06-30T12:00:00+00:00"
   },
   {
     "id": 2,
@@ -141,6 +142,86 @@
     "marcado_por": null,
     "criado_em": "2026-06-26T22:50:01.529967+00:00",
     "atualizado_em": "2026-06-26T22:50:01.529967+00:00",
+    "deleted_at": null
+  },
+  {
+    "id": 9,
+    "paciente_prep": "gAAAAABqQm8d25IS8ow1MiMXTOFJgiKYHHQR1Z5MmPvarpYsVZmLN3PrzdhBnzBgwChfCUoBvqdwlM6U49-m0SUj-8xnsdAdNQ==",
+    "medico_solicitante_crm": "Administrador do Sistema",
+    "especialidade_id": 11,
+    "sintomas_json": [
+      {
+        "id": 34,
+        "nome": "Infecções urinárias complicadas (repetição e/ou rim único)"
+      }
+    ],
+    "gravidade": "VERDE",
+    "status": "AGENDADO",
+    "marcado_por": null,
+    "data_consulta": null,
+    "motivo_negacao": "Não é papel do HC",
+    "criado_em": "2026-06-29T13:11:57.086089+00:00",
+    "atualizado_em": "2026-06-29T13:12:28.363048+00:00",
+    "deleted_at": null
+  },
+  {
+    "id": 10,
+    "paciente_prep": "gAAAAABqQm8uIggZybwnXHfn_vf7keencjeltWUw72llZkVQho8UvazX0YYbOF7ipeBEbQHl6I6R57HuVk5JYxRGtUT0cQiKSQ==",
+    "medico_solicitante_crm": "Administrador do Sistema",
+    "especialidade_id": 11,
+    "sintomas_json": [
+      {
+        "id": 32,
+        "nome": "Proteinúria subnefrótica isolada"
+      }
+    ],
+    "gravidade": "VERDE",
+    "status": "ERRO",
+    "marcado_por": null,
+    "data_consulta": null,
+    "motivo_negacao": "Não é papel do HC",
+    "criado_em": "2026-06-29T13:12:14.783662+00:00",
+    "atualizado_em": "2026-06-29T13:12:14.783662+00:00",
+    "deleted_at": null
+  },
+  {
+    "id": 11,
+    "paciente_prep": "gAAAAABqQnAEDLjilSF3e4Nq6zqQjRuKOyUMqwAJpRuNPL4IKvTCsnhBYXP1OwqGfjY6atvNv7qrG5GEurgRS0fsJMTQBUdAyA==",
+    "medico_solicitante_crm": "Administrador do Sistema",
+    "especialidade_id": 11,
+    "sintomas_json": [
+      {
+        "id": 34,
+        "nome": "Infecções urinárias complicadas (repetição e/ou rim único)"
+      }
+    ],
+    "gravidade": "VERDE",
+    "status": "ERRO",
+    "marcado_por": null,
+    "data_consulta": null,
+    "motivo_negacao": "Não é papel do HC",
+    "criado_em": "2026-06-29T13:15:48.763928+00:00",
+    "atualizado_em": "2026-06-29T13:15:48.763928+00:00",
+    "deleted_at": null
+  },
+  {
+    "id": 12,
+    "paciente_prep": "gAAAAABqQnD7dvUZ12bwCrg9a8BvxGKdBa52i6Si1IgOp2oGFb4z6mdfxB6TLJ109D6_Nj3h4mxXZ-T6t479j5rRfW9stfYbIA==",
+    "medico_solicitante_crm": "Administrador do Sistema",
+    "especialidade_id": 4,
+    "sintomas_json": [
+      {
+        "id": 9,
+        "nome": "Nódulo tireoidiano palpável"
+      }
+    ],
+    "gravidade": "AMARELO",
+    "status": "PENDENTE",
+    "marcado_por": null,
+    "data_consulta": null,
+    "motivo_negacao": null,
+    "criado_em": "2026-06-29T13:19:55.722770+00:00",
+    "atualizado_em": "2026-06-29T13:19:55.722770+00:00",
     "deleted_at": null
   }
 ]

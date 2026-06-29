@@ -1,8 +1,5 @@
-# visualizacao-central-marcacao Specification
+## MODIFIED Requirements
 
-## Purpose
-TBD - created by archiving change visualizacao-central-marcacao. Update Purpose after archive.
-## Requirements
 ### Requirement: Painel de Regulação Centralizado
 O sistema MUST disponibilizar um painel digital centralizado (Dashboard de Regulação) que exiba a fila de solicitações ativas ordenada por gravidade (VERMELHO ➔ AMARELO) e depois por data de criação. Pedidos com gravidade VERDE não devem ser exibidos ou regulados na Central de Marcação. A interface MUST exibir apenas o número do PREP decifrado do paciente, omitindo o nome do paciente, ID numérico do pedido ou ordem de criação. A interface e a API MUST retornar e exibir de forma legível os valores numéricos de pontuação (prioridade) e dias em fila para cada solicitação.
 
@@ -23,18 +20,3 @@ O sistema MUST permitir que o operador da Central altere manualmente o status de
 #### Scenario: Atualizar Status Manualmente
 - **WHEN** o operador marcar um pedido específico como concluído/agendado no painel
 - **THEN** o sistema envia uma requisição de atualização, persiste o status 'AGENDADO' na base de dados (via SQL nativo e provider) e atualiza a interface visual.
-
-### Requirement: Identidade Visual InterHC
-O sistema MUST expor a denominação "InterHC" em todas as áreas principais de branding no frontend.
-
-#### Scenario: Visualização do Nome do Aplicativo
-- **WHEN** qualquer usuário acessar o painel do frontend
-- **THEN** o sistema exibe "InterHC" no logotipo e título da barra lateral, e na tag title da página no navegador.
-
-### Requirement: Exibição Amigável de Especialidades
-O sistema MUST resolver o ID numérico da especialidade e exibir o nome por extenso correspondente em todas as views de listagem e detalhamento da Central de Marcação.
-
-#### Scenario: Visualização do Nome da Especialidade na Fila
-- **WHEN** o operador acessar a fila digital na Central de Marcação
-- **THEN** o sistema exibe o nome legível por extenso da especialidade (ex: "Cardiologia") nas células da tabela e no drawer de detalhes em vez de apenas o ID numérico.
-

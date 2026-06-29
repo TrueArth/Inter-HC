@@ -91,7 +91,10 @@
       <template #header>
         <div class="flex justify-between items-center pb-2">
           <div>
-            <h2 class="text-xl font-bold text-gray-800">Fila Digital de Regulação</h2>
+            <h2 class="text-xl font-bold text-gray-800">
+              Fila Digital de Regulação
+              <span v-if="especialidadeFiltro" class="text-blue-600"> — {{ obterNomeEspecialidade(especialidadeFiltro) }}</span>
+            </h2>
             <p class="text-xs text-gray-400">Classificação pelo Motor de Regras clínica, ordenada por risco</p>
           </div>
           <Button variant="info" size="sm" :loading="interconsultaStore.loading" @click="recarregar">
@@ -146,8 +149,7 @@
         <table class="min-w-full divide-y divide-gray-200 mt-2">
           <thead class="bg-gray-50">
             <tr>
-              <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">ID</th>
-              <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Paciente / PREP</th>
+              <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">PREP</th>
               <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Especialidade (AGHU)</th>
               <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Gravidade Clínica</th>
               <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Pontuação</th>
@@ -164,11 +166,7 @@
               class="hover:bg-gray-50/50 transition cursor-pointer"
               @click="selecionarPedido(pedido)"
             >
-              <td class="px-4 py-3 text-sm font-medium text-gray-900">#{{ pedido.id }}</td>
-              <td class="px-4 py-3 text-sm">
-                <div class="font-mono text-gray-700 font-semibold">{{ pedido.paciente_prep }}</div>
-                <div class="text-xs text-gray-400 mt-0.5">{{ pedido.paciente_nome || 'Não identificado' }}</div>
-              </td>
+              <td class="px-4 py-3 text-sm font-mono text-gray-700 font-semibold">{{ pedido.paciente_prep }}</td>
               <td class="px-4 py-3 text-sm text-gray-600">{{ obterNomeEspecialidade(pedido.especialidade_id) }}</td>
               <td class="px-4 py-3 text-sm">
                 <span :class="gravidadeClass(pedido.gravidade)" class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider">
@@ -230,19 +228,15 @@
       >
         <div class="space-y-6">
           <div class="flex justify-between items-center border-b pb-4">
-            <h3 class="text-lg font-bold text-gray-800">Detalhes da Solicitação #{{ pedidoSelecionado.id }}</h3>
+            <h3 class="text-lg font-bold text-gray-800">Detalhes da Solicitação</h3>
             <button class="text-gray-400 hover:text-gray-600 text-2xl" @click="fecharDetalhes">&times;</button>
           </div>
 
           <!-- Informações Principais -->
           <div class="bg-gray-50 rounded-lg p-4 space-y-3">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 gap-4">
               <div>
-                <p class="text-xs font-semibold text-gray-400 uppercase">Nome do Paciente</p>
-                <p class="text-sm font-semibold text-gray-800 mt-0.5">{{ pedidoSelecionado.paciente_nome || 'Não identificado' }}</p>
-              </div>
-              <div>
-                <p class="text-xs font-semibold text-gray-400 uppercase">PREP do Paciente (Decifrado)</p>
+                <p class="text-xs font-semibold text-gray-400 uppercase">PREP do Paciente</p>
                 <p class="text-sm font-mono font-bold text-gray-800 mt-0.5 select-all">{{ pedidoSelecionado.paciente_prep }}</p>
               </div>
             </div>
@@ -479,10 +473,8 @@ const activeTab = ref<'pendentes' | 'agendados'>('pendentes');
 const especialidadeFiltro = ref<number | null>(null);
 
 const especialidadesComPedidos = computed(() => {
-  const todas = { id: null as any, nome: 'Todas' };
   const idsComPedidos = new Set(pedidos.value.map((p) => p.especialidade_id));
-  const filtradas = interconsultaStore.especialidades.filter((esp) => idsComPedidos.has(esp.id));
-  return [todas, ...filtradas];
+  return interconsultaStore.especialidades.filter((esp) => idsComPedidos.has(esp.id));
 });
 
 function contarPedidosPorEspecialidade(especialidadeId: number | null): number {
@@ -493,7 +485,11 @@ function contarPedidosPorEspecialidade(especialidadeId: number | null): number {
 }
 
 async function selecionarEspecialidadeFila(id: number | null) {
-  especialidadeFiltro.value = id;
+  if (especialidadeFiltro.value === id) {
+    especialidadeFiltro.value = null;
+  } else {
+    especialidadeFiltro.value = id;
+  }
   await recarregar();
 }
 
@@ -588,14 +584,21 @@ const dataFormatadaPorExtenso = computed(() => {
   return dateObj.toLocaleDateString('pt-BR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 });
 
-const pedidos = computed(() => interconsultaStore.pedidos);
+const pedidos = computed(() => interconsultaStore.pedidos.filter((p) => p.gravidade !== 'VERDE'));
+
+const pedidosFiltrados = computed(() => {
+  if (especialidadeFiltro.value === null) {
+    return pedidos.value;
+  }
+  return pedidos.value.filter((p) => p.especialidade_id === especialidadeFiltro.value);
+});
 
 const pedidosPendentes = computed(() => 
-  pedidos.value.filter((p) => p.status === 'PENDENTE' || p.status === 'ENFILEIRADO' || p.status === 'ERRO')
+  pedidosFiltrados.value.filter((p) => p.status === 'PENDENTE' || p.status === 'ENFILEIRADO' || p.status === 'ERRO')
 );
 
 const pedidosAgendados = computed(() => 
-  pedidos.value.filter((p) => p.status === 'AGENDADO')
+  pedidosFiltrados.value.filter((p) => p.status === 'AGENDADO')
 );
 
 const pedidosExibidos = computed(() => 
@@ -684,7 +687,7 @@ function formatarDataSemHora(value?: string | null): string {
 
 async function recarregar() {
   try {
-    await interconsultaStore.listarPedidos(especialidadeFiltro.value);
+    await interconsultaStore.listarPedidos();
   } catch {
     toast.error(interconsultaStore.error ?? 'Falha ao carregar a fila de regulação.');
   }

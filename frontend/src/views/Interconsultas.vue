@@ -317,7 +317,11 @@ async function enviar(): Promise<void> {
       especialidade_id: especialidadeId.value,
       sintomas_json: sintomasSelecionados.value.map((s) => ({ id: s.id, nome: s.nome })),
     });
-    toast.success(`Pedido criado com gravidade ${criado.gravidade}.`);
+    if (criado.status === 'ERRO') {
+      toast.warning(`Solicitação de interconsulta não marcada. Motivo: ${criado.motivo_negacao || 'Não é papel do HC'}`);
+    } else {
+      toast.success('Solicitação de interconsulta registrada com sucesso (aguardando regulação).');
+    }
     limparFormulario();
   } catch {
     const detail =

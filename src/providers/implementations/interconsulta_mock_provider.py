@@ -93,6 +93,7 @@ class InterconsultaMockProvider(InterconsultaProviderInterface):
             "status": pedido_data.get("status", "PENDENTE"),
             "marcado_por": pedido_data.get("marcado_por"),
             "data_consulta": None,
+            "motivo_negacao": pedido_data.get("motivo_negacao"),
             "criado_em": now_str,
             "atualizado_em": now_str,
             "deleted_at": None
@@ -112,6 +113,7 @@ class InterconsultaMockProvider(InterconsultaProviderInterface):
             "status": new_record["status"],
             "marcado_por": new_record["marcado_por"],
             "data_consulta": None,
+            "motivo_negacao": new_record["motivo_negacao"],
             "criado_em": self._parse_datetime(new_record["criado_em"]),
             "atualizado_em": self._parse_datetime(new_record["atualizado_em"])
         }
@@ -143,6 +145,7 @@ class InterconsultaMockProvider(InterconsultaProviderInterface):
                 "status": r.get("status", "PENDENTE"),
                 "marcado_por": r.get("marcado_por"),
                 "data_consulta": self._parse_datetime(r.get("data_consulta")),
+                "motivo_negacao": r.get("motivo_negacao"),
                 "criado_em": self._parse_datetime(r.get("criado_em")),
                 "atualizado_em": self._parse_datetime(r.get("atualizado_em"))
             })

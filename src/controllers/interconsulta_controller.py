@@ -81,7 +81,12 @@ class InterconsultaController:
             regras_db=regras_db
         )
         payload["gravidade"] = gravidade
-        payload["status"] = "PENDENTE"
+        if gravidade == "VERDE":
+            payload["status"] = "ERRO"
+            payload["motivo_negacao"] = "Não é papel do HC"
+        else:
+            payload["status"] = "PENDENTE"
+            payload["motivo_negacao"] = None
         
         # 2. Persistência de Dados via Provider (Criptografia e Soft Delete aplicados no provider)
         try:

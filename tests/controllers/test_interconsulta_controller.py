@@ -52,7 +52,8 @@ async def test_solicitar_interconsulta_sem_sintomas_criticos():
     # Sem ID crítico ou moderado (IDs 1 a 6 mapeados no engine), o retorno padrão é VERDE
     args, _ = mock_provider.inserir_pedido.call_args
     assert args[0]["gravidade"] == "VERDE"
-    assert args[0]["status"] == "PENDENTE"
+    assert args[0]["status"] == "ERRO"
+    assert args[0]["motivo_negacao"] == "Não é papel do HC"
     mock_bg_tasks.add_task.assert_not_called()
 
 @pytest.mark.asyncio

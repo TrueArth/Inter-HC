@@ -33,6 +33,7 @@ class InterconsultaResponse(BaseModel):
     status: str
     marcado_por: Optional[str] = None
     data_consulta: Optional[datetime] = None
+    motivo_negacao: Optional[str] = None
     criado_em: Optional[datetime] = None
     atualizado_em: Optional[datetime] = None
     score_prioridade: Optional[float] = None

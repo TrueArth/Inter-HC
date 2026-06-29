@@ -212,29 +212,6 @@
         
         <div class="flex flex-wrap gap-2 pt-1">
           <button
-            type="button"
-            class="px-4 py-2 text-xs font-bold rounded-lg transition duration-200 focus:outline-none flex items-center gap-2 border"
-            :class="[
-              especialidadeFiltro === 'todas' 
-                ? 'bg-blue-600 border-blue-600 text-white shadow-sm font-bold' 
-                : 'bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100 hover:text-gray-800 font-medium'
-            ]"
-            @click="especialidadeFiltro = 'todas'"
-          >
-            Todas
-            <span 
-              class="px-2 py-0.5 text-[10px] rounded-full font-extrabold transition-colors duration-200"
-              :class="[
-                especialidadeFiltro === 'todas' 
-                  ? 'bg-blue-700 text-white' 
-                  : 'bg-gray-200 text-gray-700'
-              ]"
-            >
-              {{ sintomas.length }}
-            </span>
-          </button>
-          
-          <button
             v-for="esp in especialidades"
             :key="esp.id"
             type="button"
@@ -244,7 +221,7 @@
                 ? 'bg-blue-600 border-blue-600 text-white shadow-sm font-bold' 
                 : 'bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100 hover:text-gray-800 font-medium'
             ]"
-            @click="especialidadeFiltro = esp.id"
+            @click="especialidadeFiltro = (especialidadeFiltro === esp.id ? 'todas' : esp.id)"
           >
             {{ esp.nome }}
             <span 

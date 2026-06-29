@@ -57,6 +57,10 @@ async def lifespan(app: FastAPI):
             await conn.execute(text("ALTER TABLE interconsulta_pedidos ADD COLUMN data_consulta TIMESTAMP"))
         except Exception:
             pass
+        try:
+            await conn.execute(text("ALTER TABLE interconsulta_pedidos ADD COLUMN motivo_negacao VARCHAR"))
+        except Exception:
+            pass
             
         # Seed specialties if table is empty
         res_esps = await conn.execute(text("SELECT COUNT(*) FROM especialidades WHERE deleted_at IS NULL"))

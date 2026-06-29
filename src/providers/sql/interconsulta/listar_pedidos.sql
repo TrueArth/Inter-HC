@@ -8,6 +8,7 @@ SELECT
     status, 
     marcado_por,
     data_consulta,
+    motivo_negacao,
     criado_em, 
     atualizado_em
 FROM interconsulta_pedidos

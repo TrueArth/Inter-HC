@@ -172,10 +172,13 @@ async def test_motor_de_risco_classifica_amarelo(client: AsyncClient):
 
 @pytest.mark.asyncio
 async def test_motor_de_risco_classifica_verde(client: AsyncClient):
-    """Sintoma de baixo risco (id sem match) deve resultar em classificação VERDE."""
+    """Sintoma de baixo risco (id sem match) deve resultar em classificação VERDE e status ERRO (Não é papel do HC)."""
     response = await client.post("/api/interconsultas/", json=PAYLOAD_BAIXO)
     assert response.status_code == 201, response.text
-    assert response.json()["gravidade"] == "VERDE"
+    data = response.json()
+    assert data["gravidade"] == "VERDE"
+    assert data["status"] == "ERRO"
+    assert data["motivo_negacao"] == "Não é papel do HC"
 
 
 @pytest.mark.asyncio

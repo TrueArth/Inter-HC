@@ -31,6 +31,7 @@ export interface InterconsultaPedido {
   sintomas_json?: any;
   marcado_por?: string | null;
   data_consulta?: string | null;
+  motivo_negacao?: string | null;
   criado_em?: string | null;
   atualizado_em?: string | null;
   dias_na_fila?: number;
