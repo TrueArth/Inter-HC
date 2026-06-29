@@ -172,5 +172,84 @@
     "criado_em": "2026-06-29T14:26:59.909200+00:00",
     "atualizado_em": "2026-06-29T14:26:59.909200+00:00",
     "deleted_at": null
+  },
+  {
+    "id": 10,
+    "paciente_prep": "gAAAAABqQof5MD4WddoV8fr1F6p7Yv9p3Q7YAxySy0d7LOOFJQgpVsbU0ODr1PDdIL5uPygU8IfjDfBPpPj6QVHE3PRU20nsgg==",
+    "paciente_contato": null,
+    "medico_solicitante_crm": "Administrador do Sistema",
+    "especialidade_id": 11,
+    "sintomas_json": [
+      {
+        "id": 19,
+        "nome": "Injúria renal aguda"
+      },
+      {
+        "id": 16,
+        "nome": "Síndrome Nefrótica grave (proteinúria > 8g/24h e/ou disfunção renal aguda)"
+      },
+      {
+        "id": 24,
+        "nome": "DRC/dialítico com hiperparatireoidismo secundário grave"
+      }
+    ],
+    "gravidade": "VERMELHO",
+    "status": "PENDENTE",
+    "marcado_por": null,
+    "data_consulta": "2026-06-29T12:00:00+00:00",
+    "motivo_negacao": null,
+    "criado_em": "2026-06-29T14:58:01.460028+00:00",
+    "atualizado_em": "2026-06-29T15:06:55.953306+00:00",
+    "deleted_at": null
+  },
+  {
+    "id": 11,
+    "paciente_prep": "gAAAAABqQogqJeiIpZZBb0VTrJssNHKI2e8Ho6hXo-JovzpFSVlKNU7fGBlMqiJgxLRBHLP6tgx1arOLf1paBiKjUtOxvHHnSw==",
+    "paciente_contato": "gAAAAABqQogqyt-NRk6adCE8SusvV-ZQGM4hM44mskxZGOwRvAWhb5DU_Ktk8wPxm9U_iaO7wifJV3s7j7U-9BpfqYpxJnhWnQ==",
+    "medico_solicitante_crm": "Administrador do Sistema",
+    "especialidade_id": 1,
+    "sintomas_json": [
+      {
+        "id": 4,
+        "nome": "Dor torácica intensa"
+      },
+      {
+        "id": 2,
+        "nome": "Infarto / Dor torácica súbita"
+      },
+      {
+        "id": 10,
+        "nome": "Dispneia aguda"
+      }
+    ],
+    "gravidade": "VERMELHO",
+    "status": "PENDENTE",
+    "marcado_por": null,
+    "data_consulta": null,
+    "motivo_negacao": null,
+    "criado_em": "2026-06-29T14:58:50.592885+00:00",
+    "atualizado_em": "2026-06-29T15:06:35.568071+00:00",
+    "deleted_at": "2026-06-29T15:06:35.568071+00:00"
+  },
+  {
+    "id": 12,
+    "paciente_prep": "gAAAAABqQojnpBZX6NBVwNI85_P0v8d0TCRA-qq64yI1Qfr-khya0zNiB_jK7lJd_VdoCAI7j2DB0KxmHh4x_CIuBFLFrtKj8Q==",
+    "paciente_contato": "gAAAAABqQojnpRVq8mbHAWv4UxO0M3BnTcf0m0CbAA3niJo_DS6Bzia5PPAKNNu_04-a7WEAikcdhzn18O2Q4XaKzugAw5o1nA==",
+    "medico_solicitante_crm": "Administrador do Sistema",
+    "especialidade_id": 17,
+    "sintomas_json": [
+      {
+        "id": 6,
+        "nome": "Fratura"
+      }
+    ],
+    "gravidade": "AMARELO",
+    "status": "PENDENTE",
+    "marcado_por": null,
+    "data_consulta": null,
+    "motivo_negacao": null,
+    "criado_em": "2026-06-29T15:01:59.596636+00:00",
+    "atualizado_em": "2026-06-29T15:01:59.596636+00:00",
+    "deleted_at": null
   }
 ]

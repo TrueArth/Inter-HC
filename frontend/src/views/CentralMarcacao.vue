@@ -211,6 +211,22 @@
                 >
                   <ArrowPathIcon class="h-5 w-5" />
                 </button>
+                <button
+                  v-if="authStore.isAdmin && (pedido.status === 'PENDENTE' || pedido.status === 'ENFILEIRADO' || pedido.status === 'ERRO')"
+                  title="Excluir/Cancelar Pedido"
+                  class="p-1.5 text-red-600 hover:bg-red-50 rounded transition"
+                  @click="cancelarEExcluirPedido(pedido)"
+                >
+                  <TrashIcon class="h-5 w-5" />
+                </button>
+                <button
+                  v-if="authStore.isAdmin && pedido.status === 'AGENDADO'"
+                  title="Reverter para Aguardando"
+                  class="p-1.5 text-amber-600 hover:bg-amber-50 rounded transition"
+                  @click="reverterPedido(pedido)"
+                >
+                  <ArrowUturnLeftIcon class="h-5 w-5" />
+                </button>
               </td>
             </tr>
           </tbody>
@@ -349,6 +365,32 @@
             </template>
             Re-enviar para o AGHU
           </Button>
+
+          <Button 
+            v-if="authStore.isAdmin && (pedidoSelecionado.status === 'PENDENTE' || pedidoSelecionado.status === 'ENFILEIRADO' || pedidoSelecionado.status === 'ERRO')"
+            variant="danger" 
+            class="w-full mt-2"
+            :loading="executingAction"
+            @click="cancelarEExcluirPedido(pedidoSelecionado)"
+          >
+            <template #icon>
+              <TrashIcon class="h-5 w-5" />
+            </template>
+            Excluir/Cancelar Pedido
+          </Button>
+
+          <Button 
+            v-if="authStore.isAdmin && pedidoSelecionado.status === 'AGENDADO'"
+            variant="warning" 
+            class="w-full mt-2"
+            :loading="executingAction"
+            @click="reverterPedido(pedidoSelecionado)"
+          >
+            <template #icon>
+              <ArrowUturnLeftIcon class="h-5 w-5" />
+            </template>
+            Reverter para Aguardando
+          </Button>
         </div>
       </div>
     </div>
@@ -437,6 +479,28 @@
         <Button variant="success" :loading="executingAction" @click="salvarAgendamento">Confirmar Agendamento</Button>
       </template>
     </Modal>
+
+    <!-- Modal de Confirmação Customizado (Substitui window.confirm) -->
+    <Modal :show="mostrarModalConfirmacao" @close="cancelarConfirmacao">
+      <template #header>{{ tituloConfirmacao }}</template>
+      
+      <div class="space-y-4 py-2">
+        <p class="text-sm text-gray-600">
+          {{ mensagemConfirmacao }}
+        </p>
+      </div>
+
+      <template #footer>
+        <Button variant="default" @click="cancelarConfirmacao">Desfazer</Button>
+        <Button 
+          :variant="tipoConfirmacao === 'excluir' ? 'danger' : 'warning'" 
+          :loading="executingAction" 
+          @click="executarConfirmacao"
+        >
+          Confirmar
+        </Button>
+      </template>
+    </Modal>
   </div>
 </template>
 
@@ -453,14 +517,18 @@ import {
   ClockIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
+  TrashIcon,
+  ArrowUturnLeftIcon,
 } from '@heroicons/vue/24/outline';
 import Card from '../components/Card.vue';
 import Button from '../components/Button.vue';
 import Modal from '../components/Modal.vue';
 import { useInterconsultaStore, InterconsultaPedido } from '../stores/interconsulta';
+import { useAuthStore } from '../stores/auth';
 
 const toast = useToast();
 const interconsultaStore = useInterconsultaStore();
+const authStore = useAuthStore();
 
 function obterNomeEspecialidade(id: number): string {
   const esp = interconsultaStore.especialidades.find((x) => x.id === id);
@@ -788,6 +856,75 @@ async function reprocessar(pedido: InterconsultaPedido) {
   );
 
   fecharDetalhes();
+}
+
+const mostrarModalConfirmacao = ref(false);
+const tituloConfirmacao = ref('');
+const mensagemConfirmacao = ref('');
+const tipoConfirmacao = ref<'excluir' | 'reverter'>('excluir');
+let acaoConfirmadaCallback: (() => Promise<void>) | null = null;
+
+function abrirConfirmacao(titulo: string, mensagem: string, tipo: 'excluir' | 'reverter', callback: () => Promise<void>) {
+  tituloConfirmacao.value = titulo;
+  mensagemConfirmacao.value = mensagem;
+  tipoConfirmacao.value = tipo;
+  acaoConfirmadaCallback = callback;
+  mostrarModalConfirmacao.value = true;
+}
+
+function cancelarConfirmacao() {
+  mostrarModalConfirmacao.value = false;
+  acaoConfirmadaCallback = null;
+}
+
+async function executarConfirmacao() {
+  if (acaoConfirmadaCallback) {
+    await acaoConfirmadaCallback();
+  }
+  mostrarModalConfirmacao.value = false;
+  acaoConfirmadaCallback = null;
+}
+
+function cancelarEExcluirPedido(pedido: InterconsultaPedido) {
+  abrirConfirmacao(
+    `Excluir Solicitação de Interconsulta (ID #${pedido.id})`,
+    `Tem certeza de que deseja excluir/cancelar a Solicitação de Interconsulta do paciente ${pedido.paciente_nome || pedido.paciente_prep}?`,
+    'excluir',
+    async () => {
+      executingAction.value = true;
+      try {
+        await interconsultaStore.cancelarPedido(pedido.id);
+        toast.success(`Pedido #${pedido.id} cancelado com sucesso.`);
+        fecharDetalhes();
+        await recarregar();
+      } catch {
+        toast.error(interconsultaStore.error ?? 'Não foi possível cancelar o pedido.');
+      } finally {
+        executingAction.value = false;
+      }
+    }
+  );
+}
+
+function reverterPedido(pedido: InterconsultaPedido) {
+  abrirConfirmacao(
+    `Reverter Solicitação de Interconsulta (ID #${pedido.id})`,
+    `Tem certeza de que deseja reverter o agendamento da Solicitação de Interconsulta do paciente ${pedido.paciente_nome || pedido.paciente_prep} de volta para aguardando agendamento?`,
+    'reverter',
+    async () => {
+      executingAction.value = true;
+      try {
+        await interconsultaStore.atualizarStatusPedido(pedido.id, 'PENDENTE');
+        toast.success(`Pedido #${pedido.id} revertido para pendente com sucesso.`);
+        fecharDetalhes();
+        await recarregar();
+      } catch {
+        toast.error(interconsultaStore.error ?? 'Não foi possível reverter o status do pedido.');
+      } finally {
+        executingAction.value = false;
+      }
+    }
+  );
 }
 
 onMounted(() => {

@@ -249,15 +249,22 @@ export const useInterconsultaStore = defineStore('interconsulta', () => {
     error.value = null;
     try {
       const payload: any = { status };
-      if (dataConsulta) {
+      if (status === 'AGENDADO' && dataConsulta) {
         payload.data_consulta = dataConsulta;
+      } else {
+        payload.data_consulta = null;
       }
       await api.patch(`/api/interconsultas/${pedidoId}/status`, payload);
       const p = pedidos.value.find((x) => x.id === pedidoId);
       if (p) {
         p.status = status;
-        if (dataConsulta) {
-          p.data_consulta = dataConsulta;
+        if (status === 'AGENDADO') {
+          if (dataConsulta) {
+            p.data_consulta = dataConsulta;
+          }
+        } else {
+          p.data_consulta = null;
+          p.marcado_por = null;
         }
         p.atualizado_em = new Date().toISOString();
       }
@@ -287,6 +294,20 @@ export const useInterconsultaStore = defineStore('interconsulta', () => {
     }
   }
 
+  async function cancelarPedido(pedidoId: number): Promise<void> {
+    loading.value = true;
+    error.value = null;
+    try {
+      await api.delete(`/api/interconsultas/${pedidoId}`);
+      pedidos.value = pedidos.value.filter((x) => x.id !== pedidoId);
+    } catch (err: unknown) {
+      error.value = 'Falha ao cancelar o pedido.';
+      throw err;
+    } finally {
+      loading.value = false;
+    }
+  }
+
   return {
     pedidos,
     sintomas,
@@ -305,6 +326,7 @@ export const useInterconsultaStore = defineStore('interconsulta', () => {
     criarPedido,
     mascararPrep,
     atualizarStatusPedido,
+    cancelarPedido,
     reprocessarPedido,
   };
 });

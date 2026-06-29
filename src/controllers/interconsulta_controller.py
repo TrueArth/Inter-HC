@@ -158,6 +158,10 @@ class InterconsultaController:
         """
         Atualiza o status de um pedido de interconsulta.
         """
+        if status != "AGENDADO":
+            marcado_por = None
+            data_consulta = None
+
         if status == "AGENDADO":
             if not data_consulta:
                 raise HTTPException(status_code=400, detail="Data da consulta é obrigatória para agendamento.")
