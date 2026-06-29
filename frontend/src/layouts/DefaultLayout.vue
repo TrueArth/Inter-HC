@@ -26,10 +26,7 @@
 
 
 
-            <router-link v-if="authStore.isAuthenticated && authStore.isAdmin" to="/pacientes" class="flex items-center space-x-2 py-2.5 px-4 rounded transition duration-200 hover:bg-paper-active-link hover:text-white">
-              <UsersIcon class="h-6 w-6" />
-              <span>Pacientes</span>
-            </router-link>
+
 
             <router-link
               v-if="authStore.isAuthenticated && (authStore.isAdmin || authStore.isMedico)"
@@ -80,6 +77,68 @@
         </div>
       </main>
     </div>
+
+    <!-- Floating Undo Banner -->
+    <transition
+      enter-active-class="transition duration-300 ease-out"
+      enter-from-class="transform translate-y-10 opacity-0 scale-95"
+      enter-to-class="transform translate-y-0 opacity-100 scale-100"
+      leave-active-class="transition duration-200 ease-in"
+      leave-from-class="transform translate-y-0 opacity-100 scale-100"
+      leave-to-class="transform translate-y-10 opacity-0 scale-95"
+    >
+      <div 
+        v-if="interconsultaStore.activeUndoAction"
+        class="fixed bottom-6 right-6 z-50 bg-gray-900/95 backdrop-blur text-white rounded-2xl shadow-2xl p-4 flex items-center justify-between gap-6 border border-gray-800 min-w-[320px] font-sans"
+      >
+        <div class="flex items-center gap-3">
+          <div class="relative flex items-center justify-center w-8 h-8">
+            <svg class="w-8 h-8 transform -rotate-90">
+              <circle
+                class="text-gray-700"
+                stroke-width="3"
+                stroke="currentColor"
+                fill="transparent"
+                r="12"
+                cx="16"
+                cy="16"
+              />
+              <circle
+                class="text-blue-500 transition-all duration-1000 ease-linear"
+                stroke-width="3"
+                :stroke-dasharray="2 * Math.PI * 12"
+                :stroke-dashoffset="((30 - interconsultaStore.activeUndoAction.secondsLeft) / 30) * (2 * Math.PI * 12)"
+                stroke-linecap="round"
+                stroke="currentColor"
+                fill="transparent"
+                r="12"
+                cx="16"
+                cy="16"
+              />
+            </svg>
+            <span class="absolute text-[10px] font-bold">{{ interconsultaStore.activeUndoAction.secondsLeft }}</span>
+          </div>
+          <div>
+            <p class="text-xs text-gray-400 font-semibold">Ação pendente...</p>
+            <p class="text-sm font-bold">{{ interconsultaStore.activeUndoAction.name }}</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+          <button 
+            @click="confirmarAcao"
+            class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg shadow transition focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 focus:ring-offset-gray-900"
+          >
+            Confirmar
+          </button>
+          <button 
+            @click="desfazerAcao"
+            class="px-3 py-1.5 bg-gray-700 hover:bg-gray-600 text-white text-xs font-bold rounded-lg shadow transition focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-900"
+          >
+            Desfazer
+          </button>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -88,7 +147,6 @@ import { ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import {
   HomeIcon,
-  UsersIcon,
   ShieldCheckIcon,
   CubeTransparentIcon,
   Bars3Icon,
@@ -99,14 +157,26 @@ import {
 import ProfileDropdown from '../components/ProfileDropdown.vue';
 import Button from '../components/Button.vue';
 import { useAuthStore } from '../stores/auth';
+import { useInterconsultaStore } from '../stores/interconsulta';
 
 const sidebarOpen = ref(false);
 const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
+const interconsultaStore = useInterconsultaStore();
 
 // Close sidebar on route change
 watch(() => route.path, () => {
   sidebarOpen.value = false;
 });
+
+function confirmarAcao() {
+  console.log("Confirmar clicado no banner");
+  interconsultaStore.triggerConfirm();
+}
+
+function desfazerAcao() {
+  console.log("Desfazer clicado no banner");
+  interconsultaStore.triggerUndo();
+}
 </script>

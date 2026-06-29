@@ -211,3 +211,35 @@ async def test_payload_incompleto_retorna_422(client: AsyncClient):
     payload_invalido = {"paciente_prep": "10000016"}
     response = await client.post("/api/interconsultas/", json=payload_invalido)
     assert response.status_code == 422
+
+
+@pytest.mark.asyncio
+async def test_criar_interconsulta_com_contato_valido(client: AsyncClient):
+    """POST /api/interconsultas/ com contato em formato válido (dd) xxxxx-xxxx deve retornar 201."""
+    payload = dict(PAYLOAD_CRITICO)
+    payload["paciente_contato"] = "(81) 98888-8888"
+    response = await client.post("/api/interconsultas/", json=payload)
+    assert response.status_code == 201
+    data = response.json()
+    assert data["paciente_contato"] == "(81) 98888-8888"
+
+
+@pytest.mark.asyncio
+async def test_criar_interconsulta_com_contato_alternativo_valido(client: AsyncClient):
+    """POST /api/interconsultas/ com contato no formato alternativo com espaço ou 8 dígitos deve retornar 201."""
+    payload = dict(PAYLOAD_CRITICO)
+    payload["paciente_contato"] = "(81) 98888- 8888" # Espaço após o hífen
+    response = await client.post("/api/interconsultas/", json=payload)
+    assert response.status_code == 201
+    assert response.json()["paciente_contato"] == "(81) 98888- 8888"
+
+
+@pytest.mark.asyncio
+async def test_criar_interconsulta_com_contato_invalido_retorna_422(client: AsyncClient):
+    """POST /api/interconsultas/ com contato fora do formato deve retornar 422."""
+    payload = dict(PAYLOAD_CRITICO)
+    payload["paciente_contato"] = "81988888888" # Sem formatação
+    response = await client.post("/api/interconsultas/", json=payload)
+    assert response.status_code == 422
+    assert "paciente_contato" in response.text
+

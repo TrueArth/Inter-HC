@@ -14,7 +14,7 @@
     <div class="space-y-4">
       <h2 class="text-xl font-bold text-gray-800">Ações Rápidas</h2>
       
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <!-- Interconsultas Card (Doctor/Admin) -->
         <div 
           v-if="authStore.isAdmin || authStore.isMedico"
@@ -51,23 +51,7 @@
           </div>
         </div>
 
-        <!-- Pacientes Card (Admin) -->
-        <div 
-          v-if="authStore.isAdmin"
-          @click="irPara('/pacientes')"
-          class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-blue-300 transition cursor-pointer flex flex-col justify-between group"
-        >
-          <div>
-            <div class="bg-blue-50 text-blue-600 p-3 rounded-lg w-fit group-hover:bg-blue-100 transition">
-              <UsersIcon class="h-6 w-6" />
-            </div>
-            <h3 class="text-lg font-bold text-gray-800 mt-4 group-hover:text-blue-700 transition">Pacientes</h3>
-            <p class="text-sm text-gray-500 mt-1">Gerencie os prontuários dos pacientes cadastrados e integre dados do AGHU.</p>
-          </div>
-          <div class="mt-6 flex items-center text-xs font-bold text-blue-600 group-hover:translate-x-1 transition duration-200">
-            Gerenciar Pacientes <ArrowRightIcon class="h-4 w-4 ml-1" />
-          </div>
-        </div>
+
 
         <!-- Admin Card (Admin) -->
         <div 
@@ -201,7 +185,6 @@ import api from '../services/api';
 import { 
   ClipboardDocumentListIcon, 
   QueueListIcon, 
-  UsersIcon, 
   UserGroupIcon,
   UserIcon,
   ArrowRightIcon,

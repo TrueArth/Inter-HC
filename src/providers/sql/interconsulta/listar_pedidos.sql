@@ -1,6 +1,7 @@
 SELECT 
     id, 
     paciente_prep, 
+    paciente_contato,
     medico_solicitante_crm, 
     especialidade_id, 
     sintomas_json, 

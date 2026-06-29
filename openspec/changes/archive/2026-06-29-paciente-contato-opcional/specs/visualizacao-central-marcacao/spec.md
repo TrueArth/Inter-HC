@@ -24,10 +24,6 @@ O sistema MUST permitir que o operador da Central altere manualmente o status de
 - **WHEN** o operador marcar um pedido específico como concluído/agendado no painel
 - **THEN** o sistema envia uma requisição de atualização, persiste o status 'AGENDADO' na base de dados (via SQL nativo e provider) e atualiza a interface visual.
 
-#### Scenario: Desfazer Alteração de Status
-- **WHEN** o operador alterar o status de um pedido e clicar em desfazer nos primeiros 30 segundos
-- **THEN** o sistema cancela a chamada e reverte o status da interconsulta visualmente ao estado anterior, sem persistir nenhuma alteração de status.
-
 ### Requirement: Identidade Visual InterHC
 O sistema MUST expor a denominação "InterHC" em todas as áreas principais de branding no frontend.
 

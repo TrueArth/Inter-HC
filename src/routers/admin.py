@@ -506,6 +506,7 @@ async def export_statistics_excel(
                 "ID Solicitação": p.get("id"),
                 "PREP Paciente": prep_decrypted,
                 "Nome Paciente": paciente_nome,
+                "Contato Paciente": p.get("paciente_contato") or "Não Informado",
                 "Médico Solicitante": p.get("medico_solicitante_crm", ""),
                 "Especialidade": esp_name,
                 "Gravidade": p.get("gravidade", ""),
@@ -516,7 +517,7 @@ async def export_statistics_excel(
             
         df_detalhes = pd.DataFrame(rows_detalhe)
         if df_detalhes.empty:
-            df_detalhes = pd.DataFrame(columns=["ID Solicitação", "PREP Paciente", "Nome Paciente", "Médico Solicitante", "Especialidade", "Gravidade", "Status", "Marcado Por", "Data de Criação"])
+            df_detalhes = pd.DataFrame(columns=["ID Solicitação", "PREP Paciente", "Nome Paciente", "Contato Paciente", "Médico Solicitante", "Especialidade", "Gravidade", "Status", "Marcado Por", "Data de Criação"])
             
         # 7. Aba de Usuários Cadastrados
         user_rows = []

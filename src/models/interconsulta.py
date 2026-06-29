@@ -11,6 +11,7 @@ class InterconsultaPedido(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     paciente_prep = Column(String, index=True, nullable=False) # Armazenará o PREP (idealmente criptografado)
+    paciente_contato = Column(String, nullable=True) # Número de contato do paciente (criptografado)
     medico_solicitante_crm = Column(String, nullable=False)
     especialidade_id = Column(Integer, nullable=False)
     

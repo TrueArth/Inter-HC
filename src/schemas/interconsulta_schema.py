@@ -8,6 +8,7 @@ class Sintoma(BaseModel):
 
 class InterconsultaCreate(BaseModel):
     paciente_prep: str = Field(..., description="PREP do paciente (será encriptado via AES-256 no banco)")
+    paciente_contato: Optional[str] = Field(None, description="Contato do paciente no formato (dd) xxxxx-xxxx")
     medico_solicitante_crm: str = Field(..., description="CRM do médico logado solicitante")
     especialidade_id: int = Field(..., description="ID da especialidade desejada no AGHU")
     sintomas_json: List[Sintoma] = Field(default_factory=list, description="Lista de sintomas para análise do Motor de Risco")
@@ -22,10 +23,23 @@ class InterconsultaCreate(BaseModel):
             raise ValueError("O número do PREP deve conter entre 7 e 8 dígitos.")
         return v_clean
 
+    @field_validator("paciente_contato")
+    @classmethod
+    def validate_contato_format(cls, v: Optional[str]) -> Optional[str]:
+        if not v:
+            return None
+        v_clean = v.strip()
+        import re
+        regex = r"^\(\d{2}\)\s?\d{4,5}-\s?\d{4}$"
+        if not re.match(regex, v_clean):
+            raise ValueError("O número de contato do paciente deve estar no formato (dd) xxxxx-xxxx ou (dd) xxxx-xxxx.")
+        return v_clean
+
 class InterconsultaResponse(BaseModel):
     id: int
     paciente_prep: str
     paciente_nome: Optional[str] = None
+    paciente_contato: Optional[str] = None
     medico_solicitante_crm: str
     especialidade_id: int
     sintomas_json: List[Sintoma] = Field(default_factory=list)

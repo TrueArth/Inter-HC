@@ -20,6 +20,18 @@
         </div>
 
         <div class="form-group">
+          <label for="pacienteContato" class="form-label">Contato do paciente (Opcional)</label>
+          <input
+            id="pacienteContato"
+            v-model="pacienteContato"
+            type="text"
+            placeholder="(dd) xxxxx-xxxx ou (dd) xxxx-xxxx"
+            class="form-control"
+            @input="aplicarMascaraTelefone"
+          />
+        </div>
+
+        <div class="form-group">
           <label for="especialidadeId" class="form-label">Especialidade (AGHU)</label>
           <select
             id="especialidadeId"
@@ -147,6 +159,7 @@ const toast = useToast();
 const interconsultaStore = useInterconsultaStore();
 
 const pacientePrep = ref('');
+const pacienteContato = ref('');
 const especialidadeId = ref(1);
 const sintomasSelecionados = ref<SintomaCatalogoItem[]>([]);
 
@@ -290,8 +303,33 @@ function scrollToHighlighted() {
   });
 }
 
+function aplicarMascaraTelefone(event: Event) {
+  const input = event.target as HTMLInputElement;
+  let value = input.value.replace(/\D/g, '');
+  
+  if (value.length > 11) {
+    value = value.slice(0, 11);
+  }
+  
+  if (value.length > 6) {
+    if (value.length > 10) {
+      input.value = `(${value.slice(0, 2)}) ${value.slice(2, 7)}-${value.slice(7)}`;
+    } else {
+      input.value = `(${value.slice(0, 2)}) ${value.slice(2, 6)}-${value.slice(6)}`;
+    }
+  } else if (value.length > 2) {
+    input.value = `(${value.slice(0, 2)}) ${value.slice(2)}`;
+  } else if (value.length > 0) {
+    input.value = `(${value}`;
+  } else {
+    input.value = '';
+  }
+  pacienteContato.value = input.value;
+}
+
 function limparFormulario(): void {
   pacientePrep.value = '';
+  pacienteContato.value = '';
   especialidadeId.value = 1;
   sintomasSelecionados.value = [];
   termoBusca.value = '';
@@ -304,30 +342,52 @@ async function enviar(): Promise<void> {
     pacientePrep.value,
     especialidadeId.value,
     sintomasSelecionados.value,
+    pacienteContato.value,
   );
   if (erroValidacao) {
     toast.error(erroValidacao);
     return;
   }
 
-  try {
-    const criado = await interconsultaStore.criarPedido({
-      paciente_prep: pacientePrep.value,
-      medico_solicitante_crm: '-',
-      especialidade_id: especialidadeId.value,
-      sintomas_json: sintomasSelecionados.value.map((s) => ({ id: s.id, nome: s.nome })),
-    });
-    if (criado.status === 'ERRO') {
-      toast.warning(`Solicitação de interconsulta não marcada. Motivo: ${criado.motivo_negacao || 'Não é papel do HC'}`);
-    } else {
-      toast.success('Solicitação de interconsulta registrada com sucesso (aguardando regulação).');
+  const savedPrep = pacientePrep.value;
+  const savedContato = pacienteContato.value;
+  const savedEspId = especialidadeId.value;
+  const savedSintomas = [...sintomasSelecionados.value];
+
+  const payload = {
+    paciente_prep: savedPrep,
+    paciente_contato: savedContato || undefined,
+    medico_solicitante_crm: '-',
+    especialidade_id: savedEspId,
+    sintomas_json: savedSintomas.map((s) => ({ id: s.id, nome: s.nome })),
+  };
+
+  interconsultaStore.registerUndoableAction(
+    `Solicitação de Interconsulta (${savedPrep})`,
+    async () => {
+      try {
+        const criado = await interconsultaStore.criarPedido(payload);
+        if (criado.status === 'ERRO') {
+          toast.warning(`Solicitação de interconsulta não marcada. Motivo: ${criado.motivo_negacao || 'Não é papel do HC'}`);
+        } else {
+          toast.success('Solicitação de interconsulta registrada com sucesso (aguardando regulação).');
+        }
+      } catch {
+        const detail =
+          (interconsultaStore.error as string | null) ??
+          'Não foi possível criar o pedido. Verifique se está autenticado e se o backend está em execução.';
+        toast.error(detail);
+      }
+    },
+    () => {
+      pacientePrep.value = savedPrep;
+      pacienteContato.value = savedContato;
+      especialidadeId.value = savedEspId;
+      sintomasSelecionados.value = savedSintomas;
+      toast.info('Solicitação desfeita. Formulário restaurado.');
     }
-    limparFormulario();
-  } catch {
-    const detail =
-      (interconsultaStore.error as string | null) ??
-      'Não foi possível criar o pedido. Verifique se está autenticado e se o backend está em execução.';
-    toast.error(detail);
-  }
+  );
+
+  limparFormulario();
 }
 </script>

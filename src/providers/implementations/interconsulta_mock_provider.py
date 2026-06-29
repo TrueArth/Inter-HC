@@ -75,6 +75,9 @@ class InterconsultaMockProvider(InterconsultaProviderInterface):
         prep_original = pedido_data.get("paciente_prep", "")
         prep_encrypted = encrypt_data(prep_original)
         
+        contato_original = pedido_data.get("paciente_contato")
+        contato_encrypted = encrypt_data(contato_original) if contato_original else None
+        
         # Sintomas can be list or string
         sintomas = pedido_data.get("sintomas_json", [])
         if isinstance(sintomas, str):
@@ -86,6 +89,7 @@ class InterconsultaMockProvider(InterconsultaProviderInterface):
         new_record = {
             "id": next_id,
             "paciente_prep": prep_encrypted,
+            "paciente_contato": contato_encrypted,
             "medico_solicitante_crm": pedido_data.get("medico_solicitante_crm", ""),
             "especialidade_id": int(pedido_data.get("especialidade_id", 0)),
             "sintomas_json": sintomas,
@@ -106,6 +110,7 @@ class InterconsultaMockProvider(InterconsultaProviderInterface):
         return {
             "id": new_record["id"],
             "paciente_prep": prep_original,
+            "paciente_contato": contato_original,
             "medico_solicitante_crm": new_record["medico_solicitante_crm"],
             "especialidade_id": new_record["especialidade_id"],
             "sintomas_json": new_record["sintomas_json"],
@@ -134,10 +139,13 @@ class InterconsultaMockProvider(InterconsultaProviderInterface):
                 continue
                 
             prep_decrypted = self._decrypt_prep(r.get("paciente_prep", ""))
+            contato_encrypted = r.get("paciente_contato")
+            contato_decrypted = self._decrypt_prep(contato_encrypted) if contato_encrypted else None
             
             active_records.append({
                 "id": r["id"],
                 "paciente_prep": prep_decrypted,
+                "paciente_contato": contato_decrypted,
                 "medico_solicitante_crm": r.get("medico_solicitante_crm", ""),
                 "especialidade_id": int(r.get("especialidade_id", 0)),
                 "sintomas_json": r.get("sintomas_json", []),

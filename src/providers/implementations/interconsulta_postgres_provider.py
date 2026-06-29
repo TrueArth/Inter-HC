@@ -36,10 +36,12 @@ class InterconsultaPostgresProvider(InterconsultaProviderInterface):
         Retorna com o PREP descriptografado para uso imediato pela API.
         """
         prep_original = pedido_data.get("paciente_prep", "")
+        contato_original = pedido_data.get("paciente_contato")
 
         # Prepara cópia com dados transformados para o SQL
         params = dict(pedido_data)
         params["paciente_prep"] = encrypt_data(prep_original)
+        params["paciente_contato"] = encrypt_data(contato_original) if contato_original else None
         params.setdefault("marcado_por", None)
         params.setdefault("motivo_negacao", None)
         if isinstance(params.get("sintomas_json"), list):
@@ -67,6 +69,11 @@ class InterconsultaPostgresProvider(InterconsultaProviderInterface):
                         row_dict["paciente_prep"] = decrypt_data(row_dict["paciente_prep"])
                     except Exception:
                         pass
+                if row_dict.get("paciente_contato"):
+                    try:
+                        row_dict["paciente_contato"] = decrypt_data(row_dict["paciente_contato"])
+                    except Exception:
+                        pass
                 if isinstance(row_dict.get("sintomas_json"), str):
                     try:
                         row_dict["sintomas_json"] = json.loads(row_dict["sintomas_json"])
@@ -78,7 +85,7 @@ class InterconsultaPostgresProvider(InterconsultaProviderInterface):
 
         # Para SQLite: busca o registro recém-inserido via SELECT
         select_sql = text(
-            "SELECT id, paciente_prep, medico_solicitante_crm, especialidade_id, "
+            "SELECT id, paciente_prep, paciente_contato, medico_solicitante_crm, especialidade_id, "
             "sintomas_json, gravidade, status, marcado_por, data_consulta, motivo_negacao, criado_em, atualizado_em "
             "FROM interconsulta_pedidos WHERE id = :row_id"
         )
@@ -88,6 +95,11 @@ class InterconsultaPostgresProvider(InterconsultaProviderInterface):
         if row_dict.get("paciente_prep"):
             try:
                 row_dict["paciente_prep"] = decrypt_data(row_dict["paciente_prep"])
+            except Exception:
+                pass
+        if row_dict.get("paciente_contato"):
+            try:
+                row_dict["paciente_contato"] = decrypt_data(row_dict["paciente_contato"])
             except Exception:
                 pass
         if isinstance(row_dict.get("sintomas_json"), str):
@@ -115,6 +127,11 @@ class InterconsultaPostgresProvider(InterconsultaProviderInterface):
             if p_dict.get("paciente_prep"):
                 try:
                     p_dict["paciente_prep"] = decrypt_data(p_dict["paciente_prep"])
+                except Exception:
+                    pass
+            if p_dict.get("paciente_contato"):
+                try:
+                    p_dict["paciente_contato"] = decrypt_data(p_dict["paciente_contato"])
                 except Exception:
                     pass
             if isinstance(p_dict.get("sintomas_json"), str):

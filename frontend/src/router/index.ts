@@ -4,7 +4,7 @@ import Home from '../views/Home.vue';
 import Login from '../views/Login.vue';
 import Admin from '../views/Admin.vue';
 
-import Pacientes from '../views/Pacientes.vue';
+
 import Interconsultas from '../views/Interconsultas.vue';
 import CentralMarcacao from '../views/CentralMarcacao.vue';
 
@@ -27,12 +27,7 @@ const routes = [
     component: Admin,
     meta: { requiresAuth: true, requiresAdmin: true },
   },
-  {
-    path: '/pacientes',
-    name: 'Pacientes',
-    component: Pacientes,
-    meta: { requiresAuth: true, requiresAdmin: true },
-  },
+
   {
     path: '/interconsultas',
 

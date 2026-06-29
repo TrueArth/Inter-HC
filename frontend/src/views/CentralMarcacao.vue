@@ -150,6 +150,7 @@
           <thead class="bg-gray-50">
             <tr>
               <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">PREP</th>
+              <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Contato</th>
               <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Especialidade (AGHU)</th>
               <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Gravidade Clínica</th>
               <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Pontuação</th>
@@ -167,6 +168,7 @@
               @click="selecionarPedido(pedido)"
             >
               <td class="px-4 py-3 text-sm font-mono text-gray-700 font-semibold">{{ pedido.paciente_prep }}</td>
+              <td class="px-4 py-3 text-sm text-gray-600 font-medium">{{ pedido.paciente_contato || 'Não Informado' }}</td>
               <td class="px-4 py-3 text-sm text-gray-600">{{ obterNomeEspecialidade(pedido.especialidade_id) }}</td>
               <td class="px-4 py-3 text-sm">
                 <span :class="gravidadeClass(pedido.gravidade)" class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider">
@@ -234,10 +236,14 @@
 
           <!-- Informações Principais -->
           <div class="bg-gray-50 rounded-lg p-4 space-y-3">
-            <div class="grid grid-cols-1 gap-4">
+            <div class="grid grid-cols-2 gap-4">
               <div>
                 <p class="text-xs font-semibold text-gray-400 uppercase">PREP do Paciente</p>
                 <p class="text-sm font-mono font-bold text-gray-800 mt-0.5 select-all">{{ pedidoSelecionado.paciente_prep }}</p>
+              </div>
+              <div>
+                <p class="text-xs font-semibold text-gray-400 uppercase">Contato do Paciente</p>
+                <p class="text-sm font-mono font-bold text-gray-800 mt-0.5 select-all">{{ pedidoSelecionado.paciente_contato || 'Não Informado' }}</p>
               </div>
             </div>
             <div class="grid grid-cols-2 gap-4">
@@ -714,34 +720,74 @@ async function salvarAgendamento() {
     toast.error("Por favor, selecione a data da consulta.");
     return;
   }
-  executingAction.value = true;
-  try {
-    // Envia a data com hora zerada/meio-dia UTC de forma segura contra timezones
-    const formattedDate = `${dataConsulta.value}T12:00:00Z`;
-    await interconsultaStore.atualizarStatusPedido(pedidoSendoAgendado.value.id, 'AGENDADO', formattedDate);
-    toast.success(`Pedido #${pedidoSendoAgendado.value.id} marcado como agendado com sucesso.`);
-    mostrarModalAgendamento.value = false;
-    fecharDetalhes();
-    await recarregar();
-  } catch {
-    toast.error(interconsultaStore.error ?? 'Não foi possível atualizar o status do pedido.');
-  } finally {
-    executingAction.value = false;
-  }
+
+  const pedido = pedidoSendoAgendado.value;
+  const oldStatus = pedido.status;
+  const oldDataConsulta = pedido.data_consulta;
+  const formattedDate = `${dataConsulta.value}T12:00:00Z`;
+
+  // Update UI optimistically
+  pedido.status = 'AGENDADO';
+  pedido.data_consulta = formattedDate;
+
+  interconsultaStore.registerUndoableAction(
+    `Agendamento (PREP ${pedido.paciente_prep})`,
+    async () => {
+      executingAction.value = true;
+      try {
+        pedido.status = oldStatus;
+        pedido.data_consulta = oldDataConsulta;
+        await interconsultaStore.atualizarStatusPedido(pedido.id, 'AGENDADO', formattedDate);
+        toast.success(`Pedido #${pedido.id} marcado como agendado com sucesso.`);
+        await recarregar();
+      } catch {
+        toast.error(interconsultaStore.error ?? 'Não foi possível atualizar o status do pedido.');
+        pedido.status = oldStatus;
+        pedido.data_consulta = oldDataConsulta;
+      } finally {
+        executingAction.value = false;
+      }
+    },
+    () => {
+      pedido.status = oldStatus;
+      pedido.data_consulta = oldDataConsulta;
+      toast.info('Agendamento desfeito.');
+    }
+  );
+
+  mostrarModalAgendamento.value = false;
+  fecharDetalhes();
 }
 
 async function reprocessar(pedido: InterconsultaPedido) {
-  executingAction.value = true;
-  try {
-    await interconsultaStore.reprocessarPedido(pedido.id);
-    toast.success(`Tentativa de envio re-enfileirada para o pedido #${pedido.id}.`);
-    fecharDetalhes();
-    await recarregar();
-  } catch {
-    toast.error(interconsultaStore.error ?? 'Falha ao disparar retry do pedido.');
-  } finally {
-    executingAction.value = false;
-  }
+  const oldStatus = pedido.status;
+
+  // Update UI optimistically
+  pedido.status = 'ENFILEIRADO';
+
+  interconsultaStore.registerUndoableAction(
+    `Re-envio (PREP ${pedido.paciente_prep})`,
+    async () => {
+      executingAction.value = true;
+      try {
+        pedido.status = oldStatus;
+        await interconsultaStore.reprocessarPedido(pedido.id);
+        toast.success(`Tentativa de envio re-enfileirada para o pedido #${pedido.id}.`);
+        await recarregar();
+      } catch {
+        toast.error(interconsultaStore.error ?? 'Falha ao disparar retry do pedido.');
+        pedido.status = oldStatus;
+      } finally {
+        executingAction.value = false;
+      }
+    },
+    () => {
+      pedido.status = oldStatus;
+      toast.info('Re-envio cancelado.');
+    }
+  );
+
+  fecharDetalhes();
 }
 
 onMounted(() => {
