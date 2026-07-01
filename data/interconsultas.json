@@ -149,5 +149,47 @@
     "criado_em": "2026-07-01T01:50:52.671591+00:00",
     "atualizado_em": "2026-07-01T01:50:52.671591+00:00",
     "deleted_at": null
+  },
+  {
+    "id": 8,
+    "paciente_prep": "gAAAAABqRHgBdTWdjjsWosm4R0SDLFeiR42js6Z-brCOQ0icZ9l1rA5Sd7nBEAVMN4-ar-HuhCroK_ns0TA0IoWJuMJVOcw7hw==",
+    "paciente_contato": "gAAAAABqRHgBhxVTr7MrAl3fD5c-Z7u21WOsL3liq3xcsK4eu7u6xyzKuvghIByRSeHRJkyzXo71WM_F70g4VItfbGfsDsHIsA==",
+    "medico_solicitante_crm": "Administrador do Sistema",
+    "especialidade_id": 11,
+    "sintomas_json": [
+      {
+        "id": 34,
+        "nome": "Infecções urinárias complicadas (repetição e/ou rim único)"
+      }
+    ],
+    "gravidade": "VERDE",
+    "status": "ERRO",
+    "marcado_por": null,
+    "data_consulta": null,
+    "motivo_negacao": "Não é papel do HC",
+    "criado_em": "2026-07-01T02:14:25.451251+00:00",
+    "atualizado_em": "2026-07-01T02:14:25.451251+00:00",
+    "deleted_at": null
+  },
+  {
+    "id": 9,
+    "paciente_prep": "gAAAAABqRHgXiBjjvZkt9XEoijo3AAxCPY-sLnlU3R_OHbDLFvR40HmImdUtFc0cxyqde4Zu5vgzFMUbNz-Hl2WMwi-4Jg-lHA==",
+    "paciente_contato": "gAAAAABqRHgXVmcd-kOIVsnqpG_M09gAbTykn7hSSm5OPyGaO8vNSDIjqaOAsczff6dP3oRYc6wPsyehyTQb09_EW6iN_vIQGA==",
+    "medico_solicitante_crm": "Administrador do Sistema",
+    "especialidade_id": 11,
+    "sintomas_json": [
+      {
+        "id": 19,
+        "nome": "Injúria renal aguda"
+      }
+    ],
+    "gravidade": "VERMELHO",
+    "status": "PENDENTE",
+    "marcado_por": null,
+    "data_consulta": null,
+    "motivo_negacao": null,
+    "criado_em": "2026-07-01T02:14:47.095607+00:00",
+    "atualizado_em": "2026-07-01T02:14:47.095607+00:00",
+    "deleted_at": null
   }
 ]

@@ -53,5 +53,71 @@
     "created_at": "2026-06-20T15:48:57.211145+00:00",
     "updated_at": "2026-06-20T15:48:57.211165+00:00",
     "deleted_at": null
+  },
+  {
+    "id": 6,
+    "username": "joaogui",
+    "hashed_password": "pbkdf2_sha256$100000$382b5cee5483cb97d1bf700372b59085$3123ad4501ded82ea9236fe56c0f31ffaaa607636b961841f5f957d2fc579528",
+    "display_name": "Dr. João Guilherme Lemos Duarte de Oliveira",
+    "role": "medico",
+    "email": "jgldo@cin.ufpe.br",
+    "created_at": "2026-07-01T04:11:45.323251+00:00",
+    "updated_at": "2026-07-01T04:22:24.203707+00:00",
+    "deleted_at": "2026-07-01T04:22:24.203707+00:00"
+  },
+  {
+    "id": 7,
+    "username": "arthursean",
+    "hashed_password": "pbkdf2_sha256$100000$04691d931841fee285f359635c27ac00$5ddca8b6ccf8c056091eca4c3491581474c663b40b3223c885eb2b0e3d27fb93",
+    "display_name": "Arthur Campos",
+    "role": "admin",
+    "email": "ascc2@cin.ufpe.br",
+    "created_at": "2026-07-01T04:12:26.884146+00:00",
+    "updated_at": "2026-07-01T04:21:44.936334+00:00",
+    "deleted_at": "2026-07-01T04:21:44.936334+00:00"
+  },
+  {
+    "id": 8,
+    "username": "isabela",
+    "hashed_password": "pbkdf2_sha256$100000$5003083d582ed819bd9194daf2d7483b$f276987bf3396aa522e61f171d3bac889dc3084d7732323b5238f3e2e80d1613",
+    "display_name": "Isabela Possídio",
+    "role": "regulador",
+    "email": "ipa@cin.ufpe.br",
+    "created_at": "2026-07-01T04:14:02.209093+00:00",
+    "updated_at": "2026-07-01T04:22:22.052048+00:00",
+    "deleted_at": "2026-07-01T04:22:22.052048+00:00"
+  },
+  {
+    "id": 9,
+    "username": "arthursean",
+    "hashed_password": "pbkdf2_sha256$100000$6a8053c0e5c19bf0c507bd427113aa82$fa06e34fde5447d369860396581f0db83614fba5c7773fc655581df4938fb86c",
+    "display_name": "Arthur Campos",
+    "role": "admin",
+    "email": "ascc2@cin.ufpe.br",
+    "created_at": "2026-07-01T04:22:05.036908+00:00",
+    "updated_at": "2026-07-01T04:22:05.036908+00:00",
+    "deleted_at": null
+  },
+  {
+    "id": 10,
+    "username": "isabela",
+    "hashed_password": "pbkdf2_sha256$100000$c63179e481331325633aae6f149f4e70$1eef731b4d4a4739745ff09cc0153f9b5e4db6ca731d80484af91b71dfa7848a",
+    "display_name": "Isabela Possídio",
+    "role": "regulador",
+    "email": "ipa@cin.ufpe.br",
+    "created_at": "2026-07-01T04:22:56.811349+00:00",
+    "updated_at": "2026-07-01T04:22:56.811349+00:00",
+    "deleted_at": null
+  },
+  {
+    "id": 11,
+    "username": "joaoguilherme",
+    "hashed_password": "pbkdf2_sha256$100000$42d6f27f4b38e16517b354668340415a$e10ea5ed5a10cd4be074fd3ed4ab830ec242996f548d6f7a5581759118aad950",
+    "display_name": "Dr. João Duarte",
+    "role": "medico",
+    "email": "jgldo@cin.ufpe.br",
+    "created_at": "2026-07-01T04:23:27.518773+00:00",
+    "updated_at": "2026-07-01T04:23:27.518773+00:00",
+    "deleted_at": null
   }
 ]

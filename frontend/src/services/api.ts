@@ -41,8 +41,9 @@ api.interceptors.response.use(
     const originalRequest = error.config;
     const authStore = useAuthStore();
 
-    // Check if the error is 401 and it's not a retry request
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    // Check if the error is 401, it's not a retry request, and it's not a login or token refresh request
+    const isLoginOrRefresh = originalRequest.url?.endsWith('/login') || originalRequest.url?.endsWith('/token/refresh');
+    if (error.response?.status === 401 && !originalRequest._retry && !isLoginOrRefresh) {
       if (isRefreshing) {
         return new Promise(function(resolve, reject) {
           failedQueue.push({ resolve, reject });

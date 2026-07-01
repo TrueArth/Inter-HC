@@ -100,10 +100,11 @@ class UserPostgresProvider(UserProviderInterface):
             return row is not None
 
     async def buscar_usuario_por_username(self, username: str) -> Optional[dict]:
+        username_normalized = username.strip().lower() if username else ""
         select_sql = text(
             "SELECT id, username, hashed_password, display_name, role, email, created_at, updated_at "
             "FROM users WHERE username = :username AND deleted_at IS NULL"
         )
-        result = await self.session.execute(select_sql, {"username": username})
+        result = await self.session.execute(select_sql, {"username": username_normalized})
         row = result.mappings().first()
         return dict(row) if row else None

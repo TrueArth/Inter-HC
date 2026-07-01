@@ -35,16 +35,29 @@ class MockAuthProvider(AuthProviderInterface):
     async def authenticate_user(self, username, password, db=None) -> dict:
         print("--- Authenticating with MockAuthProvider ---")
         
-        # 1. Tentativa de autenticação no banco local se o banco estiver presente
-        if db is not None:
+        # Normaliza o username para busca local no banco e fallbacks estáticos (caixa baixa e sem espaços)
+        username_normalized = username.strip().lower() if username else ""
+        
+        # 1. Tentativa de autenticação no banco/provedor local configurado
+        env_strategy = os.getenv("USER_PROVIDER_TYPE", None)
+        if not env_strategy:
+            env_strategy = os.getenv("INTERCONSULTA_PROVIDER_TYPE", "POSTGRES")
+        provider_type = env_strategy.upper() if env_strategy else "POSTGRES"
+
+        provider = None
+        if provider_type == "MOCK":
+            from ..providers.implementations.user_mock_provider import UserMockProvider
+            provider = UserMockProvider()
+        elif db is not None:
+            from ..providers.implementations.user_postgres_provider import UserPostgresProvider
+            dialect = db.bind.dialect.name if db.bind else "postgresql"
+            provider = UserPostgresProvider(session=db, dialect=dialect)
+
+        if provider is not None:
             try:
                 from ..helpers.crypto_helper import verify_password
-                from ..providers.implementations.user_postgres_provider import UserPostgresProvider
                 
-                dialect = db.bind.dialect.name if db.bind else "postgresql"
-                provider = UserPostgresProvider(session=db, dialect=dialect)
-                
-                # Se a tabela de usuários estiver vazia, cria o admin inicial
+                # Se a tabela de usuários estiver vazia, cria o admin inicial no provedor correspondente
                 usuarios = await provider.listar_usuarios()
                 if not usuarios:
                     from ..helpers.crypto_helper import hash_password
@@ -57,7 +70,7 @@ class MockAuthProvider(AuthProviderInterface):
                     }
                     await provider.inserir_usuario(admin_initial)
                 
-                user_db = await provider.buscar_usuario_por_username(username)
+                user_db = await provider.buscar_usuario_por_username(username_normalized)
                 if user_db:
                     # Se password for None, estamos re-autenticando no refresh, aceita
                     if password is None or verify_password(password, user_db["hashed_password"]):
@@ -92,7 +105,7 @@ class MockAuthProvider(AuthProviderInterface):
         # 2. Fallback para usuários mock estáticos (compatibilidade de teste e desenvolvimento)
         print("--- Using Static Mock Fallback ---")
         admin_group = "GLO-SEC-HCPE-SETISD"
-        if username == "admin" and (password is None or password == "admin"):
+        if username_normalized == "admin" and (password is None or password == "admin"):
             return {
                 "username": "admin",
                 "displayName": ["Mock Admin"],
@@ -101,7 +114,7 @@ class MockAuthProvider(AuthProviderInterface):
                 "role": "admin",
                 "email": "admin@mock.com"
             }
-        elif username == "medico" and (password is None or password == "medico"):
+        elif username_normalized == "medico" and (password is None or password == "medico"):
             return {
                 "username": "medico",
                 "displayName": ["Mock Medico"],
@@ -110,7 +123,7 @@ class MockAuthProvider(AuthProviderInterface):
                 "role": "medico",
                 "email": "medico@mock.com"
             }
-        elif username == "regulador" and (password is None or password == "regulador"):
+        elif username_normalized == "regulador" and (password is None or password == "regulador"):
             return {
                 "username": "regulador",
                 "displayName": ["Mock Regulador"],
@@ -227,6 +240,10 @@ class AuthHandler:
             self.provider: AuthProviderInterface = MockAuthProvider()
 
     async def authenticate_user(self, username, password, db=None):
+        if username:
+            # Remove o prefixo de domínio EBSERHNET\ se presente (case-insensitive)
+            if username.lower().startswith("ebserhnet\\"):
+                username = username[len("ebserhnet\\"):]
         return await self.provider.authenticate_user(username, password, db=db)
 
     def create_access_token(self, data: dict, expires_delta: timedelta | None = None):

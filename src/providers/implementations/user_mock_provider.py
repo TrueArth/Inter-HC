@@ -100,7 +100,9 @@ class UserMockProvider(UserProviderInterface):
 
     async def buscar_usuario_por_username(self, username: str) -> Optional[dict]:
         data = self._load_data()
+        username_normalized = username.strip().lower() if username else ""
         for u in data:
-            if u["username"] == username and u.get("deleted_at") is None:
+            u_username = u["username"].strip().lower() if u.get("username") else ""
+            if u_username == username_normalized and u.get("deleted_at") is None:
                 return dict(u)
         return None
