@@ -1,37 +1,8 @@
-graph TD
-    User[Usuário] --> Frontend(Frontend Vue.js);
+## Processo de Validação do Paciente na Criação de Interconsulta
 
-    subgraph Frontend Aplicação Frontend
-        Frontend(Vue.js SPA) --> |HTTP/HTTPS| Backend(Backend FastAPI);
-    end
+Para simular e garantir a integridade e consistência com o banco hospitalar (AGHU), a arquitetura agora realiza uma verificação síncrona da existência do paciente antes de consolidar o pedido de interconsulta:
 
-    subgraph Backend Aplicação Backend FastAPI
-        Backend --> Router(Routers API);
-        Router --> Controller(Controllers);
-        Controller --> Provider(Providers);
-        Provider --> Resource(Resources);
-        Resource --> DB_Postgres[DB PostgreSQL (AGHU)];
-        Resource --> DB_Oracle[DB Oracle (AGHU)];
-        Resource --> DB_SQLite[DB SQLite (Local)];
-        Provider --> SQL_Templates(SQL Templates);
-        Router --> Auth(Autenticação JWT);
-        Auth --> AD[Active Directory];
-    end
-
-    subgraph Camadas de Dados
-        SQL_Templates --> Provider;
-        Resource --> DB_Postgres;
-        Resource --> DB_Oracle;
-        Resource --> DB_SQLite;
-    end
-
-    subgraph Autenticação
-        Auth --> AD;
-    end
-
-    style Frontend fill:#f9f,stroke:#333,stroke-width:2px;
-    style Backend fill:#bbf,stroke:#333,stroke-width:2px;
-    style DB_Postgres fill:#ccf,stroke:#333,stroke-width:2px;
-    style DB_Oracle fill:#ccf,stroke:#333,stroke-width:2px;
-    style DB_SQLite fill:#ccf,stroke:#333,stroke-width:2px;
-    style AD fill:#cfc,stroke:#333,stroke-width:2px;
+1. **Solicitação**: O médico submete a solicitação de interconsulta informando o prontuário (`paciente_prep`).
+2. **Verificação (AGHU)**: O `InterconsultaController` consome o `PacienteProviderInterface` (que aponta para a base PostgreSQL, Oracle ou mock CSV do AGHU) chamando `obter_paciente_por_prep(prep)`.
+3. **Consistência**: Se o paciente não existir no AGHU, a solicitação é abortada imediatamente com erro `HTTP 400 Bad Request (Paciente não encontrado)`.
+4. **Persistência Local**: Após a validação positiva de existência do paciente, a interconsulta é classificada pelo motor de risco, encriptada via AES-256, e salva no banco de dados local.

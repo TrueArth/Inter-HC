@@ -1,15 +1,16 @@
+import os
 from src.schemas.interconsulta_schema import InterconsultaCreate, InterconsultaResponse, StatusUpdate
 from fastapi import APIRouter, Depends, BackgroundTasks, status, HTTPException
 from pydantic import BaseModel, Field
 from typing import List, Dict, Any, Optional
 from datetime import datetime
-from fastapi import APIRouter, Depends
 from src.services.queue_optimizer_service import QueueOptimizerService
 
 from src.controllers.interconsulta_controller import InterconsultaController
 from src.providers.interfaces.interconsulta_provider_interface import InterconsultaProviderInterface
-from src.dependencies import get_interconsulta_provider, get_catalogo_provider
+from src.dependencies import get_interconsulta_provider, get_catalogo_provider, get_paciente_provider
 from src.auth.auth import auth_handler
+
 
 get_current_user = auth_handler.decode_token
 
@@ -47,6 +48,7 @@ async def criar_interconsulta(
     background_tasks: BackgroundTasks,
     provider: InterconsultaProviderInterface = Depends(get_interconsulta_provider(strategy="POSTGRES")),
     catalogo_provider = Depends(get_catalogo_provider()),
+    paciente_provider = Depends(get_paciente_provider(os.getenv("PACIENTE_PROVIDER_TYPE", "CSV"))),
     current_user: dict = Depends(verify_medico_user)  # Exige token JWT de médico/admin
 ):
     """
@@ -61,9 +63,11 @@ async def criar_interconsulta(
         payload=dados,
         provider=provider,
         catalogo_provider=catalogo_provider,
+        paciente_provider=paciente_provider,
         background_tasks=background_tasks
     )
     return pedido
+
 
 async def verify_regulator_user(current_user: dict = Depends(get_current_user)):
     ADMIN_GROUP = "GLO-SEC-HCPE-SETISD"

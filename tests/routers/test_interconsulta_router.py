@@ -82,7 +82,7 @@ def _mock_current_user():
 
 # A factory get_interconsulta_provider retorna uma função de dependência.
 # Precisamos sobrescrever a função interna que ela retorna.
-from src.dependencies import _get_interconsulta_postgres_provider
+from src.dependencies import _get_interconsulta_postgres_provider, _get_paciente_postgres_provider, _get_paciente_csv_provider
 
 
 # ────────────────────────────────────────────────────────────────
@@ -102,6 +102,7 @@ async def create_tables():
 async def client():
     """AsyncClient com transporte ASGI — faz chamadas HTTP reais ao app FastAPI."""
     app.dependency_overrides[_get_interconsulta_postgres_provider] = _get_sqlite_interconsulta_provider
+    app.dependency_overrides[_get_paciente_postgres_provider] = _get_paciente_csv_provider
     app.dependency_overrides[get_app_db_session] = _get_test_db_session
     app.dependency_overrides[get_current_user] = _mock_current_user
     async with AsyncClient(
@@ -110,6 +111,7 @@ async def client():
     ) as ac:
         yield ac
     app.dependency_overrides.clear()
+
 
 
 # ────────────────────────────────────────────────────────────────
@@ -242,4 +244,15 @@ async def test_criar_interconsulta_com_contato_invalido_retorna_422(client: Asyn
     response = await client.post("/api/interconsultas/", json=payload)
     assert response.status_code == 422
     assert "paciente_contato" in response.text
+
+
+@pytest.mark.asyncio
+async def test_criar_interconsulta_paciente_nao_existente_retorna_400(client: AsyncClient):
+    """POST /api/interconsultas/ com paciente inexistente deve retornar HTTP 400."""
+    payload = dict(PAYLOAD_CRITICO)
+    payload["paciente_prep"] = "9999999" # Prontuário que não existe
+    response = await client.post("/api/interconsultas/", json=payload)
+    assert response.status_code == 400
+    assert "não encontrado na base do AGHU" in response.json()["detail"]
+
 

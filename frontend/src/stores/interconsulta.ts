@@ -236,13 +236,15 @@ export const useInterconsultaStore = defineStore('interconsulta', () => {
     try {
       const response = await api.post<InterconsultaPedido>('/api/interconsultas/', payload);
       return response.data;
-    } catch (err: unknown) {
-      error.value = 'Falha ao criar pedido de interconsulta.';
+    } catch (err: any) {
+      const errMsg = err.response?.data?.detail || 'Falha ao criar pedido de interconsulta.';
+      error.value = errMsg;
       throw err;
     } finally {
       submitting.value = false;
     }
   }
+
 
   async function atualizarStatusPedido(pedidoId: number, status: string, dataConsulta?: string): Promise<void> {
     loading.value = true;

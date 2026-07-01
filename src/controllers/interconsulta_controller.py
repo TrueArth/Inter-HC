@@ -57,12 +57,37 @@ class InterconsultaController:
         payload: dict, 
         provider: InterconsultaProviderInterface,
         background_tasks: BackgroundTasks,
-        catalogo_provider: Any = None
+        catalogo_provider: Any = None,
+        paciente_provider: Any = None
     ) -> dict:
         """
         Recebe o payload da API, processa e persiste a interconsulta.
         """
+        if paciente_provider is not None:
+            prep_val = payload.get("paciente_prep")
+            try:
+                paciente = await paciente_provider.obter_paciente_por_prep(prep_val)
+                if not paciente:
+                    raise HTTPException(
+                        status_code=400,
+                        detail=f"Paciente com prontuário {prep_val} não encontrado na base do AGHU."
+                    )
+            except Exception as e:
+                if hasattr(e, 'status_code') and e.status_code == 404:
+                    raise HTTPException(
+                        status_code=400,
+                        detail=f"Paciente com prontuário {prep_val} não encontrado na base do AGHU."
+                    )
+                if hasattr(e, 'status_code') and hasattr(e, 'detail'):
+                    raise e
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"Paciente com prontuário {prep_val} não encontrado na base do AGHU."
+                )
+
+
         sintomas = payload.get("sintomas_json", [])
+
         
         # 1. Processamento pelo Motor de Regras (Carrega catálogos dinâmicos se o provider de catálogo for passado)
         sintomas_db = None

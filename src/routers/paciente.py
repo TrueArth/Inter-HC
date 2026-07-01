@@ -1,3 +1,4 @@
+import os
 from fastapi import APIRouter, Depends, HTTPException, status
 from typing import List
 
@@ -27,9 +28,9 @@ async def verify_regulator_user(current_user: dict = Depends(auth_handler.decode
     return current_user
 
 # --- PONTO ÚNICO DE CONFIGURAÇÃO PARA ESTE ROTEADOR ---
-# Para usar o banco de dados em produção, altere esta linha para "postgres"
-STRATEGY = "csv"
+STRATEGY = os.getenv("PACIENTE_PROVIDER_TYPE", "CSV")
 # ----------------------------------------------------
+
 
 router = APIRouter(
     prefix="/api/pacientes",

@@ -20,7 +20,7 @@ from src.models.especialidade import Especialidade
 from src.models.sintoma import Sintoma
 from src.models.regra_gravidade import RegraGravidade
 from src.models.interconsulta import InterconsultaPedido
-from src.dependencies import _get_interconsulta_postgres_provider
+from src.dependencies import _get_interconsulta_postgres_provider, _get_paciente_postgres_provider, _get_paciente_csv_provider
 from src.providers.implementations.interconsulta_postgres_provider import InterconsultaPostgresProvider
 from src.routers.interconsulta import get_current_user
 
@@ -60,17 +60,24 @@ async def create_tables():
     """Cria o esquema do banco de dados na memória e semeia dados de teste."""
     async with _engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
-    
-    # Semeia especialidades, sintomas e regras dinâmicas de teste
+        
+    # Semeia especialidades e sintomas mínimos para o motor de regras funcionar
     async with _TestSession() as session:
-        # Especialidade Pneumologia
-        esp = Especialidade(id=15, nome="Pneumologia")
-        session.add(esp)
-        
-        # Sintoma com pontuação padrão 2
-        sint = Sintoma(id=20, nome="Tosse Crônica", pontuacao=2)
-        session.add(sint)
-        
+        # Especialidades
+        session.add_all([
+            Especialidade(id=1, nome="Clínica Médica"),
+            Especialidade(id=2, nome="Ortopedia"),
+            Especialidade(id=3, nome="Dermatologia"),
+            Especialidade(id=4, nome="Cardiologia"),
+            Especialidade(id=15, nome="Pneumologia"),
+        ])
+        # Sintomas base
+        session.add_all([
+            Sintoma(id=1, nome="Cegueira", pontuacao=10),
+            Sintoma(id=2, nome="Infarto / Dor torácica", pontuacao=10),
+            Sintoma(id=5, nome="Febre alta", pontuacao=5),
+            Sintoma(id=20, nome="Tosse Crônica", pontuacao=1),
+        ])
         await session.commit()
         
         # Regra de pontuação que define Tosse Crônica para Pneumologia como 10 (VERMELHO)
@@ -87,6 +94,7 @@ async def create_tables():
 async def client():
     """Retorna um AsyncClient com as dependências do banco e usuário mockadas."""
     app.dependency_overrides[_get_interconsulta_postgres_provider] = _get_sqlite_interconsulta_provider
+    app.dependency_overrides[_get_paciente_postgres_provider] = _get_paciente_csv_provider
     app.dependency_overrides[get_app_db_session] = _get_test_db_session
     app.dependency_overrides[get_current_user] = _mock_current_user
     async with AsyncClient(

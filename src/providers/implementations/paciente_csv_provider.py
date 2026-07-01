@@ -51,3 +51,22 @@ class PacienteCsvProvider(PacienteProviderInterface):
 
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Paciente não encontrado no CSV")
 
+    async def obter_paciente_por_prep(self, prep: str) -> Dict[str, Any]:
+        try:
+            with open(self.csv_path, mode='r', encoding='utf-8') as f:
+                reader = csv.DictReader(f)
+                for row in reader:
+                    if row.get('prep') == prep:
+                        # Tenta converter o código no dicionário retornado
+                        if 'codigo' in row:
+                            try:
+                                row['codigo'] = int(row['codigo'])
+                            except ValueError:
+                                pass
+                        return row
+        except Exception as e:
+            print(f"Erro ao ler CSV: {e}")
+
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Paciente não encontrado no CSV")
+
+

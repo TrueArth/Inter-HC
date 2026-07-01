@@ -39,3 +39,12 @@ class PacientePostgresProvider(PacienteProviderInterface):
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Paciente não encontrado")
             
         return dict(paciente)
+
+    async def obter_paciente_por_prep(self, prep: str) -> Dict[str, Any]:
+        try:
+            codigo = int(prep)
+        except ValueError:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Paciente não encontrado (prontuário inválido)")
+        
+        return await self.obter_paciente_por_codigo(codigo)
+

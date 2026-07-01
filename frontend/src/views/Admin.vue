@@ -7,11 +7,13 @@
           <UserGroupIcon v-if="abaAtiva === 'usuarios'" class="h-8 w-8 text-blue-600" />
           <QueueListIcon v-else-if="abaAtiva === 'especialidades'" class="h-8 w-8 text-blue-600" />
           <ClipboardDocumentListIcon v-else-if="abaAtiva === 'sintomas'" class="h-8 w-8 text-blue-600" />
+          <UserIcon v-else-if="abaAtiva === 'pacientes'" class="h-8 w-8 text-blue-600" />
           <ChartBarIcon v-else class="h-8 w-8 text-blue-600" />
           {{ 
             abaAtiva === 'usuarios' ? 'Gestão de Usuários' : 
             abaAtiva === 'especialidades' ? 'Gerenciar Especialidades' :
             abaAtiva === 'sintomas' ? 'Gerenciar Sintomas & Regras' :
+            abaAtiva === 'pacientes' ? 'Pacientes (AGHU)' :
             'Estatísticas de Regulação' 
           }}
         </h1>
@@ -20,6 +22,7 @@
             abaAtiva === 'usuarios' ? 'Crie novos usuários e gerencie perfis de acesso localmente.' : 
             abaAtiva === 'especialidades' ? 'Cadastre e remova especialidades médicas no catálogo.' :
             abaAtiva === 'sintomas' ? 'Crie sintomas e defina regras de gravidade específicas por especialidade.' :
+            abaAtiva === 'pacientes' ? 'Visualize a lista de pacientes cadastrados na base do AGHU.' :
             'Acompanhe indicadores clínicos e auditoria de solicitações.' 
           }}
         </p>
@@ -65,6 +68,13 @@
         class="pb-3 px-2 transition text-sm font-semibold focus:outline-none"
       >
         Gerenciar Sintomas & Regras
+      </button>
+      <button 
+        @click="alterarAba('pacientes')" 
+        :class="abaAtiva === 'pacientes' ? 'border-b-2 border-blue-600 text-blue-600 font-bold' : 'text-gray-500 hover:text-gray-700'"
+        class="pb-3 px-2 transition text-sm font-semibold focus:outline-none"
+      >
+        Pacientes (AGHU)
       </button>
       <button 
         @click="alterarAba('estatisticas')" 
@@ -458,6 +468,61 @@
       </template>
     </Modal>
 
+    <!-- Tab 5: Pacientes (AGHU) -->
+    <div v-show="abaAtiva === 'pacientes'" class="space-y-6">
+      <Card>
+        <template #header>
+          <div class="pb-2">
+            <h2 class="text-lg font-semibold text-gray-700">Pacientes Cadastrados no AGHU</h2>
+            <p class="text-xs text-gray-400">Lista completa de pacientes obtida via simulação de conexão com o banco hospitalar.</p>
+          </div>
+        </template>
+
+        <div v-if="loadingPacientes" class="text-center py-8">
+          <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-blue-600 border-t-transparent"></div>
+          <p class="text-sm text-gray-500 mt-2">Carregando pacientes do AGHU...</p>
+        </div>
+
+        <div v-else-if="pacientes.length === 0" class="text-center py-12">
+          <p class="text-sm text-gray-500">Nenhum paciente cadastrado no AGHU.</p>
+        </div>
+
+        <div v-else class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200 mt-2">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Cód. AGHU</th>
+                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Prontuário (PREP)</th>
+                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Nome Completo</th>
+                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">CPF</th>
+                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Dt. Nasc.</th>
+                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Gênero / Cor</th>
+                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Filiação</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-100 font-sans">
+              <tr v-for="p in pacientes" :key="p.codigo" class="hover:bg-gray-50/50 transition">
+                <td class="px-6 py-4 text-sm font-semibold text-gray-950 font-mono font-bold">#{{ p.codigo }}</td>
+                <td class="px-6 py-4 text-sm font-semibold text-blue-600 font-mono">{{ p.prep }}</td>
+                <td class="px-6 py-4 text-sm font-bold text-gray-950">{{ p.nome }}</td>
+                <td class="px-6 py-4 text-sm text-gray-600 font-mono">{{ p.cpf || 'Não informado' }}</td>
+                <td class="px-6 py-4 text-sm text-gray-500">{{ p.dt_nascimento }}</td>
+                <td class="px-6 py-4 text-sm text-gray-500">
+                  <span class="inline-flex px-2 py-0.5 rounded text-xs font-semibold bg-gray-100 text-gray-700">
+                    {{ p.sexo }} / {{ p.cor }}
+                  </span>
+                </td>
+                <td class="px-6 py-4 text-sm text-gray-400">
+                  <div class="text-xs">Mãe: {{ p.nome_mae || 'Não informado' }}</div>
+                  <div class="text-xs">Pai: {{ p.nome_pai || 'Não informado' }}</div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </Card>
+    </div>
+
     <!-- Tab 2: Estatísticas de Regulação -->
     <div v-show="abaAtiva === 'estatisticas'" class="space-y-6">
       <div v-if="loadingStats" class="text-center py-12">
@@ -773,7 +838,8 @@ import {
   InboxIcon,
   QueueListIcon,
   ClipboardDocumentListIcon,
-  ClockIcon
+  ClockIcon,
+  UserIcon
 } from '@heroicons/vue/24/outline';
 
 const authStore = useAuthStore();
@@ -781,9 +847,11 @@ const authStore = useAuthStore();
 const abaAtiva = ref('usuarios');
 const users = ref<any[]>([]);
 const stats = ref<any>(null);
+const pacientes = ref<any[]>([]);
 
 const loading = ref(false);
 const loadingStats = ref(false);
+const loadingPacientes = ref(false);
 const salvando = ref(false);
 const erroForm = ref('');
 
@@ -1039,6 +1107,19 @@ const scoreClass = (score: number) => {
   return 'bg-green-100 text-green-700';
 };
 
+const carregarPacientes = async () => {
+  if (!authStore.isAdmin) return;
+  loadingPacientes.value = true;
+  try {
+    const { data } = await api.get('/api/pacientes');
+    pacientes.value = data;
+  } catch (error: any) {
+    console.error("Erro ao carregar pacientes:", error);
+  } finally {
+    loadingPacientes.value = false;
+  }
+};
+
 const alterarAba = (aba: string) => {
   abaAtiva.value = aba;
   if (aba === 'usuarios') {
@@ -1049,6 +1130,8 @@ const alterarAba = (aba: string) => {
     carregarCatalogos();
   } else if (aba === 'sintomas') {
     carregarCatalogos();
+  } else if (aba === 'pacientes') {
+    carregarPacientes();
   }
 };
 
